@@ -150,13 +150,23 @@ const PROGRAMMES = [
   };
   if (!RM) gsap.delayedCall(2.4, tick);
 
-  /* photo card flip: every 2s the open programme's card turns half a revolution side to side on the Y axis.
-     Both faces carry the same photo for now. The stat card stays in front (z-index 2 over the card's 1). */
-  const cards = bands.map((b) => q(b, ".f-card"));
+  /* card flip: every 2s the open programme's photo card and its stat card turn half a revolution side to
+     side on the Y axis, together. The photo card has two faces (same photo for now). The stat card turns
+     edge-on, swaps sides unseen and turns back, so the same card reappears the right way round; power3.in
+     then power3.out over the two halves traces exactly the photo's power3.inOut, so the two stay in step.
+     The stat card stays in front throughout (z-index 2 over the photo's 1). */
+  const FLIP = 1;
+  const flippers = bands.map((b, i) => ({ card: q(b, ".f-card"), stat: q(b, ".f-stat"), full: fulls[i], tl: null }));
   const flip = () => {
     const r = stage.getBoundingClientRect();
     if (r.bottom > 0 && r.top < innerHeight)
-      cards.forEach((c, i) => { if (isOpen(fulls[i]) && !gsap.isTweening(c)) gsap.to(c, { rotationY: "+=180", duration: 1, ease: "power3.inOut" }); });
+      flippers.forEach((f) => {
+        if (!isOpen(f.full) || (f.tl && f.tl.isActive())) return;
+        f.tl = gsap.timeline()
+          .to(f.card, { rotationY: "+=180", duration: FLIP, ease: "power3.inOut" }, 0)
+          .fromTo(f.stat, { rotationY: 0, transformPerspective: 700 }, { rotationY: 90, duration: FLIP / 2, ease: "power3.in", immediateRender: false }, 0)
+          .fromTo(f.stat, { rotationY: -90, transformPerspective: 700 }, { rotationY: 0, duration: FLIP / 2, ease: "power3.out", immediateRender: false }, FLIP / 2);
+      });
     gsap.delayedCall(2, flip);
   };
   if (!RM) gsap.delayedCall(2, flip);
