@@ -1,0 +1,47 @@
+/* Design notes: a switch fixed to the bottom-left corner; when on, a card above it annotates the section in
+   view (hero, then programmes). Built by notes.js. Sits above the page and the nav. */
+.dn{--dn-ink:#0f172a;--dn-sub:#475569;--dn-mute:#64748b;--dn-line:#e2e8f0;--dn-card:#fff;--dn-accent:#2563eb;--dn-track:#cbd5e1;
+  --dn-ease:cubic-bezier(.22,1,.36,1);position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));
+  z-index:90;display:flex;flex-direction:column;align-items:flex-start;gap:10px;font-family:var(--font,"Inter",system-ui,sans-serif);
+  color:var(--dn-ink);pointer-events:none}
+.dn > *{pointer-events:auto}
+
+/* the switch */
+.dn__sw{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 14px 0 8px;border:1px solid var(--dn-line);border-radius:999px;
+  background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 6px 20px -10px rgba(15,23,42,.35);
+  font:500 13px/1 var(--font,"Inter",system-ui,sans-serif);color:var(--dn-ink);cursor:pointer;transition:border-color .3s,box-shadow .3s}
+.dn__sw:hover{border-color:#94a3b8}
+.dn__sw:focus-visible{outline:2px solid var(--dn-accent);outline-offset:3px}
+.dn__track{position:relative;width:36px;height:22px;border-radius:999px;background:var(--dn-track);transition:background .3s var(--dn-ease)}
+.dn__track::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 3px rgba(15,23,42,.3);transition:transform .35s var(--dn-ease)}
+.dn__sw[aria-checked="true"] .dn__track{background:var(--dn-accent)}
+.dn__sw[aria-checked="true"] .dn__track::after{transform:translateX(14px)}
+
+/* the notes card */
+.dn__card{width:min(360px,calc(100vw - 32px));max-height:min(62vh,560px);overflow:auto;overscroll-behavior:contain;padding:20px 20px 18px;
+  border:1px solid var(--dn-line);border-radius:18px;background:var(--dn-card);box-shadow:0 24px 48px -24px rgba(15,23,42,.35);
+  transform-origin:0 100%;transition:opacity .35s var(--dn-ease),transform .45s var(--dn-ease),visibility 0s .45s}
+.dn:not(.is-on) .dn__card{opacity:0;visibility:hidden;transform:translateY(10px) scale(.97)}
+.dn.is-on .dn__card{transition:opacity .35s var(--dn-ease),transform .45s var(--dn-ease),visibility 0s}
+.dn__body{transition:opacity .25s,transform .35s var(--dn-ease)}
+.dn__body.is-swap{opacity:0;transform:translateY(6px)}
+
+.dn__n{margin:0;font-size:11px;line-height:16px;font-weight:600;letter-spacing:.08em;color:var(--dn-mute);font-variant-numeric:tabular-nums}
+.dn__n b{color:var(--dn-accent);font-weight:600}
+.dn__h{margin:6px 0 10px;font-size:20px;line-height:26px;font-weight:600;letter-spacing:-.02em}
+.dn__p{margin:0 0 10px;font-size:13.5px;line-height:21px;color:var(--dn-sub)}
+.dn__sub{margin:16px 0 10px;padding-top:14px;border-top:1px solid var(--dn-line);font-size:11px;line-height:16px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dn-mute)}
+.dn__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.dn__list li{padding-left:12px;border-left:2px solid var(--dn-line)}
+.dn__list b{display:block;font-size:13px;line-height:19px;font-weight:600;color:var(--dn-ink)}
+.dn__list span{display:block;font-size:12.5px;line-height:19px;color:var(--dn-sub)}
+
+@media (max-width:860px){
+  .dn__card{max-height:52vh;padding:16px}
+  .dn__h{font-size:18px;line-height:24px}
+}
+@media (prefers-reduced-motion:reduce){
+  .dn *,.dn *::after{transition-duration:.01ms!important}
+}
