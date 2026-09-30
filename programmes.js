@@ -70,14 +70,15 @@ const PROGRAMMES = [
             </div>
           </div>
           <div class="f-media">
-            <div class="f-flip"><div class="f-card">
-              <figure class="f-photo is-front"><img src="${p.photo}" alt="${p.photoAlt}" loading="lazy"></figure>
-              <figure class="f-photo is-back" aria-hidden="true"><img src="${p.photo}" alt="" loading="lazy"></figure>
+            <div class="f-flip"><div class="f-card">${["front", "back"].map((side) => `
+              <div class="f-face is-${side}"${side === "back" ? ' aria-hidden="true"' : ""}>
+                <figure class="f-photo"><img src="${p.photo}" alt="${side === "front" ? p.photoAlt : ""}" loading="lazy"></figure>
+                <div class="f-pop is-${s.side}"><div class="f-stat">
+                  <div class="faces" aria-hidden="true"><div class="faces__row">${pools[i].slice(0, VISIBLE + 1).map((f) => `<img src="${f}" alt="">`).join("")}</div></div>
+                  <div><strong>${s.fig}</strong><span>${s.cap}</span></div>
+                </div></div>
+              </div>`).join("")}
             </div></div>
-            <div class="f-stat is-${s.side}">
-              <div class="faces" aria-hidden="true"><div class="faces__row">${pools[i].slice(0, VISIBLE + 1).map((f) => `<img src="${f}" alt="">`).join("")}</div></div>
-              <div><strong>${s.fig}</strong><span>${s.cap}</span></div>
-            </div>
           </div>
         </div>
       </div>
@@ -99,7 +100,7 @@ const PROGRAMMES = [
   /* photo card hover: the card tilts toward the pointer, the picture drifts the other way inside
      its frame and the stat card floats a little further, so the three read as layers. Size never changes. */
   if (!RM && matchMedia("(hover: hover)").matches) bands.forEach((b) => {
-    const media = q(b, ".f-media"), img = b.querySelectorAll(".f-photo img"), stat = q(b, ".f-stat");
+    const media = q(b, ".f-media"), img = b.querySelectorAll(".f-photo img"), stat = b.querySelectorAll(".f-stat");
     const ease = { duration: 0.8, ease: "power3.out", overwrite: "auto" };
     gsap.set(media, { transformPerspective: 1100 });
     media.addEventListener("pointerenter", () => gsap.to(img, { scale: 1.07, ...ease }));
@@ -122,11 +123,10 @@ const PROGRAMMES = [
      Runs on GSAP's clock, so it pauses in a background tab instead of piling up, and only for the open
      programme, and holds while the card is hovered. */
   const STEP = 28 - 9.625;
-  const stacks = bands.map((b, i) => {
-    const row = q(b, ".faces__row");
+  const stacks = bands.flatMap((b, i) => [...b.querySelectorAll(".faces__row")].map((row) => {
     gsap.set(row.children[VISIBLE], { scale: 0.4, opacity: 0 });
-    return { row, card: q(b, ".f-stat"), full: fulls[i], pool: pools[i], next: VISIBLE + 1, busy: false };
-  });
+    return { row, card: b, full: fulls[i], pool: pools[i], next: VISIBLE + 1, busy: false };
+  }));
   const isOpen = (el) => getComputedStyle(el).visibility === "visible" && +getComputedStyle(el).opacity > 0.5;
   const cycle = (s) => {
     const first = s.row.children[0], incoming = s.row.children[VISIBLE];
@@ -145,27 +145,38 @@ const PROGRAMMES = [
   const tick = () => {
     const r = stage.getBoundingClientRect();
     if (r.bottom > 0 && r.top < innerHeight)
-      stacks.forEach((s) => { if (!s.busy && isOpen(s.full) && !s.card.matches(":hover")) cycle(s); });
+      stacks.forEach((s) => { if (!s.busy && isOpen(s.full) && !q(s.card, ".f-stat:hover")) cycle(s); });
     gsap.delayedCall(2.4, tick);
   };
   if (!RM) gsap.delayedCall(2.4, tick);
 
-  /* card flip: every 2s the open programme's photo card and its stat card turn half a revolution side to
-     side on the Y axis, together. The photo card has two faces (same photo for now). The stat card turns
-     edge-on, swaps sides unseen and turns back, so the same card reappears the right way round; power3.in
-     then power3.out over the two halves traces exactly the photo's power3.inOut, so the two stay in step.
-     The stat card stays in front throughout (z-index 2 over the photo's 1). */
-  const FLIP = 1;
-  const flippers = bands.map((b, i) => ({ card: q(b, ".f-card"), stat: q(b, ".f-stat"), full: fulls[i], tl: null }));
+  /* card flip, after Framer University's "3D Flipping Project Card": every 2s the open programme's card
+     turns top over bottom (rotateX 180, perspective 1200) in 1s on a sharp in-out curve. Each face carries
+     its own photo and stat card (the same ones for now); the stat card floats 70px off its face, so it
+     turns with the card as a layer in front of the photo. The leaving stat card shrinks to 0.6 and drifts
+     toward the card's centre; the arriving one grows back from there. */
+  const bezier = (x1, y1, x2, y2) => (t) => {
+    const f = (a, b, u) => ((1 - 3 * b + 3 * a) * u + (3 * b - 6 * a)) * u * u + 3 * a * u;
+    let lo = 0, hi = 1, u = t;
+    for (let k = 0; k < 24; k++) { u = (lo + hi) / 2; if (f(x1, x2, u) < t) lo = u; else hi = u; }
+    return f(y1, y2, u);
+  };
+  const FLIP = { duration: 1, ease: bezier(0.93, 0.03, 0.23, 0.99) };
+  const flippers = bands.map((b, i) => {
+    const pops = [...b.querySelectorAll(".f-pop")];
+    return { card: q(b, ".f-card"), stats: pops.map((p) => q(p, ".f-stat")), drift: pops[0].classList.contains("is-left") ? -24 : 24, full: fulls[i], side: 0, tl: null };
+  });
   const flip = () => {
     const r = stage.getBoundingClientRect();
     if (r.bottom > 0 && r.top < innerHeight)
       flippers.forEach((f) => {
         if (!isOpen(f.full) || (f.tl && f.tl.isActive())) return;
-        f.tl = gsap.timeline()
-          .to(f.card, { rotationY: "+=180", duration: FLIP, ease: "power3.inOut" }, 0)
-          .fromTo(f.stat, { rotationY: 0, transformPerspective: 700 }, { rotationY: 90, duration: FLIP / 2, ease: "power3.in", immediateRender: false }, 0)
-          .fromTo(f.stat, { rotationY: -90, transformPerspective: 700 }, { rotationY: 0, duration: FLIP / 2, ease: "power3.out", immediateRender: false }, FLIP / 2);
+        const leaving = f.stats[f.side], arriving = f.stats[1 - f.side];
+        f.side = 1 - f.side;
+        f.tl = gsap.timeline({ defaults: FLIP })
+          .to(f.card, { rotationX: "+=180" }, 0)
+          .fromTo(leaving, { scale: 1, yPercent: 0 }, { scale: 0.6, yPercent: f.drift }, 0)
+          .fromTo(arriving, { scale: 0.6, yPercent: f.drift }, { scale: 1, yPercent: 0 }, 0);
       });
     gsap.delayedCall(2, flip);
   };
@@ -193,9 +204,9 @@ const PROGRAMMES = [
       .fromTo(f.querySelectorAll(".f-list li"), { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power3.out" }, 0.34)
       .fromTo(f.querySelectorAll(".f-list .ic"), { scale: 0.7 }, { scale: 1, duration: 0.5, stagger: 0.07, ease: "back.out(2)", clearProps: "transform" }, 0.34)
       .fromTo(q(f, ".f-cta"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", clearProps: "transform" }, 0.55)
-      .fromTo(q(f, ".f-flip"), { clipPath: "inset(6% 5% 6% 5% round 24px)", y: 30, opacity: 0.4 }, { clipPath: "inset(0% 0% 0% 0% round 24px)", y: 0, opacity: 1, duration: 1, ease: "power3.out", clearProps: "clipPath" }, 0.05)
+      .fromTo(f.querySelectorAll(".f-photo"), { clipPath: "inset(6% 5% 6% 5% round 24px)", y: 30, opacity: 0.4 }, { clipPath: "inset(0% 0% 0% 0% round 24px)", y: 0, opacity: 1, duration: 1, ease: "power3.out", clearProps: "clipPath" }, 0.05)
       .fromTo(f.querySelectorAll(".f-photo img"), { scale: 1.12 }, { scale: 1, duration: 1.2, ease: "power2.out", clearProps: "transform" }, 0.05)
-      .fromTo(q(f, ".f-stat"), { opacity: 0, y: 26, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)", clearProps: "transform" }, 0.6);
+      .fromTo(f.querySelectorAll(".f-stat"), { opacity: 0, y: 26, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)", clearProps: "transform" }, 0.6);
   };
   /* the open programme lifts away with the page, softening as it goes */
   const conceal = (i) => gsap.timeline()

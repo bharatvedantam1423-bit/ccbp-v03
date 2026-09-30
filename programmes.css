@@ -86,19 +86,21 @@
 
 /* the photo card: on hover it tilts toward the pointer and the picture drifts inside it (JS); no glow, no resize */
 #programmes .f-media{position:relative;flex:none;width:486px;height:596px;will-change:transform}
-/* the flip: .f-flip is a flat layer (z-index 1) with its own perspective, so the turning card never
-   cuts through the stat card (z-index 2); .f-card turns on Y and carries two faces with the same photo */
-#programmes .f-flip{position:absolute;inset:0;z-index:1;perspective:1600px}
-#programmes .f-card{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
-#programmes .f-photo.is-back{transform:rotateY(180deg)}
-#programmes .f-photo{position:absolute;inset:0;margin:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;border:2px solid var(--pg-hair);background:#fff;overflow:hidden;isolation:isolate}
+/* the flip (after Framer University's 3D flipping card): .f-card turns on X; each .f-face holds a photo and
+   a stat card. The stat card (.f-pop, z-index 2) floats 70px off its face in front of the photo (z-index 1). */
+#programmes .f-flip{position:absolute;inset:0;perspective:1200px}
+#programmes .f-card,#programmes .f-face{position:absolute;inset:0;transform-style:preserve-3d}
+#programmes .f-card{will-change:transform}
+#programmes .f-face.is-back{transform:rotateX(180deg)}
+#programmes .f-pop{position:absolute;z-index:2;transform:translateZ(70px);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+#programmes .f-photo{position:absolute;inset:0;z-index:1;margin:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;border:2px solid var(--pg-hair);background:#fff;overflow:hidden;isolation:isolate}
 #programmes .f-photo img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:var(--pos,50%) 50%;border-radius:22px;will-change:transform}
 
 /* stat card (Figma 8070:10662): faces, figure, caption */
-#programmes .f-stat{position:absolute;z-index:2;width:181px;padding:16px;border-radius:16px;background:var(--stat-bg);display:flex;flex-direction:column;gap:16px;
-  border:var(--stat-border,0);backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:box-shadow .5s var(--pg-ease-out)}
-#programmes .f-stat.is-left{left:-77px;top:366px}
-#programmes .f-stat.is-right{right:-80px;top:36px}
+#programmes .f-stat{position:relative;width:181px;padding:16px;border-radius:16px;background:var(--stat-bg);display:flex;flex-direction:column;gap:16px;
+  border:var(--stat-border,0);transition:box-shadow .5s var(--pg-ease-out)}
+#programmes .f-pop.is-left{left:-77px;top:366px}
+#programmes .f-pop.is-right{right:-80px;top:36px}
 #programmes .f-stat:hover{box-shadow:0 18px 36px -20px rgba(15,23,42,.25)}
 /* exactly four faces in view (28 + 3 x 18.375 = 83.125); a fifth waits hidden at the end of the row */
 #programmes .faces{position:relative;width:84px;height:36px;margin:-4px 0;overflow:hidden}
@@ -124,7 +126,8 @@
   #programmes .f-media{width:auto;height:auto;flex:1 1 0;min-height:clamp(136px,21svh,320px)}
   #programmes .f-photo{border-radius:18px}
   #programmes .f-photo img{border-radius:16px}
-  #programmes .f-stat,#programmes .f-stat.is-left,#programmes .f-stat.is-right{left:auto;right:10px;top:auto;bottom:10px;width:auto;flex-direction:row;align-items:center;gap:10px;padding:8px 12px 8px 8px;border-radius:14px}
+  #programmes .f-pop.is-left,#programmes .f-pop.is-right{left:auto;right:10px;top:auto;bottom:10px}
+  #programmes .f-stat{width:auto;flex-direction:row;align-items:center;gap:10px;padding:8px 12px 8px 8px;border-radius:14px}
   #programmes .f-stat strong{font-size:17px}
   #programmes .f-stat span{font-size:11px;line-height:14px;margin-top:0}
   #programmes .f-text{width:auto;gap:clamp(14px,2.2svh,22px)}
