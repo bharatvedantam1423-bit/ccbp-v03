@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NxtWave — The Wave</title>
+<meta name="description" content="AI changed tech hiring. NxtWave changed how you learn: fundamentals + AI, industry mentors and real projects. Join 16,000+ learners hired at 3,000+ companies.">
+<meta name="theme-color" content="#F6FAFE">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NxtWave — The Wave">
+<meta property="og:description" content="Join the 16,000+ NxtWave learners hired at 3,000+ companies.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="vendor/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vendor/fonts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Outfit:wght@400;500;600&display=swap">
+<!-- section 2: programmes (styles scoped to .programmes) -->
+<link rel="stylesheet" href="programmes.css">
+<style>
+/* =====================================================================
+   TOKENS
+   ===================================================================== */
+:root{
+  --font:"InterVariable","Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* one type system for every section below the hero (Figma CCBP-v02 659:483) */
+  --font-head:Outfit, sans-serif;                  /* section headings */
+  --font-sub:var(--font);                          /* section subheadings: Inter, like the body */
+  /* the heading fill (Figma 802:5314): black into navy into blue, left to right */
+  /* heading fill: a soft blue mesh, after the approved reference swatch. A periwinkle highlight at the
+     top left and a sky-blue glow at the bottom right over a royal-to-sky base; the lightest tones are
+     held back from the swatch's palest so 56px headings stay readable on white. */
+  --head-grad:radial-gradient(60% 180% at 18% 0%,#6fa8f5 0%,rgba(111,168,245,0) 65%),
+              radial-gradient(80% 160% at 85% 100%,#3d8dfc 0%,rgba(61,141,252,0) 70%),
+              linear-gradient(100deg,#1d4ed8 0%,#2a6af0 60%,#3b8cff 100%);
+  --head-grad-dark:linear-gradient(193deg,#b9c3d6 12%,#ffffff 52%,#aeb9cd 115%);
+  --title-grad:var(--head-grad);                   /* the supplied build's name for the same fill */
+  --sec-y:clamp(56px,6.5vw,96px);                  /* vertical breathing room above/below a section */
+  --head-size:clamp(32px,3.9vw,56px);              /* section headings below the fold */
+  --sub-size:clamp(15px,1.2vw,18px);               /* the subhead under a section heading */
+  --sub-ink:#3b4a63;                               /* every subheading, one slate */
+  /* page layout: content is at most 1400px wide, with one fluid side margin (20px on phones, 80px on
+     large screens). --page-edge is where content starts on the left: the margin, or more once the
+     window is wider than 1400px plus margins, so the column stays centred. */
+  --page-max:1400px;
+  --page-pad:clamp(20px,5vw,80px);
+  --page-edge:max(var(--page-pad),calc((100vw - var(--page-max)) / 2));
+  --page-bg:#ffffff;
+  --card-bg:#ffffff;
+  --ink:#1e293b;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --blue:#2563eb;
+  --blue-ink:#1d4ed8;
+  --border:#cbd5e1;
+  --radius-card:24px;
+  --radius-banner:18px;
+  --card-w:388px;
+  --ease:cubic-bezier(.2,.9,.25,1);
+  --dur:.28s;
+}
+*,*::before,*::after{box-sizing:border-box}
+/* the logo ticker goes full-bleed with 100vw, which counts the scrollbar — clip on the root as
+   well as the body, or the page scrolls sideways by the scrollbar's width. `clip` (not `hidden`)
+   so the pinned hero and mentors stages keep working. */
+html,body{margin:0;overflow-x:clip}
+body{background:var(--page-bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:clip}
+p,h1,h2,h3{margin:0}
+a{color:inherit;text-decoration:none}
+
+/* =====================================================================
+   SECTION TYPE — every section below the hero shares one heading and one
+   subheading style. Headings: Outfit 600 with the Figma gradient fill.
+   Subheadings: Geist. The hero (.hx) is deliberately left out of this.
+   ===================================================================== */
+.prog-title,.record-title,.mw-title,.companies-title,.inv-title,.mc .mc__title,
+.ctv-title,.cs .wl__title,.cs .ht__title,.cs .fm__title,.cs .cta__title,
+.nr-title{
+  font-family:var(--font-head);font-weight:600;
+  line-height:.98;letter-spacing:-.01em;font-variation-settings:normal;
+  background-image:var(--head-grad);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  padding-bottom:.08em;text-wrap:balance;
+  width:fit-content;max-width:100%;   /* the fill runs across the words, not the whole column */
+}
+/* same fill, inverted for the headings that sit on dark panels */
+.cs .cta__title{background-image:var(--head-grad-dark)}
+
+.prog-sub,.mw-sub,.companies-sub,.inv-sub,.nr .nr-lede,
+.ctv-sub,.cs .wl__sub,.cs .ht__sub,.cs .cta__sub{
+  font-family:var(--font-sub);font-weight:400;line-height:1.5;letter-spacing:normal;color:var(--sub-ink);
+}
+/* the sections below the awards share one heading size */
+.prog-title,.record-title,.mw-title,.ctv-title,
+.companies-title,.inv-title,.mc .mc__title,.cs .wl__title,.cs .ht__title,.cs .fm__title,
+.nr-title{font-size:var(--head-size);line-height:1.12}
+/* ...and one subheading size */
+.prog-sub,.mw-sub,.companies-sub,.inv-sub,
+.ctv-sub,.cs .wl__sub,.cs .ht__sub,.cs .cta__sub{font-size:var(--sub-size)}
+/* card-level heading/body inside a section follow the same two families */
+.cs .wl__h{font-family:var(--font-head);font-weight:600;letter-spacing:-.01em}
+.cs .wl__p{font-family:var(--font-sub);font-weight:400;letter-spacing:normal}
+.wl__sub b{font-weight:700;color:var(--blue,#2563eb)}
+
+
+/* =====================================================================
+   NAV (v02, Figma 869:112) — was inside the v02 hero's pinned stage; here it
+   rides fixed over the hero and fades out once the programmes reach the top
+   ===================================================================== */
+.site-nav{position:fixed;inset:0 0 auto 0;z-index:50;height:80px;pointer-events:none;
+  --hx-pad:clamp(20px,5.56vw,80px);color:#fff;font-family:var(--font);letter-spacing:normal;font-variation-settings:normal;
+  transition:opacity .3s ease,visibility .3s}
+.site-nav > *{pointer-events:auto}
+.site-nav.is-hidden{opacity:0;visibility:hidden}
+.site-nav *{margin:0;padding:0}
+/* nav: fixed over the hero, fades out once the white sections take the screen.
+   Figma 869:112 — a full-width band, 19% black over a 16px backdrop blur, 10px of padding
+   around a 60px row. Tokens below are read straight off that frame. */
+.hx-nav{--nav-stroke:#3e5787;--nav-stroke-hot:#406bdb;--nav-streak:#9dc6ff;
+  position:absolute;inset:0 0 auto 0;z-index:10;margin-top:0!important;padding:10px 0!important}
+
+/* The bar's glass, built the same way as the hero's progressive blur: stacked layers, each
+   blurring less than the one above and faded in over its own overlapping band, so the frost
+   ramps from heavy at the top edge to nothing at the bottom instead of ending on a hard line.
+   It is invisible until the pointer is over the bar. Each layer fades itself -- the wrapper
+   must stay free of opacity, filter and mask, or the layers lose the photo they are blurring. */
+.hx-nav-frost{position:absolute;inset:0;pointer-events:none}
+.hx-nav-frost i,.hx-nav-tint{position:absolute;inset:0;opacity:0;
+  transition:opacity .32s cubic-bezier(.22,.61,.36,1)}
+.hx-nav-frost i{-webkit-backdrop-filter:blur(var(--b));backdrop-filter:blur(var(--b));
+  -webkit-mask-image:var(--m);mask-image:var(--m);will-change:opacity}
+.hx-nav-frost i:nth-child(1){--b:24px;--m:linear-gradient(180deg,#000 0%,#000 16%,transparent 32%)}
+.hx-nav-frost i:nth-child(2){--b:14px;--m:linear-gradient(180deg,transparent 6%,#000 20%,#000 36%,transparent 50%)}
+.hx-nav-frost i:nth-child(3){--b:8px; --m:linear-gradient(180deg,transparent 24%,#000 38%,#000 54%,transparent 66%)}
+.hx-nav-frost i:nth-child(4){--b:4px; --m:linear-gradient(180deg,transparent 40%,#000 54%,#000 68%,transparent 80%)}
+.hx-nav-frost i:nth-child(5){--b:2px; --m:linear-gradient(180deg,transparent 56%,#000 70%,#000 82%,transparent 92%)}
+.hx-nav-frost i:nth-child(6){--b:1px; --m:linear-gradient(180deg,transparent 72%,#000 88%,transparent 100%)}
+/* the tint rides the same ramp, so the darkening fades out with the blur */
+.hx-nav-tint{background:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.16) 45%,rgba(0,0,0,0) 100%)}
+.hx-nav:hover .hx-nav-frost i,.hx-nav:hover .hx-nav-tint,
+.hx-nav:focus-within .hx-nav-frost i,.hx-nav:focus-within .hx-nav-tint{opacity:1}
+
+.hx-nav-row{position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  height:60px;padding:0 var(--hx-pad)}
+.hx-logo{display:block;line-height:0}
+.hx-logo img{display:block;width:clamp(72px,6.67vw,96px);height:auto}
+.hx-nav ul{display:flex;gap:24px;align-items:center;list-style:none}   /* Figma: 24px between controls */
+.hx-nav a{color:#fff;text-decoration:none}
+
+/* one nav button (Figma 869:151/153/155): 1px stroke, 100px radius, 10/18 padding,
+   Geist SemiBold 12 caps on a near-clear fill. Default stroke #3e5787, hover #406bdb. */
+.hx-nl{position:relative;display:block;padding:10px 18px;border-radius:100px;
+  border:1px solid var(--nav-stroke);background:rgba(255,255,255,.02);
+  font:600 12px/normal Geist,var(--font);text-transform:uppercase;white-space:nowrap;
+  transition:border-color .18s cubic-bezier(.22,.61,.36,1),background .18s cubic-bezier(.22,.61,.36,1),
+             box-shadow .24s cubic-bezier(.22,.61,.36,1)}
+.hx-nl:hover,.hx-nl:focus-visible{border-color:var(--nav-stroke-hot);background:rgba(64,107,219,.10);
+  box-shadow:0 0 22px rgba(64,107,219,.30),inset 0 0 18px rgba(64,107,219,.14)}
+.hx-nl:focus-visible{outline:none}
+
+/* HOVER 1 — the diagonal glow: a slanted band of light crossing the button. The pseudo-element
+   carries the button's own radius, so the band is clipped to the pill without an overflow clip
+   (which would eat the stroke glow). */
+.hx-nl::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.20) 47%,rgba(190,215,255,.30) 52%,transparent 68%);
+  background-size:260% 100%;background-position:88% 0;background-repeat:no-repeat;
+  opacity:0;transition:opacity .15s ease;will-change:background-position}
+/* no fade-in and no run-up: the band is already at the leading edge on frame one, so the glow
+   is there the moment the pointer lands. It still fades out gently on the way off. */
+.hx-nl:hover::after,.hx-nl:focus-visible::after{opacity:1;transition-duration:0s;
+  animation:hx-sweep .85s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes hx-sweep{from{background-position:88% 0}to{background-position:6% 0}}
+
+/* HOVER 2 — the moving stroke: a conic gradient turning clockwise behind a 1px ring mask, so
+   two bright streaks run round the outline. Starts with the glow above, same hover. */
+.hx-nl-ring{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  padding:1px;opacity:0;transition:opacity .18s ease;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.hx-nl-ring::before{content:"";position:absolute;top:50%;left:50%;width:150%;aspect-ratio:1;translate:-50% -50%;
+  background:conic-gradient(from 0deg,transparent 0 6%,var(--nav-streak) 12%,var(--nav-stroke-hot) 17%,
+    transparent 25%,transparent 56%,var(--nav-streak) 62%,var(--nav-stroke-hot) 67%,transparent 75%);
+  will-change:rotate}   /* its own layer, so the spin composites instead of repainting the pill */
+.hx-nl:hover .hx-nl-ring,.hx-nl:focus-visible .hx-nl-ring{opacity:1}
+.hx-nl:hover .hx-nl-ring::before,.hx-nl:focus-visible .hx-nl-ring::before{animation:hx-orbit 1.7s linear infinite}
+@keyframes hx-orbit{to{rotate:360deg}}
+/* where the ring mask can't be composited, the stroke colour change and the glow still read */
+@supports not ((mask-composite:exclude) or (-webkit-mask-composite:xor)){ .hx-nl-ring{display:none} }
+
+/* HOVER 3 — the label roll: two copies of the text share one clipped cell; the top one rolls
+   out as the copy underneath rolls in, a letter at a time. Same hover as the other two. */
+.hx-nl-clip{display:grid;overflow:hidden;padding-block:1px}
+.hx-nl-txt{grid-area:1/1;display:flex}
+.hx-ch{display:inline-block;will-change:transform;
+  transition:transform .26s cubic-bezier(.22,.9,.24,1);transition-delay:calc(var(--i,0)*10ms)}
+.hx-sp{width:.32em}   /* the word gap, which a bare space would lose between the spans */
+.hx-nl-dup .hx-ch{transform:translateY(105%)}
+.hx-nl:hover .hx-nl-top .hx-ch,.hx-nl:focus-visible .hx-nl-top .hx-ch{transform:translateY(-105%)}
+.hx-nl:hover .hx-nl-dup .hx-ch,.hx-nl:focus-visible .hx-nl-dup .hx-ch{transform:translateY(0)}
+
+/* Login stays a plain link (Figma 869:158): Geist Medium 14 */
+.hx-login{position:relative;display:block;padding:0 8px 3px;font:500 14px/normal Geist,var(--font);
+  transition:color .25s ease,text-shadow .25s ease}
+/* a rule that draws in from the left on hover */
+.hx-login::after{content:"";position:absolute;left:8px;right:8px;bottom:0;height:1.5px;
+  background:currentColor;border-radius:2px;transform:scaleX(0);transform-origin:left center;
+  transition:transform .26s cubic-bezier(.22,.61,.36,1)}
+.hx-login:hover::after,.hx-login:focus-visible::after{transform:scaleX(1)}
+.hx-login:hover,.hx-login:focus-visible{color:#bcd4ff;text-shadow:0 0 14px rgba(64,107,219,.55)}
+
+@media (max-width:1180px){ .hx-nav ul{gap:12px} .hx-nl{padding:9px 12px;font-size:12px;letter-spacing:-.01em} }
+@media (prefers-reduced-motion:reduce){
+  .hx-nl,.hx-nl::after,.hx-nl-ring,.hx-ch{transition-duration:.01s;transition-delay:0s}
+  .hx-nl:hover::after,.hx-nl:hover .hx-nl-ring::before{animation:none}
+}
+@media (max-width:860px){
+  .hx-nav-row{height:52px}
+  .hx-nav li:not(:last-child){display:none}   /* phones: logo + Login, as before */
+}
+
+
+
+/* PAGE LAYOUT (programmes) */
+.site-nav{--hx-pad:var(--page-edge)}
+.programmes{padding:var(--sec-y) var(--page-pad) var(--sec-y)}
+.programmes__inner,.programmes__row{max-width:var(--page-max)}
+.programmes .programmes__header{margin-bottom:clamp(40px,4.5vw,64px)}
+</style>
+<style>
+/* =====================================================================
+   S1 — HERO: the copy from the "Parting Classroom" hero, over a looping film of a
+   glass corridor running toward the NxtWave mark. The film plays on its own, muted
+   and on a loop; it is not tied to scroll. Scoped to #hero.
+   ===================================================================== */
+:root{--hx-ease:cubic-bezier(.16,1,.3,1)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto !important}
+
+#hero{position:relative;z-index:1;height:100vh;height:100svh;min-height:560px;overflow:hidden;
+  background:#eef3fa;color:#181818;font-family:var(--font);-webkit-font-smoothing:antialiased}
+/* the film: poster first, the video fades in over it once it is actually playing */
+#hero .hb{position:absolute;inset:-2%;will-change:transform;transform:scale(1.08);
+  transition:transform 2.4s var(--hx-ease)}
+#hero .hb img,#hero .hb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+#hero .hb video{opacity:0;transition:opacity .9s ease}
+#hero .hb video.is-on{opacity:1}
+#hero.is-in .hb{transform:scale(1)}
+/* a soft wash of the sky colour behind the copy, and a fade into the white page at the foot */
+#hero .hw{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(70% 55% at 50% 22%,rgba(246,250,254,.82) 0%,rgba(246,250,254,.45) 45%,rgba(246,250,254,0) 75%),
+             linear-gradient(180deg,rgba(246,250,254,0) 72%,#fff 100%)}
+
+#hero .h-copy{position:absolute;z-index:5;left:50%;top:max(112px,14.5%);width:min(930px,calc(100% - 32px));translate:-50% 0;
+  display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center;will-change:transform,opacity}
+#hero .h-top{display:flex;flex-direction:column;align-items:center;gap:20px}
+#hero .h-head{display:flex;flex-direction:column;align-items:center;gap:16px}
+#hero .h-badge{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:100px;
+  background:rgba(219,234,254,.9);color:#2563eb;box-shadow:0 0 0 1px rgba(37,99,235,.12),0 8px 24px -12px rgba(37,99,235,.45);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  font-size:14px;line-height:28px;font-weight:600;letter-spacing:-.28px;white-space:nowrap}
+#hero .h-badge img{width:14px;height:14px}
+#hero .h-badge img:first-child{animation:hx-twinkle 3.2s ease-in-out infinite}
+#hero .h-badge img:last-child{animation:hx-twinkle 3.2s ease-in-out 1.6s infinite}
+@keyframes hx-twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(.72) rotate(45deg)}}
+#hero .h-title{margin:0;font-weight:600;font-size:52px;line-height:76px;letter-spacing:-.26px;font-variation-settings:"opsz" 32;color:#181818}
+#hero .h-title .row{display:block;white-space:nowrap}
+#hero .h-title .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:6px;margin-bottom:-6px}
+#hero .h-title .w > span{display:inline-block}
+#hero .h-title .ai > span{letter-spacing:-.08px;background:linear-gradient(90deg,#0054e4,#57c7ff,#0054e4);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:hx-sheen 6s ease-in-out 1.6s infinite}
+@keyframes hx-sheen{0%,100%{background-position:0 0}50%{background-position:100% 0}}
+#hero .h-stats{display:flex;align-items:center;gap:32px;margin:0}
+#hero .h-stats > div{display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap}
+#hero .h-stats > i{width:1px;height:40px;background:rgba(15,23,42,.14)}
+#hero .h-stats dt{font:600 32px/normal "Outfit",var(--font);color:#333;font-variant-numeric:tabular-nums}
+#hero .h-stats dd{margin:0;font-size:12px;line-height:18px;font-weight:500;color:#1e293b}
+#hero .h-ctas{display:flex;gap:24px}
+#hero .h-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:200px;height:44px;border-radius:16px;
+  font-size:14px;line-height:24px;font-weight:500;text-decoration:none;white-space:nowrap;
+  transition:transform .45s var(--hx-ease),background .3s,color .3s,box-shadow .45s var(--hx-ease)}
+#hero .h-btn--pri{background:#2563eb;color:#fff;box-shadow:0 12px 28px -14px rgba(37,99,235,.8)}
+#hero .h-btn--pri:hover{background:#1d4ed8;transform:translateY(-2px);box-shadow:0 16px 32px -14px rgba(37,99,235,.9)}
+#hero .h-btn--sec{background:rgba(255,255,255,.85);color:#2563eb;box-shadow:inset 0 0 0 1px #2563eb}
+#hero .h-btn--sec:hover{background:#eff6ff;transform:translateY(-2px)}
+#hero .h-btn:active{transform:translateY(0) scale(.98)}
+#hero .h-btn:focus-visible{outline:2px solid #2563eb;outline-offset:3px}
+
+/* intro: the film settles from a slight push-in; the badge, the words, the stats and the buttons rise in turn */
+#hero [data-in]{opacity:0;transform:translateY(18px);transition:opacity .9s var(--hx-ease),transform 1.1s var(--hx-ease);transition-delay:var(--d,0s)}
+#hero .h-title .w > span{transform:translateY(105%);transition:transform 1.1s var(--hx-ease);transition-delay:var(--d,0s)}
+#hero.is-in [data-in]{opacity:1;transform:none}
+#hero.is-in .h-title .w > span{transform:none}
+
+@media (max-width:1100px){#hero .h-title{font-size:clamp(30px,4.6vw,52px);line-height:1.46}}
+@media (max-width:860px){
+  #hero .h-copy{top:96px;gap:28px}
+  #hero .h-title{font-size:clamp(28px,7.6vw,40px);line-height:1.3;letter-spacing:-.6px}
+  #hero .h-title .row{white-space:normal}
+  #hero .h-stats{gap:24px}#hero .h-stats dt{font-size:28px}
+  #hero .h-ctas{flex-direction:column;gap:12px}
+  #hero .hb img,#hero .hb video{object-position:50% 70%}
+}
+@media (prefers-reduced-motion:reduce){
+  #hero .hb,#hero [data-in],#hero .h-title .w > span{transition:none}
+  #hero .h-badge img,#hero .h-title .ai > span{animation:none}
+}
+
+/* the nav rides over a light film now: dark ink, pale strokes, a white frost on hover */
+.site-nav .hx-nav{--nav-stroke:rgba(37,99,235,.28);--nav-stroke-hot:#2563eb;--nav-streak:#60a5fa}
+.site-nav .hx-nav a{color:#0f172a}
+.site-nav .hx-nl{background:rgba(255,255,255,.55)}
+.site-nav .hx-nl:hover,.site-nav .hx-nl:focus-visible{background:rgba(255,255,255,.85);box-shadow:0 0 22px rgba(37,99,235,.18)}
+.site-nav .hx-nl::after{background:linear-gradient(115deg,transparent 32%,rgba(37,99,235,.10) 47%,rgba(96,165,250,.18) 52%,transparent 68%);
+  background-size:260% 100%;background-repeat:no-repeat}
+.site-nav .hx-nav-tint{background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.25) 45%,rgba(255,255,255,0) 100%)}
+.site-nav .hx-nav a.hx-login{color:#2563eb}
+.site-nav .hx-login:hover,.site-nav .hx-login:focus-visible{color:#1d4ed8;text-shadow:none}
+</style>
+</head>
+<body>
+
+<!-- site navbar (v02): fixed over the hero -->
+<header class="site-nav">
+    <nav class="hx-nav" aria-label="Primary">
+      <div class="hx-nav-frost" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><span class="hx-nav-tint"></span></div>
+      <div class="hx-nav-row">
+        <a class="hx-logo" href="#hero"><img src="assets/hero/nxtwave-logo.svg" alt="NxtWave" width="105" height="61"></a>
+        <ul>
+          <li><a class="hx-nl" href="#programmes">Programmes<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-nl" href="#career-transformations">Success Stories<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-nl" href="#" data-blank>Hire With Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-nl" href="#" data-blank>About Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-login" href="#" data-blank>Login</a></li>
+        </ul>
+      </div>
+    </nav>
+</header>
+
+<main id="main">
+<!-- ===================================================================
+     S1 — HERO: looping corridor film behind the headline
+     =================================================================== -->
+<section id="hero" aria-label="Introduction">
+  <div class="hb" aria-hidden="true">
+    <img src="assets/hero/hero-bg.webp" alt="" fetchpriority="high">
+    <video muted loop playsinline autoplay preload="auto" poster="assets/hero/hero-bg.webp"><source src="assets/hero/hero-bg.webm" type="video/webm"><source src="assets/hero/hero-bg.mp4" type="video/mp4"></video>
+  </div>
+  <div class="hw" aria-hidden="true"></div>
+  <div class="h-copy">
+    <div class="h-top">
+      <div class="h-head">
+        <p class="h-badge" data-in style="--d:.15s"><img src="assets/hero/star.svg" alt="">AI Has Rewritten the Tech Industry<img src="assets/hero/star.svg" alt=""></p>
+        <h1 class="h-title"><span class="row">The <span class="ai">Future of Tech</span> is Being Built with AI.</span><span class="row">We Prepare You to Lead It.</span></h1>
+      </div>
+      <dl class="h-stats" data-in style="--d:.85s">
+        <div><dt data-count="16000">16,000+</dt><dd>Learners Hired</dd></div>
+        <i aria-hidden="true"></i>
+        <div><dt data-count="3000">3,000+</dt><dd>Hiring Partners</dd></div>
+      </dl>
+    </div>
+    <div class="h-ctas" data-in style="--d:1s">
+      <a class="h-btn h-btn--pri" href="#programmes">Explore Programs</a>
+      <a class="h-btn h-btn--sec" href="#" data-blank>Talk to a Counsellor</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     S2 — PROGRAMMES
+     =================================================================== -->
+  <!-- Icon sprite (Lucide icon set, matching the icon names used in the Figma file) -->
+  <svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+    <symbol id="i-trending-up" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></symbol>
+    <symbol id="i-graduation-cap" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+    <symbol id="i-book-open" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+    <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+    <symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  </svg>
+
+  <section class="programmes" id="programmes" aria-labelledby="programmes-title">
+  <div class="programmes__inner">
+    <header class="programmes__header">
+      <h2 id="programmes-title" class="programmes__title">
+        Three programmes. One is yours.
+      </h2>
+      <p class="programmes__subtitle">
+        Different starting points, same goal, a job in tech.
+      </p>
+    </header>
+
+    <div class="programmes__row" data-programmes>
+      <!-- ============ NxtWave Academy ============ -->
+      <article class="programme programme--academy" tabindex="0" aria-label="NxtWave Academy">
+        <div class="programme__preview" aria-hidden="true">
+          <img class="programme__photo programme__photo--default" src="assets/prog/ac-rest-photo.webp" alt="" />
+          <img class="programme__photo programme__photo--collapsed" src="assets/prog/ac-rest-photo.webp" alt="" />
+          <div class="programme__fade"></div>
+          <div class="programme__logo">
+            <img src="assets/prog/ac-rest-logo.webp" alt="" data-fallback />
+            <span class="wordmark"><small>NXT WAVE</small>ACADEMY</span>
+          </div>
+        </div>
+
+        <div class="programme__actions">
+          <a class="programme__btn programme__btn--primary" href="#">Request Callback</a>
+          <a class="programme__btn programme__btn--ghost" href="#">Know More</a>
+        </div>
+
+        <div class="programme__detail" inert>
+          <div class="detail__media">
+            <div class="detail__photo">
+              <img src="assets/prog/ac-open-photo.webp" alt="Student learning on a laptop" data-fallback />
+            </div>
+            <div class="detail__fade"></div>
+            <div class="detail__steps" data-steps="mirror"></div>
+            <div class="detail__intro">
+              <div class="detail__logo">
+                <img src="assets/prog/ac-open-logo.webp" alt="NxtWave Academy" data-fallback />
+                <span class="wordmark"><small>NXT WAVE</small>ACADEMY</span>
+              </div>
+              <p class="detail__text">Build software skills<br />alongside your studies.</p>
+            </div>
+          </div>
+          <div class="detail__panel">
+            <div class="detail__body">
+              <h3 class="detail__headline">Become a Highly-paid Gen AI Engineer</h3>
+              <ul class="features">
+                <li><span class="features__icon"><svg><use href="#i-settings" /></svg></span>50+ Real-world AI Projects</li>
+                <li><span class="features__icon"><svg><use href="#i-users" /></svg></span>Learn from IITians &amp; MAANG Professionals</li>
+                <li><span class="features__icon"><svg><use href="#i-briefcase" /></svg></span>End-to-End Placement Support</li>
+                <li><span class="features__icon"><svg><use href="#i-trending-up" /></svg></span>Join 36,000+ Students Preparing for AI Careers</li>
+                <li><span class="features__icon"><svg><use href="#i-calendar" /></svg></span>Next Batch Starting This Week</li>
+              </ul>
+            </div>
+            <div class="detail__actions">
+              <a class="detail__cta programme__cta" href="#">Request Callback</a>
+              <a class="detail__cta detail__cta--ghost programme__cta" href="#">Know More</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============ NxtWave Intensive ============ -->
+      <article class="programme programme--intensive" tabindex="0" aria-label="NxtWave Intensive">
+        <div class="programme__preview" aria-hidden="true">
+          <img class="programme__photo programme__photo--default" src="assets/prog/in-rest-photo.webp" alt="" />
+          <img class="programme__photo programme__photo--collapsed" src="assets/prog/in-rest-photo.webp" alt="" />
+          <div class="programme__fade"></div>
+          <div class="programme__logo">
+            <img src="assets/prog/in-rest-logo.webp" alt="" data-fallback />
+            <span class="wordmark"><small>NXT WAVE</small>INTENSIVE</span>
+          </div>
+        </div>
+
+        <div class="programme__actions">
+          <a class="programme__btn programme__btn--primary" href="#">Request Callback</a>
+          <a class="programme__btn programme__btn--ghost" href="#">Know More</a>
+        </div>
+
+        <div class="programme__detail" inert>
+          <div class="detail__media">
+            <div class="detail__photo">
+              <img src="assets/prog/in-open-photo.webp" alt="Students training together on laptops" data-fallback />
+            </div>
+            <div class="detail__fade"></div>
+            <div class="detail__steps"></div>
+            <div class="detail__intro">
+              <div class="detail__brand">
+                <div class="detail__logo">
+                  <img src="assets/prog/in-open-logo.webp" alt="NxtWave Intensive" data-fallback />
+                  <span class="wordmark"><small>NXT WAVE</small>INTENSIVE</span>
+                </div>
+                <p class="detail__mode"><span class="live-dot" aria-hidden="true"></span>Training Center / Online</p>
+              </div>
+              <p class="detail__text">Get Software Training with Placement Support, Online or at Our Training Centers</p>
+            </div>
+          </div>
+          <div class="detail__panel">
+            <div class="detail__body">
+              <h3 class="detail__headline">Get Software Training with Placement Support</h3>
+              <ul class="features">
+                <li><span class="features__icon"><svg><use href="#i-monitor" /></svg></span>Learn Online or at Our Training Centers</li>
+                <li><span class="features__icon"><svg><use href="#i-graduation-cap" /></svg></span>For 2025, 2026 &amp; 2027 Graduates</li>
+                <li><span class="features__icon"><svg><use href="#i-book-open" /></svg></span>Open to Any Branch, Any Degree</li>
+                <li><span class="features__icon"><svg><use href="#i-map-pin" /></svg></span>Training Centers Across 4 Cities</li>
+                <li><span class="features__icon"><svg><use href="#i-message-circle" /></svg></span>View Placements &amp; Talk to a Student</li>
+              </ul>
+            </div>
+            <div class="detail__actions">
+              <a class="detail__cta programme__cta" href="#">Request Callback</a>
+              <a class="detail__cta detail__cta--ghost programme__cta" href="#">Know More</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============ NIAT ============ -->
+      <article class="programme programme--niat" tabindex="0" aria-label="NxtWave Institute of Advanced Technologies">
+        <div class="programme__preview" aria-hidden="true">
+          <img class="programme__photo programme__photo--default" src="assets/prog/ni-rest-photo.webp" alt="" />
+          <img class="programme__photo programme__photo--collapsed" src="assets/prog/ni-rest-photo.webp" alt="" />
+          <div class="programme__fade"></div>
+          <div class="programme__logo">
+            <img class="logo-full" src="assets/prog/ni-rest-logo.svg" alt="" data-fallback />
+            <img class="logo-mark" src="assets/niat-shield.svg" alt="" data-fallback />
+            <span class="wordmark">NIAT</span>
+          </div>
+        </div>
+
+        <div class="programme__actions">
+          <a class="programme__btn programme__btn--primary" href="#">Request Callback</a>
+          <a class="programme__btn programme__btn--ghost" href="#">Know More</a>
+        </div>
+
+        <div class="programme__detail" inert>
+          <div class="detail__media">
+            <div class="detail__photo">
+              <img src="assets/prog/ni-open-photo.webp" alt="Students building a drone together" data-fallback />
+            </div>
+            <div class="detail__fade"></div>
+            <div class="detail__steps"></div>
+            <div class="detail__intro">
+              <div class="detail__logo">
+                <img src="assets/prog/ni-open-logo.svg" alt="NxtWave of Innovation in Advanced Technologies" data-fallback />
+                <span class="wordmark">NxtWave of Innovation in<br />Advanced Technologies</span>
+              </div>
+              <p class="detail__text">Start Your Journey in AI/ML • Robotics<br />Data Science &amp; More</p>
+            </div>
+          </div>
+          <div class="detail__panel">
+            <div class="detail__body">
+              <h3 class="detail__headline">Build Your Degree and Tech Career Together</h3>
+              <ul class="features">
+                <li><span class="features__icon"><svg><use href="#i-cpu" /></svg></span>Learn AI/ML, Robotics, Data Science &amp; More</li>
+                <li><span class="features__icon"><svg><use href="#i-rocket" /></svg></span>Industry-Ready Upskilling</li>
+                <li><span class="features__icon"><svg><use href="#i-landmark" /></svg></span>Offered at 35+ UGC-Approved Institutions</li>
+                <li><span class="features__icon"><svg><use href="#i-graduation-cap" /></svg></span>Designed for Students After 12th</li>
+                <li><span class="features__icon"><svg><use href="#i-target" /></svg></span>Build Skills for Future Tech Careers</li>
+              </ul>
+            </div>
+            <div class="detail__actions">
+              <a class="detail__cta programme__cta" href="#">Request Callback</a>
+              <a class="detail__cta detail__cta--ghost programme__cta" href="#">Know More</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+  </section>
+
+</main>
+
+<script src="vendor/lenis.min.js"></script>
+<script>
+(() => {
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* smooth scrolling keeps the scrubbed hero fluid */
+  if (!RM && window.Lenis){
+    const lenis = new Lenis({ lerp: 0, duration: 1, easing: t => 1 - Math.pow(1 - t, 4), anchors: true });
+    const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+    window.NW = Object.assign(window.NW || {}, { lenis });
+  }
+
+
+  /* links with no destination yet */
+  /* NAV LABEL ROLL — give each button two copies of its label, split per character, without
+     disturbing the .hx-nl-ring span that carries the moving stroke. */
+  document.querySelectorAll('.hx-nl').forEach(a => {
+    const label = [...a.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
+    if (!label) return;
+    a.setAttribute('aria-label', label);
+    const layer = cls => {
+      const w = document.createElement('span');
+      w.className = 'hx-nl-txt ' + cls;
+      [...label].forEach((ch, i) => {
+        const c = document.createElement('span');
+        c.className = ch === ' ' ? 'hx-ch hx-sp' : 'hx-ch';
+        c.style.setProperty('--i', i);
+        c.textContent = ch === ' ' ? '\u00a0' : ch;
+        w.appendChild(c);
+      });
+      return w;
+    };
+    const clip = document.createElement('span');
+    clip.className = 'hx-nl-clip';
+    clip.setAttribute('aria-hidden', 'true');
+    clip.append(layer('hx-nl-top'), layer('hx-nl-dup'));
+    [...a.childNodes].forEach(n => { if (n.nodeType === 3) n.remove(); });
+    a.prepend(clip);
+  });
+
+  document.querySelectorAll('[data-blank]').forEach(el => el.addEventListener('click', e => e.preventDefault()));
+})();
+</script>
+<script>
+/* page chrome: the nav fades out once the programmes section reaches the top, and the scroll feel
+   switches with it. One Lenis serves the whole page (created above with the lower sections'
+   settings); over the hero it takes a slightly floatier feel and hands the page's back after it. */
+(() => {
+  const nav = document.querySelector('.site-nav'), progs = document.getElementById('programmes');
+  if (!progs) return;
+  const lenis = (window.NW && NW.lenis) || null;
+  const HERO_FEEL = { lerp: .12, duration: undefined, easing: undefined, wheelMultiplier: 1, touchMultiplier: 1.2 };
+  let pageFeel = null, feel = '';
+  const setFeel = inHero => {
+    const k = inHero ? 'hero' : 'page';
+    if (!lenis || feel === k) return;
+    const o = lenis.options;
+    if (!pageFeel) pageFeel = { lerp: o.lerp, duration: o.duration, easing: o.easing, wheelMultiplier: o.wheelMultiplier, touchMultiplier: o.touchMultiplier };
+    const f = inHero ? HERO_FEEL : pageFeel;
+    Object.assign(o, f);
+    if (lenis.virtualScroll) Object.assign(lenis.virtualScroll.options, { wheelMultiplier: f.wheelMultiplier, touchMultiplier: f.touchMultiplier });
+    feel = k;
+  };
+  const tick = () => {
+    requestAnimationFrame(tick);
+    const pTop = progs.getBoundingClientRect().top;
+    nav.classList.toggle('is-hidden', pTop < 64);
+    setFeel(pTop > 0);
+  };
+  requestAnimationFrame(tick);
+})();
+</script>
+<script>
+/* S1 hero: the corridor film loops on its own (muted, autoplay), independent of scroll. It fades in over
+   its poster once frames are really painting, pauses while the hero is off screen, and is kicked on the
+   first touch where autoplay is held back. The copy rises in on load, the stats count up, and as the page
+   scrolls away the copy lifts and fades while the film drifts a little behind it. */
+(() => {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const film = hero.querySelector('.hb'), video = film.querySelector('video'), copy = hero.querySelector('.h-copy');
+
+  // words into masks so each can rise in on its own
+  let wi = 0;
+  const wrap = node => {
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.append(part); return; }
+          const w = document.createElement('span'); w.className = 'w';
+          const s = document.createElement('span'); s.textContent = part;
+          s.style.setProperty('--d', (.3 + wi++ * .045).toFixed(3) + 's');
+          w.append(s); frag.append(w);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && n.classList.contains('ai')) {
+        // the gradient phrase keeps one mask so the gradient runs across it unbroken
+        const s = document.createElement('span'); s.textContent = n.textContent;
+        s.style.setProperty('--d', (.3 + wi++ * .045).toFixed(3) + 's');
+        n.textContent = ''; n.classList.add('w'); n.append(s); wi += 2;
+      } else if (n.nodeType === 1) wrap(n);
+    });
+  };
+  wrap(hero.querySelector('.h-title'));
+
+  // the film: reveal once it paints, loop regardless of scroll, rest while off screen
+  const reveal = () => video.classList.add('is-on');
+  if (RM) { video.removeAttribute('autoplay'); video.pause(); }
+  else {
+    video.muted = true;
+    const play = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
+    video.addEventListener('playing', reveal, { once: true });
+    if (!video.paused && video.readyState > 2) reveal();
+    play();
+    addEventListener('touchstart', play, { once: true, passive: true });   // autoplay held back (iOS low-power)
+    new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? play() : video.pause()), { threshold: 0 }).observe(hero);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && hero.getBoundingClientRect().bottom > 0) play(); });
+  }
+
+  // intro
+  requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add('is-in')));
+
+  // stats count up as they arrive
+  const fmt = n => n.toLocaleString('en-IN') + '+';
+  hero.querySelectorAll('[data-count]').forEach(el => {
+    const to = +el.dataset.count;
+    if (RM) return;
+    el.textContent = fmt(0);
+    const t0 = performance.now() + 900, dur = 1600;
+    const step = now => {
+      const k = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - k, 4);
+      el.textContent = fmt(k >= 1 ? to : Math.round(to * e / 100) * 100);
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+
+  // scrolling away: the copy lifts and fades, the film drifts slower behind it
+  if (RM) return;
+  let last = -1;
+  const tick = () => {
+    requestAnimationFrame(tick);
+    const h = hero.offsetHeight, y = Math.min(h, Math.max(0, -hero.getBoundingClientRect().top));
+    if (y === last) return;
+    last = y;
+    const p = y / h;
+    copy.style.transform = `translateY(${(-p * 90).toFixed(1)}px)`;
+    copy.style.opacity = String(Math.max(0, 1 - p * 1.6));
+    if (hero.classList.contains('is-in')) film.style.translate = `0 ${(p * h * .35).toFixed(1)}px`;
+  };
+  requestAnimationFrame(tick);
+})();
+</script>
+<script src="programmes.js"></script>
+</body>
+</html>

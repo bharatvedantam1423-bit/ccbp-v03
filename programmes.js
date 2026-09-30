@@ -1,0 +1,199 @@
+(() => {
+  const row = document.querySelector("[data-programmes]");
+  if (!row) return;
+
+  const cards = [...row.querySelectorAll(".programme")];
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const stacked = window.matchMedia("(max-width: 899px)");
+
+  // Pixel "steps" on the right edge of each expanded photo (Figma: 14 blocks,
+  // [top, width, rightOffset] in px of the 536px-tall media panel).
+  const STEP_H = 41.078;
+  const STEPS = [
+    [0, 73.383, 0, 41.078],
+    [41.078, 53.181, 0],
+    [82.156, 59.599, 0],
+    [82.156, 41.08, 111.5],
+    [123.234, 111.986, 0],
+    [164.313, 73.384, 0],
+    [205.391, 53.181, 0],
+    [246.469, 67.872, 0],
+    [287.547, 92.685, 0],
+    [328.625, 53.181, 0],
+    [369.703, 67.872, 0],
+    [410.781, 53.181, 0],
+    [451.859, 92.685, 0],
+    [492.938, 53.181, 0, 43.063],
+  ];
+  const MEDIA_H = 536;
+
+  row.querySelectorAll(".detail__steps").forEach((host) => {
+    const mirror = host.dataset.steps === "mirror";
+    STEPS.forEach(([top, width, right, h = STEP_H], i) => {
+      const s = document.createElement("span");
+      s.style.top = `${Math.round(mirror ? MEDIA_H - top - h : top)}px`;
+      s.style.width = `${width}px`;
+      s.style.height = `${Math.ceil(h) + 1}px`;
+      s.style.right = `${right}px`;
+      s.style.setProperty("--i", mirror ? STEPS.length - 1 - i : i);
+      host.appendChild(s);
+    });
+  });
+
+  // Show a text wordmark if an exported asset is missing.
+  row.querySelectorAll("img[data-fallback]").forEach((img) => {
+    const markMissing = () => img.parentElement.classList.add("is-missing");
+    img.addEventListener("error", markMissing, { once: true });
+    // a load that already failed before this script ran
+    if (img.complete && img.currentSrc && img.naturalWidth === 0 && !img.src.endsWith(".svg")) markMissing();
+  });
+
+  // On phones (the stacked layout) every card is shown open, so every open layer is live and the
+  // resting CTAs, which are hidden there, are not.
+  const setActive = (card) => {
+    cards.forEach((c) => {
+      const on = c === card;
+      c.classList.toggle("is-active", on);
+      c.querySelector(".programme__detail").inert = !on && !stacked.matches;
+      // resting CTAs: hidden on the open card, and on every card in the wide row once one is open
+      c.querySelector(".programme__actions").inert = stacked.matches || on || Boolean(card);
+    });
+    row.classList.toggle("has-active", Boolean(card));
+  };
+  const syncStacked = () => setActive(cards.find((c) => c.classList.contains("is-active")) || null);
+  syncStacked();
+  stacked.addEventListener("change", syncStacked);
+
+  cards.forEach((card) => {
+    card.addEventListener("mouseenter", () => {
+      if (canHover.matches && !stacked.matches) setActive(card);
+    });
+
+    card.addEventListener("focus", () => {
+      if (card.matches(":focus-visible")) setActive(card);
+    });
+
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("a") || stacked.matches) return;
+      const isOpen = card.classList.contains("is-active");
+      if (!isOpen) setActive(card);
+      else if (stacked.matches || !canHover.matches) setActive(null);
+    });
+
+    card.addEventListener("keydown", (e) => {
+      if (e.target !== card) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setActive(card);
+        card.querySelector(".detail__panel .detail__cta")?.focus();
+      }
+    });
+  });
+
+  // a short grace period so crossing the gap between cards never snaps the row shut
+  let closeTimer;
+  row.addEventListener("mouseenter", () => clearTimeout(closeTimer));
+  row.addEventListener("mouseleave", () => {
+    if (!canHover.matches || stacked.matches) return;
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(() => {
+      if (row.contains(document.activeElement)) document.activeElement.blur();
+      setActive(null);
+    }, 140);
+  });
+
+  row.addEventListener("focusout", (e) => {
+    if (!row.contains(e.relatedTarget)) setActive(null);
+  });
+
+  // The open card turns toward the pointer and its layers travel by different
+  // amounts, so the photo reads in front of the logo and the logo in front of
+  // the panel. One eased set of values per card, read by every layer in CSS:
+  //   nx, ny  pointer, -0.5 .. 0.5 across the whole card (tilt + shadow offset)
+  //   x, y    the photo's drift in px; the logo and panel take fractions of it
+  //   s       the photo's zoom      o/lx/ly  the light that follows the cursor
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const TILT = 4.2;   // degrees at the card's edge
+  cards.forEach((card) => {
+    const media = card.querySelector(".detail__media");
+    const target = { x: 0, y: 0, s: 1, o: 0, nx: 0, ny: 0 };
+    const cur = { ...target };
+    let frame = 0, leaving = false;
+
+    const tick = () => {
+      let moving = false;
+      for (const k in cur) {
+        cur[k] += (target[k] - cur[k]) * (leaving ? 0.05 : 0.08);
+        if (Math.abs(target[k] - cur[k]) > 0.0005) moving = true;
+        else cur[k] = target[k];
+      }
+      card.style.setProperty("--mx", `${cur.x.toFixed(2)}px`);
+      card.style.setProperty("--my", `${cur.y.toFixed(2)}px`);
+      card.style.setProperty("--ms", cur.s.toFixed(4));
+      card.style.setProperty("--lo", cur.o.toFixed(3));
+      card.style.setProperty("--nx", cur.nx.toFixed(4));
+      card.style.setProperty("--ny", cur.ny.toFixed(4));
+      card.style.setProperty("--ry", `${(cur.nx * TILT).toFixed(3)}deg`);
+      card.style.setProperty("--rx", `${(-cur.ny * TILT).toFixed(3)}deg`);
+      frame = moving ? requestAnimationFrame(tick) : 0;
+    };
+    const run = () => { if (!frame) frame = requestAnimationFrame(tick); };
+
+    card.addEventListener("pointermove", (e) => {
+      if (!canHover.matches || stacked.matches || reduceMotion.matches) return;
+      if (!card.classList.contains("is-active")) return;
+      const c = card.getBoundingClientRect();
+      target.nx = (e.clientX - c.left) / c.width - 0.5;
+      target.ny = (e.clientY - c.top) / c.height - 0.5;
+
+      // the photo tracks the pointer within the media half only
+      const r = media.getBoundingClientRect();
+      const nx = (e.clientX - r.left) / r.width - 0.5;
+      const ny = (e.clientY - r.top) / r.height - 0.5;
+      const over = nx > -0.5 && nx < 0.5;
+      // the photo is anchored to the bottom edge, so it only moves down (never lifts off it)
+      target.x = Math.max(-0.5, Math.min(0.5, nx)) * 24;
+      target.y = (Math.max(-0.5, Math.min(0.5, ny)) + 0.5) * 10;
+      target.s = 1.06;
+      target.o = over ? 1 : 0;
+      if (over) {
+        card.style.setProperty("--lx", `${((nx + 0.5) * 100).toFixed(1)}%`);
+        card.style.setProperty("--ly", `${((ny + 0.5) * 100).toFixed(1)}%`);
+      }
+      run();
+    });
+
+    card.addEventListener("pointerenter", () => { leaving = false; });
+    card.addEventListener("pointerleave", () => {
+      leaving = true;
+      Object.assign(target, { x: 0, y: 0, s: 1, o: 0, nx: 0, ny: 0 });
+      run();
+    });
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      setActive(null);
+      if (row.contains(document.activeElement)) document.activeElement.blur();
+    }
+  });
+
+  // Open the first card when the row scrolls into view; reset when it leaves
+  // so the reveal plays again next time. Skipped on the stacked mobile layout,
+  // where expanding a card mid-scroll would shift the page.
+  let autoTimer;
+  new IntersectionObserver(
+    ([entry]) => {
+      clearTimeout(autoTimer);
+      if (stacked.matches) return;
+      if (entry.isIntersecting) {
+        autoTimer = setTimeout(() => {
+          if (!row.classList.contains("has-active")) setActive(cards[0]);
+        }, 250);
+      } else if (!row.contains(document.activeElement)) {
+        setActive(null);
+      }
+    },
+    { threshold: 0.6 }
+  ).observe(row);
+})();
