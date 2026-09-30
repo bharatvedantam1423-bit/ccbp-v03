@@ -70,7 +70,10 @@ const PROGRAMMES = [
             </div>
           </div>
           <div class="f-media">
-            <figure class="f-photo"><img src="${p.photo}" alt="${p.photoAlt}" loading="lazy"></figure>
+            <div class="f-flip"><div class="f-card">
+              <figure class="f-photo is-front"><img src="${p.photo}" alt="${p.photoAlt}" loading="lazy"></figure>
+              <figure class="f-photo is-back" aria-hidden="true"><img src="${p.photo}" alt="" loading="lazy"></figure>
+            </div></div>
             <div class="f-stat is-${s.side}">
               <div class="faces" aria-hidden="true"><div class="faces__row">${pools[i].slice(0, VISIBLE + 1).map((f) => `<img src="${f}" alt="">`).join("")}</div></div>
               <div><strong>${s.fig}</strong><span>${s.cap}</span></div>
@@ -96,7 +99,7 @@ const PROGRAMMES = [
   /* photo card hover: the card tilts toward the pointer, the picture drifts the other way inside
      its frame and the stat card floats a little further, so the three read as layers. Size never changes. */
   if (!RM && matchMedia("(hover: hover)").matches) bands.forEach((b) => {
-    const media = q(b, ".f-media"), img = q(b, ".f-photo img"), stat = q(b, ".f-stat");
+    const media = q(b, ".f-media"), img = b.querySelectorAll(".f-photo img"), stat = q(b, ".f-stat");
     const ease = { duration: 0.8, ease: "power3.out", overwrite: "auto" };
     gsap.set(media, { transformPerspective: 1100 });
     media.addEventListener("pointerenter", () => gsap.to(img, { scale: 1.07, ...ease }));
@@ -147,6 +150,17 @@ const PROGRAMMES = [
   };
   if (!RM) gsap.delayedCall(2.4, tick);
 
+  /* photo card flip: every 2s the open programme's card turns half a revolution side to side on the Y axis.
+     Both faces carry the same photo for now. The stat card stays in front (z-index 2 over the card's 1). */
+  const cards = bands.map((b) => q(b, ".f-card"));
+  const flip = () => {
+    const r = stage.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < innerHeight)
+      cards.forEach((c, i) => { if (isOpen(fulls[i]) && !gsap.isTweening(c)) gsap.to(c, { rotationY: "+=180", duration: 1, ease: "power3.inOut" }); });
+    gsap.delayedCall(2, flip);
+  };
+  if (!RM) gsap.delayedCall(2, flip);
+
   /* ---- scroll plumbing: the page's one Lenis drives ScrollTrigger ---- */
   gsap.registerPlugin(ScrollTrigger);
   const lenis = (window.NW && NW.lenis) || null;
@@ -169,8 +183,8 @@ const PROGRAMMES = [
       .fromTo(f.querySelectorAll(".f-list li"), { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power3.out" }, 0.34)
       .fromTo(f.querySelectorAll(".f-list .ic"), { scale: 0.7 }, { scale: 1, duration: 0.5, stagger: 0.07, ease: "back.out(2)", clearProps: "transform" }, 0.34)
       .fromTo(q(f, ".f-cta"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", clearProps: "transform" }, 0.55)
-      .fromTo(q(f, ".f-photo"), { clipPath: "inset(6% 5% 6% 5% round 24px)", y: 30, opacity: 0.4 }, { clipPath: "inset(0% 0% 0% 0% round 24px)", y: 0, opacity: 1, duration: 1, ease: "power3.out", clearProps: "clipPath" }, 0.05)
-      .fromTo(q(f, ".f-photo img"), { scale: 1.12 }, { scale: 1, duration: 1.2, ease: "power2.out", clearProps: "transform" }, 0.05)
+      .fromTo(q(f, ".f-flip"), { clipPath: "inset(6% 5% 6% 5% round 24px)", y: 30, opacity: 0.4 }, { clipPath: "inset(0% 0% 0% 0% round 24px)", y: 0, opacity: 1, duration: 1, ease: "power3.out", clearProps: "clipPath" }, 0.05)
+      .fromTo(f.querySelectorAll(".f-photo img"), { scale: 1.12 }, { scale: 1, duration: 1.2, ease: "power2.out", clearProps: "transform" }, 0.05)
       .fromTo(q(f, ".f-stat"), { opacity: 0, y: 26, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)", clearProps: "transform" }, 0.6);
   };
   /* the open programme lifts away with the page, softening as it goes */
