@@ -1,6 +1,7 @@
-/* S2 programmes: the section scrolls in under the hero as before, then pins. The first programme's frame
-   plays in as the section arrives; from there, scrolling folds the open programme into a rail above and
-   opens the next. Needs GSAP + ScrollTrigger; rides the page's Lenis (window.NW.lenis) when there is one. */
+/* Hero to programmes: the hero pins and its layers drift apart as you scroll, then the "Explore Programs"
+   button grows into a window the camera pushes through. Inside it the programmes stack on the vertical
+   axis: scrolling on folds the open programme into a rail above and opens the next. Needs GSAP +
+   ScrollTrigger; rides the page's Lenis (window.NW.lenis) when there is one. */
 
 /* learner faces, cropped from NxtWave's own photos */
 const PG_FACES = Array.from({ length: 13 }, (_, i) => `assets/programmes/faces/f${String(i).padStart(2, "0")}.webp`);
@@ -37,8 +38,9 @@ const PROGRAMMES = [
 ];
 
 (() => {
-  const stage = document.getElementById("programmes"), vdeck = stage && stage.querySelector(".vdeck");
-  if (!vdeck || !window.gsap || !window.ScrollTrigger) return;
+  const stage = document.getElementById("hero"), portal = document.getElementById("programmes");
+  const vdeck = portal && portal.querySelector(".vdeck");
+  if (!stage || !vdeck || !window.gsap || !window.ScrollTrigger) return;
   const P = PROGRAMMES;
   const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -52,7 +54,7 @@ const PROGRAMMES = [
     return `
     <article class="band${i === 0 ? " is-first" : ""}" style="--tint:${p.tint};--accent:${p.accent};--btn:${p.btn};--btn-hover:${p.btnHover};--head-grad:${p.headGrad};--stat-bg:${s.bg};--stat-grad:${s.grad};--pos:${p.pos}${s.border ? `;--stat-border:${s.border}` : ""}">
       <button class="band__bar" type="button" data-go="p${i}" aria-label="Open ${p.name}">
-        <span class="i">0${i + 1}</span><b>${p.short}</b><em>${p.caption}</em>
+        <b>${p.short}</b><em>${p.caption}</em>
         <span class="go"><span>View programme</span><i>${ARROW}</i></span></button>
       <div class="band__full">
         <div class="frame">
@@ -150,6 +152,11 @@ const PROGRAMMES = [
   const lenis = (window.NW && NW.lenis) || null;
   if (lenis) lenis.on("scroll", ScrollTrigger.update);
 
+  const hq = (s) => stage.querySelector(s);
+  const veil = q(portal, ".portal__veil"), nav = document.querySelector(".site-nav .hx-nav");
+  const cta = hq(".h-btn--pri"), scene = hq(".hb-in"), hcopy = hq(".h-copy"), video = hq(".hb video");
+  const head = hq(".h-head"), stats = hq(".h-sw"), ctas = hq(".h-cw");
+
   /* card and text appear: logo, chip, headline lines rising out of their masks, features, CTA;
      the photo card unmasks, then the stat card settles in */
   const reveal = (i) => {
@@ -171,27 +178,54 @@ const PROGRAMMES = [
     .fromTo(fulls[i], { y: 0, opacity: 1 }, { y: () => -0.32 * stage.clientHeight, opacity: 0, duration: 0.9, ease: "power2.in", immediateRender: false }, 0)
     .fromTo(fulls[i], { visibility: "visible" }, { visibility: "hidden", duration: 0, immediateRender: false });
 
-  /* 1 · arriving: the hero's own scroll-away plays as before; once the section is most of the way up,
-     Academy's frame plays in on its own clock (not scrubbed). Scrolling back into the hero resets it,
-     so it plays again next time. The open programme's rail stays out of sight. */
-  gsap.set(bars[0], { opacity: 0 });
-  const intro = reveal(0).pause(0);
   const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
-  ScrollTrigger.create({
-    trigger: stage, start: "top 45%",
-    onEnter: () => {
-      if (!RM && tl.time() < 0.05) return intro.restart();
-      /* arriving already past Academy (a reload mid-section): finish the intro, then let the
-         scrubbed timeline re-apply its state over it */
-      intro.progress(1);
-      const t = tl.time();
-      tl.time(0, true).time(t, true);
-    },
-    onLeaveBack: () => intro.pause(0),
-  });
 
-  /* 2 · down the axis, scrubbed while pinned: the open programme folds into a rail above, the next one opens */
-  tl.addLabel("p0", 0);
+  /* ---- hero parallax: pinned, so the layers drift up at different rates as you scroll —
+     the headline fastest, the film slowest, which reads as depth ---- */
+  /* every scroll step names both its start and end values: a refresh (a resize, or a phone's address bar
+     showing or hiding) re-records starts, and a start recorded mid-scroll would stick on the way back up */
+  const FT = (t, a, b, at) => tl.fromTo(t, a, { ...b, immediateRender: false }, at);
+  tl.addLabel("start", 0);
+  FT(scene, { yPercent: 0, scale: 1 }, { yPercent: -4, scale: 1.04, duration: 0.5, ease: "none" }, 0);
+  FT(head, { y: 0 }, { y: -56, duration: 0.5, ease: "none" }, 0);
+  FT(stats, { y: 0 }, { y: -38, duration: 0.5, ease: "none" }, 0);
+  FT(ctas, { y: 0 }, { y: -22, duration: 0.5, ease: "none" }, 0);
+
+  /* ---- the window: one progress value drives its box and its corners ---- */
+  let from = null;
+  const ctaBox = () => { const a = cta.getBoundingClientRect(), b = stage.getBoundingClientRect(); return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height }; };
+  ScrollTrigger.addEventListener("refreshInit", () => (from = null));
+  const win = { p: 0 };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const drawWindow = () => {
+    from = from || ctaBox();
+    const W = stage.clientWidth, H = stage.clientHeight, p = win.p;
+    const x = lerp(from.x, 0, p), y = lerp(from.y, 0, p), w = lerp(from.w, W, p), h = lerp(from.h, H, p);
+    const r = lerp(16, 0, p) + 28 * Math.sin(Math.PI * Math.min(1, p * 1.15));
+    portal.style.clipPath = `inset(${y}px ${W - x - w}px ${H - y - h}px ${x}px round ${r}px)`;
+  };
+
+  /* 1 · the button becomes the way in: its label fades, the window grows from its exact box to the
+     full screen, the hero copy lifts away and the film falls back behind the glass. The blue of the
+     button carries into the window and clears as Academy shows through. */
+  const T0 = 0.5;
+  FT(portal, { visibility: "hidden" }, { visibility: "visible", duration: 0 }, T0);
+  FT(cta, { color: "rgba(255,255,255,1)" }, { color: "rgba(255,255,255,0)", duration: 0.1 }, T0 - 0.1);
+  FT(cta, { visibility: "visible" }, { visibility: "hidden", duration: 0 }, T0);
+  FT(head, { opacity: 1, y: -56 }, { opacity: 0, y: -100, duration: 0.35, ease: "power2.in" }, T0);
+  FT(stats, { opacity: 1, y: -38 }, { opacity: 0, y: -64, duration: 0.35, ease: "power2.in" }, T0 + 0.03);
+  FT(hq(".h-btn--sec"), { opacity: 1 }, { opacity: 0, duration: 0.2 }, T0);
+  if (nav) FT(nav, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.25 }, T0);
+  FT(scene, { scale: 1.04, opacity: 1 }, { scale: 1.16, opacity: 0.55, duration: 1, ease: "power2.in" }, T0);
+  tl.fromTo(win, { p: 0 }, { p: 1, duration: 1, ease: "power3.inOut", onUpdate: drawWindow, onStart: () => { from = null; drawWindow(); } }, T0)
+    .fromTo(vdeck, { scale: 1.08 }, { scale: 1, duration: 1.2, ease: "power3.out", immediateRender: false }, T0 + 0.2)
+    .fromTo(veil, { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power1.inOut" }, T0 + 0.2)
+    .fromTo(bars[0], { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, T0)
+    .fromTo([bars[1], bars[2]], { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power3.out" }, T0 + 0.75)
+    .add(reveal(0), T0 + 0.5)
+    .addLabel("p0", T0 + 1.8);
+
+  /* 2 · down the axis: the open programme folds into a rail above, the next one opens */
   const step = (a, b, at) => {
     tl.add(conceal(a), at)
       .fromTo(bands[a], { flexGrow: 1, flexBasis: "0px" }, { flexGrow: 0, flexBasis: () => BAR() + "px", duration: 1, ease: "power3.inOut", immediateRender: false }, at + 0.1)
@@ -209,6 +243,18 @@ const PROGRAMMES = [
   const st = ScrollTrigger.create({
     trigger: stage, start: "top top", end: () => "+=" + innerHeight * 0.8 * tl.duration(),
     pin: true, scrub: RM ? true : 0.8, animation: tl, invalidateOnRefresh: true,
+    /* a refresh re-renders the timeline without firing tween callbacks, so redraw the window from its current progress */
+    onRefresh: () => { from = null; drawWindow(); },
+  });
+  /* on every frame the timeline moves, so a fast jump can never leave the window at a stale size;
+     and once the window fills the screen the film behind it rests */
+  let covered = false;
+  tl.eventCallback("onUpdate", () => {
+    if (tl.time() >= T0) drawWindow();
+    const c = tl.time() >= T0 + 1;
+    if (c === covered || !video || RM) return;
+    covered = c;
+    if (c) video.pause(); else { const pr = video.play(); if (pr && pr.catch) pr.catch(() => {}); }
   });
   const at = (t) => st.start + (st.end - st.start) * (t / tl.duration());
   let going = false, idle = 0;
@@ -216,9 +262,9 @@ const PROGRAMMES = [
     const y = at(tl.labels[label]);
     if (!lenis) return scrollTo({ top: y, behavior: RM ? "auto" : "smooth" });
     going = true;
-    lenis.scrollTo(y, { duration: 1.1, onComplete: () => setTimeout(() => (going = false), 50) });
+    lenis.scrollTo(y, { duration: 1.1, force: true, onComplete: () => setTimeout(() => (going = false), 50) });
   };
-  /* between programmes, 20% of the way decides it */
+  /* leaving the hero takes only a nudge; between programmes, 20% of the way decides it */
   const settle = () => {
     const y = lenis.scroll;
     if (going || y <= st.start + 2 || y >= st.end - 2) return;
@@ -229,14 +275,30 @@ const PROGRAMMES = [
     if (!next && lenis.direction > 0) return;
     if (!prev || !next) return go((next || prev)[0]);
     const f = (t - prev[1]) / (next[1] - prev[1]);
-    go((lenis.direction > 0 ? f > 0.2 : f > 0.8) ? next[0] : prev[0]);
+    const fwd = prev[0] === "start" ? 0.06 : 0.2;
+    go((lenis.direction > 0 ? f > fwd : f > 0.8) ? next[0] : prev[0]);
   };
   if (lenis) lenis.on("scroll", () => { clearTimeout(idle); if (!going) idle = setTimeout(settle, 140); });
-  stage.addEventListener("click", (e) => {
+  addEventListener("resize", () => { from = null; });
+  /* "Explore Programs", the nav's Programmes link and the rails all travel the timeline. Caught in the
+     capture phase so Lenis's own anchor handling never sees the click. */
+  document.addEventListener("click", (e) => {
     const t = e.target.closest("[data-go]");
     if (!t) return;
-    e.preventDefault(); go(t.dataset.go);
-  });
+    e.preventDefault(); e.stopPropagation(); go(t.dataset.go);
+  }, true);
+
+  /* pointer parallax on the hero: the film leans away from the cursor, the copy a touch toward it */
+  if (!RM && matchMedia("(hover: hover)").matches) {
+    const qs = [gsap.quickTo(scene, "x", { duration: 1.2, ease: "power3.out" }), gsap.quickTo(scene, "y", { duration: 1.2, ease: "power3.out" }),
+      gsap.quickTo(hcopy, "x", { duration: 1.2, ease: "power3.out" }), gsap.quickTo(hcopy, "y", { duration: 1.2, ease: "power3.out" })];
+    stage.addEventListener("pointermove", (e) => {
+      if (tl.time() > T0) return;
+      const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+      qs[0](-x * 22); qs[1](-y * 12); qs[2](x * 8); qs[3](y * 5);
+    });
+    stage.addEventListener("pointerleave", () => qs.forEach((f) => f(0)));
+  }
 
   addEventListener("load", () => ScrollTrigger.refresh());
   window.NW = Object.assign(window.NW || {}, { programmes: { tl, st, go } });

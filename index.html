@@ -108,10 +108,8 @@ a{color:inherit;text-decoration:none}
    rides fixed over the hero and fades out once the programmes reach the top
    ===================================================================== */
 .site-nav{position:fixed;inset:0 0 auto 0;z-index:50;height:80px;pointer-events:none;
-  --hx-pad:clamp(20px,5.56vw,80px);color:#fff;font-family:var(--font);letter-spacing:normal;font-variation-settings:normal;
-  transition:opacity .3s ease,visibility .3s}
+  --hx-pad:clamp(20px,5.56vw,80px);color:#fff;font-family:var(--font);letter-spacing:normal;font-variation-settings:normal}
 .site-nav > *{pointer-events:auto}
-.site-nav.is-hidden{opacity:0;visibility:hidden}
 .site-nav *{margin:0;padding:0}
 /* nav: fixed over the hero, fades out once the white sections take the screen.
    Figma 869:112 — a full-width band, 19% black over a 16px backdrop blur, 10px of padding
@@ -239,6 +237,7 @@ html.lenis,html.lenis body{height:auto}
 /* the film: poster first, the video fades in over it once it is actually playing */
 #hero .hb{position:absolute;inset:-2%;will-change:transform;transform:scale(1.08);
   transition:transform 2.4s var(--hx-ease)}
+#hero .hb-in{position:absolute;inset:0;will-change:transform}
 #hero .hb img,#hero .hb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%}
 #hero .hb video{opacity:0;transition:opacity .9s ease}
 #hero .hb video.is-on{opacity:1}
@@ -325,7 +324,7 @@ html.lenis,html.lenis body{height:auto}
       <div class="hx-nav-row">
         <a class="hx-logo" href="#hero"><img src="assets/hero/nxtwave-logo.svg" alt="NxtWave" width="105" height="61"></a>
         <ul>
-          <li><a class="hx-nl" href="#programmes">Programmes<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-nl" href="#programmes" data-go="p0">Programmes<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
           <li><a class="hx-nl" href="#career-transformations">Success Stories<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
           <li><a class="hx-nl" href="#" data-blank>Hire With Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
           <li><a class="hx-nl" href="#" data-blank>About Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
@@ -341,8 +340,10 @@ html.lenis,html.lenis body{height:auto}
      =================================================================== -->
 <section id="hero" aria-label="Introduction">
   <div class="hb" aria-hidden="true">
-    <img src="assets/hero/hero-bg.webp" alt="" fetchpriority="high">
-    <video muted loop playsinline autoplay preload="auto" poster="assets/hero/hero-bg.webp"><source src="assets/hero/hero-bg.webm" type="video/webm"><source src="assets/hero/hero-bg.mp4" type="video/mp4"></video>
+    <div class="hb-in">
+      <img src="assets/hero/hero-bg.webp" alt="" fetchpriority="high">
+      <video muted loop playsinline autoplay preload="auto" poster="assets/hero/hero-bg.webp"><source src="assets/hero/hero-bg.webm" type="video/webm"><source src="assets/hero/hero-bg.mp4" type="video/mp4"></video>
+    </div>
   </div>
   <div class="hw" aria-hidden="true"></div>
   <div class="h-copy">
@@ -351,26 +352,25 @@ html.lenis,html.lenis body{height:auto}
         <p class="h-badge" data-in style="--d:.15s"><img src="assets/hero/star.svg" alt="">Helping ambition grow into ability.<img src="assets/hero/star.svg" alt=""></p>
         <h1 class="h-title"><span class="row">Preparing tomorrow's tech talent</span><span class="row">for an <span class="ai">AI-shaped world</span>.</span></h1>
       </div>
-      <dl class="h-stats" data-in style="--d:.85s">
+      <div class="h-sw"><dl class="h-stats" data-in style="--d:.85s">
         <div><dt data-count="16000">16,000+</dt><dd>Learners Hired</dd></div>
         <i aria-hidden="true"></i>
         <div><dt data-count="3000">3,000+</dt><dd>Hiring Partners</dd></div>
-      </dl>
+      </dl></div>
     </div>
-    <div class="h-ctas" data-in style="--d:1s">
-      <a class="h-btn h-btn--pri" href="#programmes">Explore Programs</a>
+    <div class="h-cw"><div class="h-ctas" data-in style="--d:1s">
+      <a class="h-btn h-btn--pri" href="#programmes" data-go="p0">Explore Programs</a>
       <a class="h-btn h-btn--sec" href="#" data-blank>Talk to a Counsellor</a>
-    </div>
+    </div></div>
   </div>
-</section>
 
-<!-- ===================================================================
-     S2 — PROGRAMMES: pins after the hero; the programmes stack on the vertical axis
-     (built by programmes.js)
-     =================================================================== -->
-<section id="programmes" aria-labelledby="programmes-title">
-  <h2 id="programmes-title" class="pg-sr">NxtWave programmes</h2>
-  <div class="vdeck"></div>
+  <!-- S2 — PROGRAMMES: the window "Explore Programs" grows into as the hero scrolls; the programmes
+       stack inside it on the vertical axis (built by programmes.js) -->
+  <div class="portal" id="programmes" role="region" aria-labelledby="programmes-title">
+    <h2 id="programmes-title" class="pg-sr">NxtWave programmes</h2>
+    <div class="vdeck"></div>
+    <div class="portal__veil" aria-hidden="true"></div>
+  </div>
 </section>
 
 </main>
@@ -420,18 +420,17 @@ html.lenis,html.lenis body{height:auto}
 })();
 </script>
 <script>
-/* page chrome: the nav fades out once the programmes section reaches the top, and the scroll feel
-   switches with it. One Lenis serves the whole page (created above with the lower sections'
-   settings); over the hero it takes a slightly floatier feel and hands the page's back after it. */
+/* page chrome: the scroll feel. One Lenis serves the whole page (created above with the lower sections'
+   settings); through the pinned hero and programmes it takes a slightly floatier feel and hands the
+   page's back after them. The nav's fade rides the hero timeline in programmes.js. */
 (() => {
-  const nav = document.querySelector('.site-nav'), progs = document.getElementById('programmes');
-  if (!progs) return;
   const lenis = (window.NW && NW.lenis) || null;
+  if (!lenis) return;
   const HERO_FEEL = { lerp: .12, duration: undefined, easing: undefined, wheelMultiplier: 1, touchMultiplier: 1.2 };
   let pageFeel = null, feel = '';
   const setFeel = inHero => {
     const k = inHero ? 'hero' : 'page';
-    if (!lenis || feel === k) return;
+    if (feel === k) return;
     const o = lenis.options;
     if (!pageFeel) pageFeel = { lerp: o.lerp, duration: o.duration, easing: o.easing, wheelMultiplier: o.wheelMultiplier, touchMultiplier: o.touchMultiplier };
     const f = inHero ? HERO_FEEL : pageFeel;
@@ -441,9 +440,8 @@ html.lenis,html.lenis body{height:auto}
   };
   const tick = () => {
     requestAnimationFrame(tick);
-    const pTop = progs.getBoundingClientRect().top;
-    nav.classList.toggle('is-hidden', pTop < 64);
-    setFeel(pTop > 0);
+    const st = NW.programmes && NW.programmes.st;
+    setFeel(scrollY < (st ? st.end : innerHeight));
   };
   requestAnimationFrame(tick);
 })();
@@ -451,13 +449,14 @@ html.lenis,html.lenis body{height:auto}
 <script>
 /* S1 hero: the corridor film loops on its own (muted, autoplay), independent of scroll. It fades in over
    its poster once frames are really painting, pauses while the hero is off screen, and is kicked on the
-   first touch where autoplay is held back. The copy rises in on load, the stats count up, and as the page
-   scrolls away the copy lifts and fades while the film drifts a little behind it. */
+   first touch where autoplay is held back. The copy rises in on load and the stats count up. Scrolling is
+   handled by programmes.js: the hero pins, its layers drift, and "Explore Programs" grows into the
+   window onto the programmes. */
 (() => {
   const hero = document.getElementById('hero');
   if (!hero) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const film = hero.querySelector('.hb'), video = film.querySelector('video'), copy = hero.querySelector('.h-copy');
+  const video = hero.querySelector('.hb video');
 
   // words into masks so each can rise in on its own
   let wi = 0;
@@ -516,20 +515,6 @@ html.lenis,html.lenis body{height:auto}
     requestAnimationFrame(step);
   });
 
-  // scrolling away: the copy lifts and fades, the film drifts slower behind it
-  if (RM) return;
-  let last = -1;
-  const tick = () => {
-    requestAnimationFrame(tick);
-    const h = hero.offsetHeight, y = Math.min(h, Math.max(0, -hero.getBoundingClientRect().top));
-    if (y === last) return;
-    last = y;
-    const p = y / h;
-    copy.style.transform = `translateY(${(-p * 90).toFixed(1)}px)`;
-    copy.style.opacity = String(Math.max(0, 1 - p * 1.6));
-    if (hero.classList.contains('is-in')) film.style.translate = `0 ${(p * h * .35).toFixed(1)}px`;
-  };
-  requestAnimationFrame(tick);
 })();
 </script>
 <script src="vendor/gsap.min.js"></script>

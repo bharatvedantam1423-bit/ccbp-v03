@@ -1,16 +1,15 @@
 /* =====================================================================
-   S2 — PROGRAMMES: the programmes stack on the vertical axis. The section pins
-   once the hero has scrolled away; scrolling on folds the open programme into a
-   rail above and opens the next. Each open programme is the Figma frame
+   S2 — PROGRAMMES: the hero's "Explore Programs" button grows into a window the
+   camera pushes through; inside it the programmes stack on the vertical axis and
+   scrolling on folds the open programme into a rail above and opens the next. Each open programme is the Figma frame
    (New Intensive Offline, 8070:10931): 1440 x 800, 80px padding, copy 602 wide,
    photo card 486 x 596, one floating stat card. Scoped to #programmes.
    ===================================================================== */
 #programmes{
   --pg-ink:#0f172a;--pg-body-ink:#334155;--pg-sub:#475569;--pg-hair:#e2e8f0;
-  --pg-mono:"Geist Mono",ui-monospace,Menlo,monospace;
   --pg-ease-out:cubic-bezier(.16,1,.3,1);
   --pg-edge:clamp(20px,5.56vw,80px);
-  position:relative;z-index:2;height:100vh;height:100svh;overflow:hidden;background:#fff;
+  position:absolute;inset:0;z-index:7;visibility:hidden;overflow:hidden;background:#fff;will-change:clip-path;
   color:var(--pg-ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
 #programmes *{box-sizing:border-box;margin:0;padding:0}
 #programmes img{display:block;max-width:100%}
@@ -19,20 +18,20 @@
 #programmes svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 #programmes .pg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-#programmes .vdeck{position:absolute;inset:0;display:flex;flex-direction:column}
+#programmes .vdeck{position:absolute;inset:0;display:flex;flex-direction:column;transform-origin:50% 40%}
+/* the button's blue carries into the window and clears as Academy shows through */
+#programmes .portal__veil{position:absolute;inset:0;z-index:5;pointer-events:none;background:#2563eb}
 
 /* Figma: white to the programme tint at 84.5% */
 #programmes .band{--bar:64px;position:relative;flex:0 0 var(--bar);min-height:0;overflow:hidden;isolation:isolate;
   background:linear-gradient(180deg,#fff 0%,var(--tint) 84.5%)}
-#programmes .band + .band{box-shadow:0 -1px 0 rgba(15,23,42,.07),0 -18px 40px -30px rgba(15,23,42,.3)}
 #programmes .band.is-first{flex:1 1 0px}
 
 /* rails for the programmes before and after */
 #programmes .band__bar{position:absolute;inset:0 0 auto;z-index:3;height:var(--bar);display:flex;align-items:center;gap:16px;padding:0 var(--pg-edge);width:100%;
   border:0;cursor:pointer;text-align:left;
   background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(255,255,255,.82));
-  box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 rgba(15,23,42,.06);transition:background .4s var(--pg-ease-out)}
-#programmes .band__bar .i{font:500 11px/1 var(--pg-mono);letter-spacing:.12em;color:var(--accent)}
+  box-shadow:inset 0 -1px 0 rgba(15,23,42,.06);transition:background .4s var(--pg-ease-out)}
 #programmes .band__bar b{font:600 17px/1 var(--font);letter-spacing:-.01em;color:var(--pg-ink)}
 #programmes .band__bar em{font-style:normal;color:var(--pg-sub);font-size:14px;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #programmes .band__bar .go{display:inline-flex;align-items:center;gap:10px;font:500 13px/1 var(--font);color:var(--pg-sub)}
