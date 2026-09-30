@@ -30,7 +30,7 @@ const PROGRAMMES = [
     features: [["grad", "For 2025, 2026 &amp; 2027 Graduates"], ["building", "Learn Online or at Our Training Centers"], ["book-i", "Open to Any Branch, Any Degree"]],
     stat: { fig: "04", cap: "Cities with Training Centers", side: "right", bg: "#fff", border: "1px solid #e2e8f0", grad: "linear-gradient(115.02deg,#1b1851 10.83%,#2116db 104.11%)" },
     back: { photo: PG_FIG("intensive-back.webp"), fit: "50% 50%",
-      stat: { fig: "Offline Training Centers", cap: "Madhapur , Kukatpally, more..", at: "left:-90.5px;top:395px", w: 193, bg: "#f1dbfe", grad: "linear-gradient(104.34deg,#0f182d 10.83%,#235be1 104.11%)" } },
+      stat: { fig: "Placement Drives", cap: "Happening Every Month", at: "left:-90.5px;top:395px", w: 193, bg: "#f1dbfe", grad: "linear-gradient(104.34deg,#0f182d 10.83%,#235be1 104.11%)" } },
     cta: "Explore Intensive", href: "https://www.ccbp.in/intensive" },
   { name: "NxtWave Institute of Advanced Technologies", short: "NIAT", caption: "Start your journey in AI/ML, Robotics, Data Science &amp; more.",
     tint: "#ffecec", accent: "#991b1b", btn: "#991b1b", btnHover: "#7f1d1d",
@@ -40,7 +40,7 @@ const PROGRAMMES = [
     features: [["cpu", "Learn AI/ML, Robotics, Data Science &amp; More"], ["rocket", "Industry-Ready Upskilling"], ["book-n", "Designed for Students After 12th"]],
     stat: { fig: "35+", cap: "UGC-approved institutions", side: "left", bg: "#fffefe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" },
     back: { photo: PG_FIG("niat-back.webp"), fit: "50% 50%",
-      stat: { fig: "Offline Training Centers", cap: "Madhapur , Kukatpally, more..", at: "left:-90.5px;top:395px", w: 193, bg: "#fff", grad: "linear-gradient(104.34deg,#0f182d 10.83%,#235be1 104.11%)" } },
+      stat: { fig: "1200+", cap: "AI-powered<br>Projects Built", at: "right:-40.77px;top:89.5px", w: 118, bg: "#fff", grad: "linear-gradient(105.27deg,#0f182d 10.83%,#235be1 104.11%)" } },
     cta: "Explore NIAT", href: "#" },
 ];
 
@@ -164,7 +164,7 @@ const PROGRAMMES = [
   };
   if (!RM) gsap.delayedCall(2.4, tick);
 
-  /* card flip, after Framer University's "3D Flipping Project Card": every 2s the open programme's card
+  /* card flip, after Framer University's "3D Flipping Project Card": the open programme's card
      turns left to right (rotateY 180, perspective 1200) in 1s on a sharp in-out curve, from the front
      (photo + stat card) to the back from Figma 1089:356 and back again. Each stat card floats 70px off its
      face, so it turns with the card as a layer in front of the photo; the leaving one shrinks to 0.6 and
@@ -181,21 +181,36 @@ const PROGRAMMES = [
     const inward = (p) => (p.classList.contains("is-left") || p.style.left ? 15 : -15);
     return { card: q(b, ".f-card"), stats: pops.map((p) => q(p, ".f-stat")), drift: pops.map(inward), full: fulls[i], side: 0, tl: null };
   });
-  const flip = () => {
-    const r = stage.getBoundingClientRect();
-    if (r.bottom > 0 && r.top < innerHeight)
-      flippers.forEach((f) => {
-        if (!isOpen(f.full) || (f.tl && f.tl.isActive())) return;
-        const out = f.side, inn = 1 - f.side;
-        f.side = inn;
-        f.tl = gsap.timeline({ defaults: FLIP })
-          .to(f.card, { rotationY: "+=180" }, 0)
-          .fromTo(f.stats[out], { scale: 1, xPercent: 0 }, { scale: 0.6, xPercent: f.drift[out] }, 0)
-          .fromTo(f.stats[inn], { scale: 0.6, xPercent: f.drift[inn] }, { scale: 1, xPercent: 0 }, 0);
-      });
-    gsap.delayedCall(2, flip);
+  /* timing: when a programme opens (from the hero, or from the programme before it) it starts on its front
+     face and flips once its reveal has settled, then again every 5s while it stays open. A programme that
+     closes goes back to its front face, ready to flip again next time it opens. */
+  const EVERY = 5, FIRST = 1.3, now = () => gsap.ticker.time;
+  const flipOnce = (f) => {
+    const out = f.side, inn = 1 - f.side;
+    f.side = inn;
+    f.tl = gsap.timeline({ defaults: FLIP })
+      .to(f.card, { rotationY: "+=180" }, 0)
+      .fromTo(f.stats[out], { scale: 1, xPercent: 0 }, { scale: 0.6, xPercent: f.drift[out] }, 0)
+      .fromTo(f.stats[inn], { scale: 0.6, xPercent: f.drift[inn] }, { scale: 1, xPercent: 0 }, 0);
   };
-  if (!RM) gsap.delayedCall(2, flip);
+  const toFront = (f) => {
+    if (f.tl) f.tl.kill();
+    f.side = 0; f.tl = null;
+    gsap.set(f.card, { rotationY: 0 });
+    gsap.set(f.stats, { scale: 1, xPercent: 0 });
+  };
+  const watch = () => {
+    const r = stage.getBoundingClientRect(), onScreen = r.bottom > 0 && r.top < innerHeight;
+    flippers.forEach((f) => {
+      const open = onScreen && isOpen(f.full);
+      if (open && !f.open) f.next = now() + FIRST;
+      else if (!open && f.open) toFront(f);
+      f.open = open;
+      if (open && now() >= f.next && !(f.tl && f.tl.isActive())) { flipOnce(f); f.next = now() + EVERY; }
+    });
+    gsap.delayedCall(0.15, watch);
+  };
+  if (!RM) watch();
 
   /* ---- scroll plumbing: the page's one Lenis drives ScrollTrigger ---- */
   gsap.registerPlugin(ScrollTrigger);
