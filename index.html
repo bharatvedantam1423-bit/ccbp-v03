@@ -246,9 +246,10 @@ html.lenis,html.lenis body{height:auto}
 #hero .hb video{opacity:0;transition:opacity .9s ease}
 #hero .hb video.is-on{opacity:1}
 #hero.is-in .hb{transform:scale(1)}
-/* a soft wash of the sky colour behind the copy, and a fade into the white page at the foot */
+/* a white progressive fade from the top behind the copy, a soft wash of the sky colour, and a fade into the white page at the foot */
 #hero .hw{position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(70% 55% at 50% 22%,rgba(246,250,254,.82) 0%,rgba(246,250,254,.45) 45%,rgba(246,250,254,0) 75%),
+  background:linear-gradient(180deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.78) 18%,rgba(255,255,255,.5) 36%,rgba(255,255,255,.18) 52%,rgba(255,255,255,0) 66%),
+             radial-gradient(70% 55% at 50% 22%,rgba(246,250,254,.82) 0%,rgba(246,250,254,.45) 45%,rgba(246,250,254,0) 75%),
              linear-gradient(180deg,rgba(246,250,254,0) 72%,#fff 100%)}
 
 #hero .h-copy{position:absolute;z-index:5;left:50%;top:max(112px,14.5%);width:min(930px,calc(100% - 32px));translate:-50% 0;
@@ -350,7 +351,7 @@ html.lenis,html.lenis body{height:auto}
   <div class="h-copy">
     <div class="h-top">
       <div class="h-head">
-        <p class="h-badge" data-in style="--d:.15s"><img src="assets/hero/star.svg" alt="">AI Has Rewritten the Tech Industry<img src="assets/hero/star.svg" alt=""></p>
+        <p class="h-badge" data-in style="--d:.15s"><img src="assets/hero/star.svg" alt="">Helping ambition grow into ability.<img src="assets/hero/star.svg" alt=""></p>
         <h1 class="h-title"><span class="row">Preparing tomorrow's tech talent</span><span class="row">for an <span class="ai">AI-shaped world</span>.</span></h1>
       </div>
       <dl class="h-stats" data-in style="--d:.85s">
