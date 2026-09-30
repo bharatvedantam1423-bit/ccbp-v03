@@ -39,17 +39,131 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 .loader__fill{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);background:#2563eb}
 .loader__pct{font:500 11px/1 var(--mono);letter-spacing:.16em;color:#64748b;font-variant-numeric:tabular-nums}
 
-/* site nav: the NxtWave logo in the frame's empty top band; fades as the classroom parts */
-.nav{position:fixed;inset:0 0 auto;z-index:60;height:124px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;color:#0f172a;pointer-events:none}
-.nav > *{pointer-events:auto}
-.nav__logo{display:block}
-.nav__logo img{height:44px;width:auto}
-.nav__links{display:flex;align-items:center;gap:32px}
-.nav__links a{font-size:14px;line-height:24px;font-weight:500;color:#334155;text-decoration:none;white-space:nowrap;transition:color .3s}
-.nav__links a:hover{color:#0f172a}
-.nav__links a.login{color:#2563eb}
-.nav__links a.login:hover{color:#1d4ed8}
-@media (max-width:860px){.nav{height:88px;padding:0 20px}.nav__logo img{height:36px}.nav__links a:not(.login){display:none}}
+/* =====================================================================
+   NAV (v02, Figma 869:112) — was inside the v02 hero's pinned stage; here it
+   rides fixed over the hero and fades out as the classroom parts into the programmes
+   ===================================================================== */
+.site-nav{position:fixed;inset:0 0 auto 0;z-index:50;height:80px;pointer-events:none;
+  --hx-pad:clamp(20px,5.56vw,80px);color:#fff;font-family:var(--font);letter-spacing:normal;font-variation-settings:normal}
+.site-nav > *{pointer-events:auto}
+.site-nav *{margin:0;padding:0}
+/* nav: fixed over the hero, fades out once the white sections take the screen.
+   Figma 869:112 — a full-width band, 19% black over a 16px backdrop blur, 10px of padding
+   around a 60px row. Tokens below are read straight off that frame. */
+.hx-nav{--nav-stroke:#3e5787;--nav-stroke-hot:#406bdb;--nav-streak:#9dc6ff;
+  position:absolute;inset:0 0 auto 0;z-index:10;margin-top:0!important;padding:10px 0!important}
+
+/* The bar's glass, built the same way as the hero's progressive blur: stacked layers, each
+   blurring less than the one above and faded in over its own overlapping band, so the frost
+   ramps from heavy at the top edge to nothing at the bottom instead of ending on a hard line.
+   It is invisible until the pointer is over the bar. Each layer fades itself -- the wrapper
+   must stay free of opacity, filter and mask, or the layers lose the photo they are blurring. */
+.hx-nav-frost{position:absolute;inset:0;pointer-events:none}
+.hx-nav-frost i,.hx-nav-tint{position:absolute;inset:0;opacity:0;
+  transition:opacity .32s cubic-bezier(.22,.61,.36,1)}
+.hx-nav-frost i{-webkit-backdrop-filter:blur(var(--b));backdrop-filter:blur(var(--b));
+  -webkit-mask-image:var(--m);mask-image:var(--m);will-change:opacity}
+.hx-nav-frost i:nth-child(1){--b:24px;--m:linear-gradient(180deg,#000 0%,#000 16%,transparent 32%)}
+.hx-nav-frost i:nth-child(2){--b:14px;--m:linear-gradient(180deg,transparent 6%,#000 20%,#000 36%,transparent 50%)}
+.hx-nav-frost i:nth-child(3){--b:8px; --m:linear-gradient(180deg,transparent 24%,#000 38%,#000 54%,transparent 66%)}
+.hx-nav-frost i:nth-child(4){--b:4px; --m:linear-gradient(180deg,transparent 40%,#000 54%,#000 68%,transparent 80%)}
+.hx-nav-frost i:nth-child(5){--b:2px; --m:linear-gradient(180deg,transparent 56%,#000 70%,#000 82%,transparent 92%)}
+.hx-nav-frost i:nth-child(6){--b:1px; --m:linear-gradient(180deg,transparent 72%,#000 88%,transparent 100%)}
+/* the tint rides the same ramp, so the darkening fades out with the blur */
+.hx-nav-tint{background:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.16) 45%,rgba(0,0,0,0) 100%)}
+.hx-nav:hover .hx-nav-frost i,.hx-nav:hover .hx-nav-tint,
+.hx-nav:focus-within .hx-nav-frost i,.hx-nav:focus-within .hx-nav-tint{opacity:1}
+
+.hx-nav-row{position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  height:60px;padding:0 var(--hx-pad)}
+.hx-logo{display:block;line-height:0}
+.hx-logo img{display:block;width:clamp(72px,6.67vw,96px);height:auto}
+.hx-nav ul{display:flex;gap:24px;align-items:center;list-style:none}   /* Figma: 24px between controls */
+.hx-nav a{color:#fff;text-decoration:none}
+
+/* one nav button (Figma 869:151/153/155): 1px stroke, 100px radius, 10/18 padding,
+   Geist SemiBold 12 caps on a near-clear fill. Default stroke #3e5787, hover #406bdb. */
+.hx-nl{position:relative;display:block;padding:10px 18px;border-radius:100px;
+  border:1px solid var(--nav-stroke);background:rgba(255,255,255,.02);
+  font:600 12px/normal Geist,var(--font);text-transform:uppercase;white-space:nowrap;
+  transition:border-color .18s cubic-bezier(.22,.61,.36,1),background .18s cubic-bezier(.22,.61,.36,1),
+             box-shadow .24s cubic-bezier(.22,.61,.36,1)}
+.hx-nl:hover,.hx-nl:focus-visible{border-color:var(--nav-stroke-hot);background:rgba(64,107,219,.10);
+  box-shadow:0 0 22px rgba(64,107,219,.30),inset 0 0 18px rgba(64,107,219,.14)}
+.hx-nl:focus-visible{outline:none}
+
+/* HOVER 1 — the diagonal glow: a slanted band of light crossing the button. The pseudo-element
+   carries the button's own radius, so the band is clipped to the pill without an overflow clip
+   (which would eat the stroke glow). */
+.hx-nl::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.20) 47%,rgba(190,215,255,.30) 52%,transparent 68%);
+  background-size:260% 100%;background-position:88% 0;background-repeat:no-repeat;
+  opacity:0;transition:opacity .15s ease;will-change:background-position}
+/* no fade-in and no run-up: the band is already at the leading edge on frame one, so the glow
+   is there the moment the pointer lands. It still fades out gently on the way off. */
+.hx-nl:hover::after,.hx-nl:focus-visible::after{opacity:1;transition-duration:0s;
+  animation:hx-sweep .85s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes hx-sweep{from{background-position:88% 0}to{background-position:6% 0}}
+
+/* HOVER 2 — the moving stroke: a conic gradient turning clockwise behind a 1px ring mask, so
+   two bright streaks run round the outline. Starts with the glow above, same hover. */
+.hx-nl-ring{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  padding:1px;opacity:0;transition:opacity .18s ease;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.hx-nl-ring::before{content:"";position:absolute;top:50%;left:50%;width:150%;aspect-ratio:1;translate:-50% -50%;
+  background:conic-gradient(from 0deg,transparent 0 6%,var(--nav-streak) 12%,var(--nav-stroke-hot) 17%,
+    transparent 25%,transparent 56%,var(--nav-streak) 62%,var(--nav-stroke-hot) 67%,transparent 75%);
+  will-change:rotate}   /* its own layer, so the spin composites instead of repainting the pill */
+.hx-nl:hover .hx-nl-ring,.hx-nl:focus-visible .hx-nl-ring{opacity:1}
+.hx-nl:hover .hx-nl-ring::before,.hx-nl:focus-visible .hx-nl-ring::before{animation:hx-orbit 1.7s linear infinite}
+@keyframes hx-orbit{to{rotate:360deg}}
+/* where the ring mask can't be composited, the stroke colour change and the glow still read */
+@supports not ((mask-composite:exclude) or (-webkit-mask-composite:xor)){ .hx-nl-ring{display:none} }
+
+/* HOVER 3 — the label roll: two copies of the text share one clipped cell; the top one rolls
+   out as the copy underneath rolls in, a letter at a time. Same hover as the other two. */
+.hx-nl-clip{display:grid;overflow:hidden;padding-block:1px}
+.hx-nl-txt{grid-area:1/1;display:flex}
+.hx-ch{display:inline-block;will-change:transform;
+  transition:transform .26s cubic-bezier(.22,.9,.24,1);transition-delay:calc(var(--i,0)*10ms)}
+.hx-sp{width:.32em}   /* the word gap, which a bare space would lose between the spans */
+.hx-nl-dup .hx-ch{transform:translateY(105%)}
+.hx-nl:hover .hx-nl-top .hx-ch,.hx-nl:focus-visible .hx-nl-top .hx-ch{transform:translateY(-105%)}
+.hx-nl:hover .hx-nl-dup .hx-ch,.hx-nl:focus-visible .hx-nl-dup .hx-ch{transform:translateY(0)}
+
+/* Login stays a plain link (Figma 869:158): Geist Medium 14 */
+.hx-login{position:relative;display:block;padding:0 8px 3px;font:500 14px/normal Geist,var(--font);
+  transition:color .25s ease,text-shadow .25s ease}
+/* a rule that draws in from the left on hover */
+.hx-login::after{content:"";position:absolute;left:8px;right:8px;bottom:0;height:1.5px;
+  background:currentColor;border-radius:2px;transform:scaleX(0);transform-origin:left center;
+  transition:transform .26s cubic-bezier(.22,.61,.36,1)}
+.hx-login:hover::after,.hx-login:focus-visible::after{transform:scaleX(1)}
+.hx-login:hover,.hx-login:focus-visible{color:#bcd4ff;text-shadow:0 0 14px rgba(64,107,219,.55)}
+
+@media (max-width:1180px){ .hx-nav ul{gap:12px} .hx-nl{padding:9px 12px;font-size:12px;letter-spacing:-.01em} }
+@media (prefers-reduced-motion:reduce){
+  .hx-nl,.hx-nl::after,.hx-nl-ring,.hx-ch{transition-duration:.01s;transition-delay:0s}
+  .hx-nl:hover::after,.hx-nl:hover .hx-nl-ring::before{animation:none}
+}
+@media (max-width:860px){
+  .hx-nav-row{height:52px}
+  .hx-nav li:not(:last-child){display:none}   /* phones: logo + Login, as before */
+}
+/* content edge, as in v3.2 (--page-edge): the page margin, centred past 1400px */
+.site-nav{--hx-pad:max(clamp(20px,5vw,80px),calc((100vw - 1400px) / 2))}
+/* the nav rides over a light film now: dark ink, pale strokes, a white frost on hover */
+.site-nav .hx-nav{--nav-stroke:rgba(37,99,235,.28);--nav-stroke-hot:#2563eb;--nav-streak:#60a5fa}
+.site-nav .hx-nav a{color:#0f172a}
+.site-nav .hx-nl{background:rgba(255,255,255,.55)}
+.site-nav .hx-nl:hover,.site-nav .hx-nl:focus-visible{background:rgba(255,255,255,.85);box-shadow:0 0 22px rgba(37,99,235,.18)}
+.site-nav .hx-nl::after{background:linear-gradient(115deg,transparent 32%,rgba(37,99,235,.10) 47%,rgba(96,165,250,.18) 52%,transparent 68%);
+  background-size:260% 100%;background-repeat:no-repeat}
+.site-nav .hx-nav-tint{background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.25) 45%,rgba(255,255,255,0) 100%)}
+.site-nav .hx-nav a.hx-login{color:#2563eb}
+.site-nav .hx-login:hover,.site-nav .hx-login:focus-visible{color:#1d4ed8;text-shadow:none}
 
 /* ---------- hero: Figma 8077:11126, 1440 x 900 ---------- */
 .stage{position:relative;height:100vh;height:100svh;overflow:hidden;background:#f6fafe}
@@ -587,8 +701,64 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
   </div>
 </div>
 
-<header class="nav" id="nav"><a class="nav__logo" href="#" aria-label="NxtWave home"><img src="assets/fig/nxtwave-logo.svg" alt="NxtWave"></a>
-  <nav class="nav__links"><a href="#">Programmes</a><a href="#">Success stories</a><a href="#">Hire with us</a><a href="#">About us</a><a class="login" href="#">Login</a></nav></header>
+<header class="site-nav" id="nav">
+    <nav class="hx-nav" aria-label="Primary">
+      <div class="hx-nav-frost" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><span class="hx-nav-tint"></span></div>
+      <div class="hx-nav-row">
+        <a class="hx-logo" href="#stage"><img src="assets/fig/nxtwave-logo.svg" alt="NxtWave" width="105" height="61"></a>
+        <ul>
+          <li><a class="hx-nl" href="#programmes" data-go="p0">Programmes<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-nl" href="#career-transformations">Success Stories<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-nl" href="#" data-blank>Hire With Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-nl" href="#" data-blank>About Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
+          <li><a class="hx-login" href="#" data-blank>Login</a></li>
+        </ul>
+      </div>
+    </nav>
+</header>
+<script>
+/* nav (from v3.2): the label roll on the buttons, and where each link goes. "Programmes" travels the
+   hero timeline to the first programme, like "Explore Programs"; the logo and Success Stories scroll
+   through the page's Lenis; Hire With Us, About Us and Login have no destination yet. The bar fades
+   with the hero timeline (#nav in the script below). */
+(() => {
+  /* NAV LABEL ROLL — give each button two copies of its label, split per character, without
+     disturbing the .hx-nl-ring span that carries the moving stroke. */
+  document.querySelectorAll('.hx-nl').forEach(a => {
+    const label = [...a.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
+    if (!label) return;
+    a.setAttribute('aria-label', label);
+    const layer = cls => {
+      const w = document.createElement('span');
+      w.className = 'hx-nl-txt ' + cls;
+      [...label].forEach((ch, i) => {
+        const c = document.createElement('span');
+        c.className = ch === ' ' ? 'hx-ch hx-sp' : 'hx-ch';
+        c.style.setProperty('--i', i);
+        c.textContent = ch === ' ' ? '\u00a0' : ch;
+        w.appendChild(c);
+      });
+      return w;
+    };
+    const clip = document.createElement('span');
+    clip.className = 'hx-nl-clip';
+    clip.setAttribute('aria-hidden', 'true');
+    clip.append(layer('hx-nl-top'), layer('hx-nl-dup'));
+    [...a.childNodes].forEach(n => { if (n.nodeType === 3) n.remove(); });
+    a.prepend(clip);
+  });
+
+  document.getElementById('nav').addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    e.preventDefault();
+    if (a.hasAttribute('data-blank') || !window.__rl) return;
+    if (a.dataset.go) return window.__rl.go(a.dataset.go);
+    const id = a.getAttribute('href').slice(1), el = id && document.getElementById(id);
+    if (el) window.__rl.lenis.scrollTo(id === 'stage' ? 0 : el, { duration: 1.4 });
+  });
+})();
+</script>
 
 <section class="stage" id="stage" aria-label="Programmes">
   <div class="h-scene" id="scene"><img src="assets/fig/hero2.jpg" alt="Five students learning together at a long desk with laptops and a robot kit"></div>
