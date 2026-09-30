@@ -191,6 +191,37 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 }
 
 
+/* ---------- design notes: a switch in the bottom-left corner opens the notes for the section on screen ---------- */
+.dn{position:fixed;left:16px;bottom:16px;z-index:90;display:flex;flex-direction:column-reverse;align-items:flex-start;gap:10px;
+  width:min(380px,calc(100vw - 32px));pointer-events:none;font-family:var(--font)}
+.dn > *{pointer-events:auto}
+.dn__switch{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 14px 0 8px;border:1px solid var(--hair);border-radius:100px;
+  background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 8px 24px -12px rgba(15,23,42,.35);
+  cursor:pointer;font-size:13px;line-height:1;font-weight:600;color:var(--ink);transition:border-color .3s}
+.dn__switch:hover{border-color:#cbd5e1}
+.dn__switch:focus-visible{outline:2px solid #2563eb;outline-offset:3px}
+.dn__track{position:relative;flex:none;width:36px;height:22px;border-radius:22px;background:#cbd5e1;transition:background .3s var(--ease-out)}
+.dn__track::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 3px rgba(15,23,42,.3);transition:transform .35s var(--ease-out)}
+.dn__switch[aria-checked="true"] .dn__track{background:#2563eb}
+.dn__switch[aria-checked="true"] .dn__track::after{transform:translateX(14px)}
+.dn__panel{width:100%;max-height:min(68vh,calc(100svh - 96px));overflow-y:auto;overscroll-behavior:contain;padding:20px 22px 22px;border:1px solid var(--hair);border-radius:20px;
+  background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 24px 48px -20px rgba(15,23,42,.35);color:var(--body-ink);
+  transform-origin:0 100%;transition:opacity .35s var(--ease-out),transform .45s var(--ease-out),visibility 0s linear 0s}
+.dn__panel[hidden]{display:block!important;opacity:0;visibility:hidden;transform:translateY(10px) scale(.98);pointer-events:none;
+  transition:opacity .25s,transform .3s,visibility 0s linear .3s}
+.dn__body{transition:opacity .25s,transform .35s var(--ease-out)}
+.dn__body.is-swapping{opacity:0;transform:translateY(6px)}
+.dn__idx{font:500 11px/1 var(--mono);letter-spacing:.14em;color:#2563eb}
+.dn__title{margin-top:8px;font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-.2px;color:var(--ink)}
+.dn__story p{margin-top:10px;font-size:13.5px;line-height:1.6}
+.dn__sub{margin-top:18px;padding-top:14px;border-top:1px solid var(--hair);font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.dn__list{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:12px}
+.dn__list li{padding-left:12px;border-left:2px solid #dbeafe}
+.dn__list b{display:block;font-size:13.5px;line-height:1.4;font-weight:600;color:var(--ink)}
+.dn__list span{display:block;margin-top:2px;font-size:13px;line-height:1.5}
+@media (max-width:860px){.dn__panel{max-height:min(56vh,calc(100svh - 96px));padding:16px 18px 18px}.dn__title{font-size:18px}}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style>
 </head>
@@ -232,6 +263,11 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
   </div>
 </section>
 
+
+<aside class="dn" id="dn" aria-label="Design notes">
+  <button class="dn__switch" id="dnSwitch" type="button" role="switch" aria-checked="false" aria-controls="dnPanel"><span class="dn__track" aria-hidden="true"></span>Design notes</button>
+  <div class="dn__panel" id="dnPanel" data-lenis-prevent hidden><div class="dn__body" id="dnBody" aria-live="polite"></div></div>
+</aside>
 
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
@@ -548,6 +584,56 @@ const PROGRAMMES = [
 })();
 </script>
 
+<script>
+/* design notes: the annotation for whichever section is on screen. The page is one pinned timeline, so the
+   section is read from its playhead: the hero until the classroom is halfway through parting, then the programmes. */
+(() => {
+  const NOTES = [
+    { idx: "01 / 14", title: "Hero",
+      story: ["Showing learners together introduces NxtWave as a community with a shared ambition. The familiar classroom, laptops, and hands-on project make that ambition feel relatable.",
+        "As visitors scroll, the classroom separates into three programme cards. This creates the “wow” moment while conveying a clear message: different starting points, different learning paths, one shared goal. The same people carry the story from belonging to finding a programme."],
+      principles: [["Gestalt Proximity", "Learners initially appear as one community; separation makes the three programme groups distinct."],
+        ["Visual Continuity", "Keeping the same learners through the transition connects the introduction to the choices."],
+        ["Social Proof", "Hiring figures add credibility alongside the sense of possibility."]] },
+    { idx: "02 / 14", title: "Three Programmes",
+      story: ["The three cards turn the shared classroom into distinct learning paths. Each programme inherits part of the original scene, making the choice feel like a natural continuation of the hero.",
+        "Opening a card gives its benefits, suitability, and action room to breathe. The other programmes remain visible as side tabs, keeping alternatives within reach. The message moves from “there is a place for learners like me” to “this is the path I can explore.”"],
+      principles: [["Hick’s Law", "Three distinct programme choices keep the decision focused."],
+        ["Progressive Disclosure", "Detailed information appears for one programme at a time."],
+        ["Recognition over Recall", "Visible programme labels make it easy to revisit another option."],
+        ["Visual Hierarchy", "The expanded programme guides attention towards its benefits and next action."]] },
+  ];
+  const sw = document.getElementById("dnSwitch"), panel = document.getElementById("dnPanel"), body = document.getElementById("dnBody");
+  const render = (n) => `<p class="dn__idx">${n.idx}</p><h2 class="dn__title">${n.title}</h2>
+    <div class="dn__story">${n.story.map((s) => `<p>${s}</p>`).join("")}</div>
+    <p class="dn__sub">Design &amp; UX principles</p>
+    <ul class="dn__list">${n.principles.map(([k, v]) => `<li><b>${k}</b><span>${v}</span></li>`).join("")}</ul>`;
+
+  let cur = -1, swap = 0;
+  const show = (i, animate) => {
+    if (i === cur) return;
+    cur = i;
+    clearTimeout(swap);
+    if (!animate || panel.hidden) { body.innerHTML = render(NOTES[i]); body.classList.remove("is-swapping"); return; }
+    body.classList.add("is-swapping");
+    swap = setTimeout(() => { body.innerHTML = render(NOTES[i]); panel.scrollTop = 0; body.classList.remove("is-swapping"); }, 220);
+  };
+  const rl = window.__rl, split = rl ? 1.0 : Infinity;   /* the classroom parts from 0.5 to 1.6 on the timeline */
+  const section = () => (rl && rl.tl.time() >= split ? 1 : 0);
+  show(section(), false);
+  if (rl) rl.tl.eventCallback("onUpdate", () => show(section(), true));
+
+  const set = (on) => {
+    sw.setAttribute("aria-checked", String(on));
+    panel.hidden = !on;
+    try { localStorage.setItem("designNotes", on ? "1" : "0"); } catch (e) {}
+  };
+  let saved = null;
+  try { saved = localStorage.getItem("designNotes"); } catch (e) {}
+  set(saved === "1");
+  sw.addEventListener("click", () => set(sw.getAttribute("aria-checked") !== "true"));
+})();
+</script>
 
 </body>
 </html>
