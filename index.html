@@ -1,0 +1,545 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Parting Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Geist+Mono:wght@500&family=Outfit:wght@600&display=swap">
+<style>
+/* Parting Classroom: the Figma hero's classroom photo parts into three slices that become the programme
+   cards; then one programme takes the screen (Figma 8086:11168: copy left, full-height photo to the rails)
+   and the other two wait as 72px rails. */
+:root{
+  color-scheme:light;
+  --ink:#0f172a;--body-ink:#334155;--sub:#475569;--muted:#64748b;--hair:#e2e8f0;
+  --w-ink:#03060d;--w-nxt:#4a9bff;
+  --font:"Inter",system-ui,-apple-system,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --edge:clamp(20px,5.56vw,80px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--w-ink)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--w-ink);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.is-loading{overflow:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit}
+svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- loader: wordmark, a hairline that fills as the images arrive, then a lift ---------- */
+.loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#f6fafe;color:#0f172a}
+.loader__in{display:flex;flex-direction:column;align-items:center;gap:22px}
+.loader__mark{font:700 20px/.95 var(--font);letter-spacing:.04em;text-align:center;overflow:hidden;color:#2563eb}
+.loader__mark span{display:block;transform:translateY(105%)}
+.loader__track{position:relative;width:148px;height:2px;border-radius:2px;background:rgba(37,99,235,.12);overflow:hidden}
+.loader__fill{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);background:#2563eb}
+.loader__pct{font:500 11px/1 var(--mono);letter-spacing:.16em;color:#64748b;font-variant-numeric:tabular-nums}
+
+/* site nav: the NxtWave logo in the frame's empty top band; fades as the classroom parts */
+.nav{position:fixed;inset:0 0 auto;z-index:60;height:124px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;color:#0f172a;pointer-events:none}
+.nav > *{pointer-events:auto}
+.nav__logo{display:block}
+.nav__logo img{height:44px;width:auto}
+.nav__links{display:flex;align-items:center;gap:32px}
+.nav__links a{font-size:14px;line-height:24px;font-weight:500;color:#334155;text-decoration:none;white-space:nowrap;transition:color .3s}
+.nav__links a:hover{color:#0f172a}
+.nav__links a.login{color:#2563eb}
+.nav__links a.login:hover{color:#1d4ed8}
+@media (max-width:860px){.nav{height:88px;padding:0 20px}.nav__logo img{height:36px}.nav__links a:not(.login){display:none}}
+
+/* ---------- hero: Figma 8077:11126, 1440 x 900 ---------- */
+.stage{position:relative;height:100vh;height:100svh;overflow:hidden;background:#f6fafe}
+/* the classroom runs edge to edge from 184px down the 896 frame, 732 tall, so its foot runs 20px past the floor
+   (Figma 8116:11960); pinned to its top edge */
+.h-scene{position:absolute;left:0;right:0;top:20.54%;height:81.7%;will-change:transform}
+.h-scene img{width:100%;height:100%;object-fit:cover;object-position:50% 0;will-change:transform}
+.h-copy{position:absolute;z-index:5;left:50%;top:max(112px,16.74%);width:min(930px,calc(100% - 32px));translate:-50% 0;display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center}
+.h-top{display:flex;flex-direction:column;align-items:center;gap:12px}
+.h-head{display:flex;flex-direction:column;align-items:center;gap:16px}
+/* Inter Display SemiBold 52/76, -0.26 tracking; words sit in masks so they can rise in */
+.h-title{font-weight:600;font-size:52px;line-height:76px;letter-spacing:-.26px;font-variation-settings:"opsz" 32;color:#1d1d1d}
+.h-title .row{display:block;white-space:nowrap}
+.h-title .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:6px;margin-bottom:-6px}
+.h-title .w > span{display:inline-block}
+.h-title .ai > span{background:linear-gradient(90deg,#0054e4,#57c7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Outfit SemiBold 32 over Inter Medium 12/18, 32px either side of a 40px hairline */
+.h-stats{display:flex;align-items:center;gap:32px}
+.h-stats > div{display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap}
+.h-stats > i{width:1px;height:40px;background:rgba(255,255,255,.15)}
+.h-stats dt{font:600 32px/normal "Outfit",var(--font);color:#333}
+.h-stats dd{font-size:12px;line-height:18px;font-weight:500;color:#1e293b}
+.h-ctas{display:flex;gap:24px}
+.h-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:200px;height:44px;border-radius:16px;font-size:14px;line-height:24px;font-weight:500;
+  text-decoration:none;white-space:nowrap;transition:transform .45s var(--ease-out),background .3s,color .3s}
+.h-btn--pri{background:#2563eb;color:#fff}
+.h-btn--pri:hover{background:#1d4ed8;transform:translateY(-2px)}
+.h-btn--sec{background:#fff;color:#2563eb;box-shadow:inset 0 0 0 1px #2563eb}
+.h-btn--sec:hover{background:#eff6ff;transform:translateY(-2px)}
+.h-btn:active{transform:translateY(0) scale(.98)}
+.h-btn:focus-visible{outline:2px solid #2563eb;outline-offset:3px}
+@media (max-width:1100px){.h-title{font-size:clamp(30px,4.6vw,52px);line-height:1.46}}
+@media (max-width:860px){
+  .h-copy{top:92px;gap:28px}
+  .h-title{font-size:clamp(28px,7.6vw,40px);line-height:1.3;letter-spacing:-.6px}
+  .h-title .row{white-space:normal}
+  .h-stats{gap:24px}.h-stats dt{font-size:28px}
+  .h-ctas{flex-direction:column;gap:12px}
+  .h-scene{top:auto;bottom:0;height:52%}
+}
+
+/* ---------- the deck: the classroom photo parts into three slices, which become the programme cards,
+   then one programme takes the screen and the other two wait as vertical rails ---------- */
+.deck{position:absolute;inset:0;z-index:7;visibility:hidden;background:#f6fafe}
+.deck__head{position:absolute;inset:0 0 auto;z-index:2;opacity:0;visibility:hidden;padding:clamp(64px,10vh,104px) 20px 0;text-align:center;pointer-events:none}
+.deck__head h2{font-weight:600;font-size:clamp(30px,3.6vw,52px);line-height:1.2;letter-spacing:-1px;font-variation-settings:"opsz" 32;color:#181818}
+.deck__head h2 em{font-style:normal;background:linear-gradient(90deg,#0054e4,#57c7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.deck__head p{margin-top:10px;color:var(--sub);font-size:clamp(15px,1.2vw,18px);font-weight:500}
+.deck__row{position:absolute;inset:0;display:flex}
+
+.slice{position:relative;flex:1 1 0px;min-width:0;min-height:0;overflow:hidden;isolation:isolate;background:var(--tint)}
+.slice + .slice{box-shadow:-1px 0 0 rgba(15,23,42,.06)}
+/* the slice of the hero: same photo, same wash, positioned from JS so the three line up into the one picture */
+.slice__scene{position:absolute;inset:0;z-index:4;background-color:#f6fafe;background-repeat:no-repeat;pointer-events:none}
+
+/* the card face: just the programme logo, over that card's slice of the hero photo */
+.slice__card{position:absolute;inset:0;z-index:5;cursor:pointer;opacity:0;visibility:hidden}
+.slice__card .top{position:absolute;inset:0 0 auto;height:22%;display:grid;place-items:center}
+.slice__card .logo{height:40px;width:auto;mix-blend-mode:multiply}
+.slice__scene{transform-origin:50% 100%;transition:transform 1s var(--ease-out)}
+.slice__card:hover + .slice__scene{transform:scale(1.035)}
+
+/* the open programme: Figma 8086:11168. The v1 copy block on the white-to-tint wash, and the photo filling the
+   full height from x 692 of the 1440 frame to the rails (the rails are the frame's last 2 x 72px). The copy block
+   is laid out at Figma size and scaled with the frame; the photo always runs edge to edge. */
+.slice__full{position:absolute;top:0;left:0;z-index:2;width:var(--fw,100vw);height:100%;visibility:hidden;overflow:hidden;
+  background:linear-gradient(180deg,#fff 0%,var(--tint) 84.5%)}
+.slice__full .f-text{position:absolute;left:calc(80px * var(--s,1));top:50%;transform:translateY(-50%) scale(var(--s,1));transform-origin:0 50%}
+.slice__media{position:absolute;top:0;bottom:0;right:0;left:calc(692px * var(--s,1));overflow:hidden;background:var(--wall)}
+.slice__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos) 100%;will-change:transform}
+
+.f-text{flex:none;width:602px;display:flex;flex-direction:column;gap:64px;align-items:flex-start}
+.f-logo{height:44px;width:auto;mix-blend-mode:multiply}
+.f-body{width:100%;display:flex;flex-direction:column;gap:40px;align-items:flex-start}
+.f-top{width:100%;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+
+.f-chip{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 16px;border-radius:100px;background:#fff;border:1px solid var(--hair);
+  font-size:14px;line-height:24px;font-weight:500;color:var(--body-ink);white-space:nowrap;
+  transition:border-color .35s var(--ease-out),transform .45s var(--ease-out)}
+.f-chip img{width:16px;height:16px}
+.f-chip b{font-weight:600;color:var(--ink)}
+.f-chip:hover{border-color:#cbd5e1;transform:translateY(-1px)}
+
+/* Inter Display SemiBold 56/72, -1.12 tracking, with the per-programme gradient clipped to the text */
+.f-head{width:602px;font-weight:600;font-size:56px;line-height:72px;letter-spacing:-1.12px;font-variation-settings:"opsz" 32}
+.f-head .ln{display:block;overflow:hidden;padding-bottom:4px;margin-bottom:-4px}
+.f-head .ln > span{display:inline-block;background:var(--head-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:602px 144px;background-repeat:no-repeat}
+.f-head .ln:nth-child(2) > span{background-position:0 -72px}
+
+.f-list{list-style:none;width:380px;display:flex;flex-direction:column;gap:24px}
+.f-list li{display:flex;align-items:center;gap:12px;font-size:16px;line-height:28px;font-weight:500;color:var(--body-ink);white-space:nowrap;cursor:default}
+.f-list .ic{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#fff;border:.5px solid var(--hair);
+  transition:transform .45s var(--ease-out),border-color .35s,box-shadow .45s var(--ease-out)}
+.f-list .ic img{width:20px;height:20px}
+.f-list .tx{transition:transform .45s var(--ease-out),color .3s}
+.f-list li:hover .ic{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 35%,var(--hair));box-shadow:0 8px 16px -10px rgba(15,23,42,.25)}
+.f-list li:hover .tx{transform:translateX(3px);color:var(--ink)}
+
+.f-cta{display:inline-flex;align-items:center;justify-content:center;gap:0;width:200px;height:44px;padding:0 32px;border-radius:16px;background:var(--btn);color:#fff;
+  text-decoration:none;font-size:14px;line-height:24px;font-weight:500;white-space:nowrap;
+  transition:transform .45s var(--ease-out),background .3s,gap .45s var(--ease-out)}
+.f-cta svg{width:16px;height:0;width:0;stroke-width:2;opacity:0;transition:width .45s var(--ease-out),height .45s var(--ease-out),opacity .3s}
+.f-cta:hover{transform:translateY(-2px);background:var(--btn-hover);gap:8px}
+.f-cta:hover svg{width:16px;height:16px;opacity:1}
+.f-cta:active{transform:translateY(0) scale(.98)}
+.f-cta:focus-visible{outline:2px solid var(--btn);outline-offset:3px}
+
+/* the rail a programme folds into: a solid programme-colour strip, the number at the top, the name centred on its side */
+.slice__rail{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;width:100%;
+  border:0;cursor:pointer;opacity:0;visibility:hidden;background:var(--rail);transition:filter .3s}
+.slice__rail .i{position:absolute;top:26px;left:0;right:0;text-align:center;font:500 11px/1 var(--mono);letter-spacing:.12em;color:var(--accent)}
+.slice__rail b{writing-mode:vertical-rl;rotate:180deg;font:600 17px/1 var(--font);letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
+.slice__rail:hover{filter:brightness(1.03)}
+.slice__rail:focus-visible{outline:2px solid var(--accent);outline-offset:-4px}
+
+/* ---------- phones: the slices stack; an open programme puts its photo above the copy ---------- */
+@media (max-width:860px){
+  .deck__row{flex-direction:column}
+  .slice + .slice{box-shadow:0 -1px 0 rgba(15,23,42,.06)}
+  .slice__full{width:100%;height:var(--fh,80vh)}
+  .slice__card .top{inset:12px auto auto 16px;height:auto;display:block}.slice__card .logo{height:26px}
+  /* the photo reaches the card's top on phones, so a soft wash of the page colour keeps the logo legible */
+  .slice__card{background:linear-gradient(180deg,rgba(246,250,254,.94) 0,rgba(246,250,254,.6) 22%,rgba(246,250,254,0) 44%)}
+  .slice__rail{justify-content:flex-start;gap:12px;padding:0 20px}
+  .slice__rail .i{position:static}
+  .slice__rail b{writing-mode:horizontal-tb;rotate:none}
+  .slice__full{display:flex;flex-direction:column}
+  .slice__media{position:relative;left:auto;flex:0 0 36%;order:-1}
+  .slice__full .f-text{position:relative;left:auto;top:auto;transform:none;padding:16px;width:auto;gap:14px}
+  .f-logo{height:28px}
+  .f-body,.f-top{gap:12px}
+  .f-chip{height:28px;padding:0 12px;font-size:12.5px}
+  .f-head{width:auto;font-size:28px;line-height:34px;letter-spacing:-.5px}
+  .f-head .ln > span{background-size:100% 200%}
+  .f-head .ln:nth-child(2) > span{background-position:0 100%}
+  .f-list{width:auto;gap:8px}.f-list li{font-size:14px;line-height:20px;white-space:normal}.f-list .ic{width:34px;height:34px;border-radius:10px}.f-list .ic img{width:17px;height:17px}
+  .f-cta{height:42px}
+}
+
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+<script>document.body.classList.add("is-loading")</script>
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__in">
+    <p class="loader__mark"><span>NXT</span><span>WAVE</span></p>
+    <div class="loader__track"><i class="loader__fill" id="loadFill"></i></div>
+    <p class="loader__pct" id="loadPct">0%</p>
+  </div>
+</div>
+
+<header class="nav" id="nav"><a class="nav__logo" href="#" aria-label="NxtWave home"><img src="assets/fig/nxtwave-logo.svg" alt="NxtWave"></a>
+  <nav class="nav__links"><a href="#">Programmes</a><a href="#">Success stories</a><a href="#">Hire with us</a><a href="#">About us</a><a class="login" href="#">Login</a></nav></header>
+
+<section class="stage" id="stage" aria-label="Programmes">
+  <div class="h-scene" id="scene"><img src="assets/fig/hero2.jpg" alt="Five students learning together at a long desk with laptops and a robot kit"></div>
+  <div class="h-copy" id="hcopy">
+    <div class="h-top">
+      <div class="h-head">
+        <h1 class="h-title"><span class="row">Preparing the next generation of tech</span><span class="row">professionals for a <span class="ai">future shaped by AI.</span></span></h1>
+      </div>
+      <dl class="h-stats">
+        <div><dt>16,000+</dt><dd>Learners Hired</dd></div>
+        <i aria-hidden="true"></i>
+        <div><dt>3,000+</dt><dd>Hiring Partners</dd></div>
+      </dl>
+    </div>
+    <div class="h-ctas">
+      <a class="h-btn h-btn--pri" href="#programmes" data-go="cards">Explore Programs</a>
+      <a class="h-btn h-btn--sec" href="#">Talk to a Counsellor</a>
+    </div>
+  </div>
+
+  <div class="deck" id="deck">
+    <header class="deck__head" id="dhead"><h2>Three programmes. <em>One is yours.</em></h2><p>Different starting points, same goal, a job in tech.</p></header>
+    <div class="deck__row" id="drow"></div>
+  </div>
+</section>
+
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+const IC = (k) => `assets/icons/${k}.svg`;
+
+
+/* Programme content and colours as in Figma (8070:10931 / 8086:11168); photos are the new wide shots.
+   wall = the photo's wall colour, pos = horizontal focus of the photo so both students stay in frame. */
+const PROGRAMMES = [
+  { name: "NxtWave Academy", short: "Academy", caption: "Build software skills alongside your studies.",
+    tint: "#edf2fb", accent: "#2563eb", btn: "#2563eb", btnHover: "#1d4ed8",
+    headGrad: "linear-gradient(109.72deg,#0f182d 10.83%,#235be1 104.11%)",
+    logo: "assets/fig/academy-logo.png", rail: "#e9f0ff", photo: "assets/fig/academy-home.webp", wall: "#ece3d3", pos: "34%", photoAlt: "A student learning on his laptop at home",
+    headline: ["Become a Highly-paid", "Gen AI Engineer"],
+    features: [["file", "50+ Real-world AI Projects"], ["users", "Learn from IITians &amp; MAANG Professionals"], ["briefcase", "End-to-End Placement Support"]],
+    stat: { fig: "36000+", cap: "Students Preparing for AI Careers", side: "left", bg: "#dbeafe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" },
+    cta: "Explore Academy", href: "https://www.ccbp.in/academy" },
+  { name: "NxtWave Intensive", short: "Intensive", caption: "Get software training with placement support.",
+    tint: "#eeedff", accent: "#4f46e5", btn: "#4f46e5", btnHover: "#4338ca",
+    headGrad: "linear-gradient(109.72deg,#1b1851 10.83%,#2116db 104.11%)",
+    logo: "assets/fig/intensive-logo.png", rail: "#e4e0fc", photo: "assets/fig/intensive-class.webp", wall: "#e8dccb", pos: "22%", photoAlt: "An Intensive student taking notes at her laptop in a classroom",
+    headline: ["Get Software Training", "with Placement Support"],
+    features: [["grad", "For 2025, 2026 &amp; 2027 Graduates"], ["building", "Learn Online or at Our Training Centers"], ["book-i", "Open to Any Branch, Any Degree"]],
+    stat: { fig: "1000s", cap: "of Students Placed", side: "right", bg: "#fff", border: "1px solid #e2e8f0", grad: "linear-gradient(115.02deg,#1b1851 10.83%,#2116db 104.11%)" },
+    cta: "Explore Intensive", href: "https://www.ccbp.in/intensive" },
+  { name: "NxtWave Institute of Advanced Technologies", short: "NIAT", caption: "Start your journey in AI/ML, Robotics, Data Science &amp; more.",
+    tint: "#ffecec", accent: "#991b1b", btn: "#991b1b", btnHover: "#7f1d1d",
+    headGrad: "linear-gradient(109.72deg,#360c0c 10.83%,#cf0707 104.11%)",
+    logo: "assets/fig/niat-logo.svg", rail: "#f6e8e9", photo: "assets/fig/niat-lab.webp", wall: "#e9dccd", pos: "45%", photoAlt: "Two NIAT students building a robot car in a lab",
+    headline: ["Build Your Degree and", "Tech Career Together"],
+    features: [["cpu", "Learn AI/ML, Robotics, Data Science &amp; More"], ["rocket", "Industry-Ready Upskilling"], ["book-n", "Designed for Students After 12th"]],
+    stat: { fig: "35+", cap: "UGC-approved institutions", side: "left", bg: "#fffefe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" },
+    cta: "Explore NIAT", href: "#" },
+];
+
+(() => {
+  const P = PROGRAMMES, $ = (id) => document.getElementById(id);
+  const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  const stage = $("stage"), deck = $("deck"), drow = $("drow"), dhead = $("dhead");
+
+  drow.innerHTML = P.map((p, i) => `
+    <article class="slice" style="--tint:${p.tint};--accent:${p.accent};--btn:${p.btn};--btn-hover:${p.btnHover};--head-grad:${p.headGrad};--wall:${p.wall};--pos:${p.pos};--rail:${p.rail}">
+      <div class="slice__card" data-go="p${i}" role="button" tabindex="-1" aria-label="Open ${p.name}">
+        <div class="top"><img class="logo" src="${p.logo}" alt="${p.name}"></div>
+      </div>
+      <div class="slice__scene" aria-hidden="true"></div>
+      <div class="slice__full">
+        <div class="f-text">
+          <img class="f-logo" src="${p.logo}" alt="${p.name}">
+          <div class="f-body">
+            <div class="f-top">
+              <p class="f-chip"><img src="${IC("calendar")}" alt=""><span>Next Batch: <b>10th Nov, 2025</b></span></p>
+              <h3 class="f-head">${p.headline.map((l) => `<span class="ln"><span>${l}</span></span>`).join("")}</h3>
+              <ul class="f-list">${p.features.map(([k, f]) => `<li><span class="ic"><img src="${IC(k)}" alt=""></span><span class="tx">${f}</span></li>`).join("")}</ul>
+            </div>
+            <a class="f-cta" href="${p.href}">${p.cta}${ARROW}</a>
+          </div>
+        </div>
+        <div class="slice__media"><img src="${p.photo}" alt="${p.photoAlt}"></div>
+      </div>
+      <button class="slice__rail" data-go="p${i}" aria-label="Open ${p.name}"><span class="i">0${i + 1}</span><b>${p.short}</b></button>
+    </article>`).join("");
+
+  const bands = [...drow.children], q = (el, s) => el.querySelector(s);
+  const fulls = bands.map((b) => q(b, ".slice__full")), cards = bands.map((b) => q(b, ".slice__card")),
+    rails = bands.map((b) => q(b, ".slice__rail")), sceneLayers = bands.map((b) => q(b, ".slice__scene"));
+  const hq = (s) => stage.querySelector(s);
+  const cta = hq(".h-btn--pri"), scene = $("scene"), sceneImg = hq(".h-scene img"), hcopy = $("hcopy");
+
+  /* headline: every word in its own mask so the lines can rise in word by word; the gradient phrase stays whole */
+  hq(".h-title").querySelectorAll(".row").forEach((row) => {
+    row.innerHTML = [...row.childNodes].map((n) => n.nodeType === 3
+      ? n.textContent.split(/(\s+)/).map((w) => (/^\s+$/.test(w) || !w ? w : `<span class="w"><span>${w}</span></span>`)).join("")
+      : `<span class="w ai"><span>${n.textContent}</span></span>`).join("");
+  });
+
+  /* the open slice is the stage minus two rails */
+  const narrow = () => innerWidth <= 860, RAIL = () => (narrow() ? 52 : 72);
+  const measure = () => {
+    const W = stage.clientWidth, H = stage.clientHeight;
+    const fw = narrow() ? W : W - 2 * RAIL(), fh = narrow() ? H - 2 * RAIL() : H;
+    deck.style.setProperty("--fw", fw + "px");
+    deck.style.setProperty("--fh", fh + "px");
+    deck.style.setProperty("--s", Math.min(fw / 1296, fh / 800, 1.25).toFixed(4));   /* the frame is 1440 wide, 1296 of it before the rails */
+  };
+  measure(); addEventListener("resize", measure);
+
+  /* each slice gets its own third of the hero picture (photo + wash), measured from where the photo
+     actually sits at the hand-off, so at that moment the three slices are the one picture. While the
+     slices pull apart into cards, that third rescales smoothly to fill its card: same framing, the
+     students' desk on the card's floor, the washed sky left above for the logo. */
+  let fit = null;
+  const syncSlices = () => {
+    const sr = stage.getBoundingClientRect(), r = sceneImg.getBoundingClientRect();
+    const iw = sceneImg.naturalWidth || 1672, ih = sceneImg.naturalHeight || 941;
+    const k = Math.max(r.width / iw, r.height / ih), bw = iw * k, bh = ih * k;
+    fit = { W: sr.width, H: sr.height, bw, bh, ox: r.left - sr.left + (r.width - bw) / 2, oy: r.top - sr.top };   /* cover, pinned to the top (object-position 50% 0) */
+    sceneLayers.forEach((el) => (el.style.backgroundImage = `url(${sceneImg.currentSrc || sceneImg.src})`));
+    paintSlices();
+  };
+  const part = { k: 0 };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const paintSlices = () => {
+    if (!fit) return;
+    const { W, H, bw, bh, ox, oy } = fit, t = part.k, n = narrow();
+    /* the card each slice ends as (same numbers the row's padding and gap animate to) */
+    const top = dhead.offsetHeight + (n ? 20 : 36), bottom = n ? 16 : 36, side = pad(), gap = n ? 10 : 16;
+    const cw = n ? W - 2 * side : (W - 2 * side - 2 * gap) / 3, ch = n ? (H - top - bottom - 2 * gap) / 3 : H - top - bottom;
+    /* desktop: a stage point p lands in the slice at (p - slice origin) * f + off; f and off ease from (1, 0) to
+       the card fit, so the third fills the card's width and the stage floor sits on the card's floor */
+    if (!n) {
+      const fEnd = cw / (W / 3), f = lerp(1, fEnd, t), offY = t * (ch - H * fEnd);
+      sceneLayers.forEach((el, i) => {
+        const lx = (i * W) / 3;
+        el.style.backgroundSize = `${bw * f}px ${bh * f}px`;
+        el.style.backgroundPosition = `${(ox - lx) * f}px ${oy * f + offY}px`;
+      });
+      return;
+    }
+    /* phones: the cards stack, but the photo only fills the lower half of the stage, so a plain band split would
+       leave the top cards as empty sky. Each slice starts as its band of the hero (so together they are the one
+       picture) and eases to its own window on the photo: half its width, stepping left, centre, right, so each
+       card holds the students' faces and desk. The photo glides up into the top cards as they form. */
+    const sEnd = cw / (bw / 2);
+    sceneLayers.forEach((el, i) => {
+      const x0 = ox, y0 = oy - (i * H) / 3;
+      const x1 = -i * (bw / 4) * sEnd, y1 = Math.min(0, Math.max(ch - bh * sEnd, ch / 2 - 0.6 * bh * sEnd));
+      const f = lerp(1, sEnd, t);
+      el.style.backgroundSize = `${bw * f}px ${bh * f}px`;
+      el.style.backgroundPosition = `${lerp(x0, x1, t)}px ${lerp(y0, y1, t)}px`;
+    });
+  };
+
+  /* photo hover: the students drift gently against the pointer inside their column; no glow, no resize */
+  if (!RM && matchMedia("(hover: hover)").matches) bands.forEach((b) => {
+    const media = q(b, ".slice__media"), img = q(media, "img");
+    const ease = { duration: 0.9, ease: "power3.out", overwrite: "auto" };
+    media.addEventListener("pointermove", (e) => {
+      const r = media.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      gsap.to(img, { x: -x * 22, y: -y * 10, scale: 1.04, transformOrigin: "50% 100%", ...ease });
+    });
+    media.addEventListener("pointerleave", () => gsap.to(img, { x: 0, y: 0, scale: 1, duration: 1.1, ease: "power3.out", overwrite: "auto" }));
+  });
+
+  /* ---- smooth scroll ---- */
+  gsap.registerPlugin(ScrollTrigger);
+  const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1 });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((t) => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  lenis.stop();
+
+  const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+
+  /* ---- hero parallax: pinned, so the layers drift up at different rates as you scroll —
+     the headline fastest, the classroom slowest, which reads as depth ---- */
+  tl.addLabel("start", 0)
+    .to(scene, { yPercent: -4, scale: 1.04, duration: 0.5, ease: "none" }, 0)
+    .to(hq(".h-head"), { y: -60, duration: 0.5, ease: "none" }, 0)
+    .to(hq(".h-stats"), { y: -40, duration: 0.5, ease: "none" }, 0)
+    .to(hq(".h-ctas"), { y: -22, duration: 0.5, ease: "none" }, 0);
+
+  /* the open programme arrives: logo, chip, headline lines rising out of their masks, features, CTA;
+     the photo wipes in from the right */
+  const reveal = (i) => {
+    const f = fulls[i];
+    return gsap.timeline()
+      .set(f, { visibility: "visible", x: 0, opacity: 1 })
+      .fromTo(q(f, ".slice__media"), { clipPath: "inset(0 0 0 100%)" }, { clipPath: "inset(0 0 0 0%)", duration: 0.8, ease: "power3.inOut" }, 0)
+      .fromTo(q(f, ".slice__media img"), { scale: 1.12 }, { scale: 1, duration: 1, ease: "power2.out", transformOrigin: "50% 100%" }, 0)
+      .fromTo(q(f, ".f-logo"), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.05)
+      .fromTo(q(f, ".f-chip"), { opacity: 0, y: 14, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 0.12)
+      .fromTo(f.querySelectorAll(".f-head .ln > span"), { yPercent: 105 }, { yPercent: 0, duration: 0.75, stagger: 0.08, ease: "power4.out" }, 0.16)
+      .fromTo(f.querySelectorAll(".f-list li"), { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power3.out" }, 0.34)
+      .fromTo(f.querySelectorAll(".f-list .ic"), { scale: 0.7 }, { scale: 1, duration: 0.5, stagger: 0.07, ease: "back.out(2)", clearProps: "transform" }, 0.34)
+      .fromTo(q(f, ".f-cta"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", clearProps: "transform" }, 0.55);
+  };
+  /* ...and leaves: the copy lifts out, the photo wipes toward the rail it is folding into */
+  const conceal = (i) => gsap.timeline()
+    .to(fulls[i].querySelectorAll(".f-logo,.f-body"), { opacity: 0, y: -24, duration: 0.35, stagger: 0.04, ease: "power2.in" }, 0)
+    .to(q(fulls[i], ".slice__media"), { clipPath: "inset(0 100% 0 0)", duration: 0.5, ease: "power2.in" }, 0.05)
+    .set(fulls[i], { visibility: "hidden" })
+    .set(fulls[i].querySelectorAll(".f-logo,.f-body"), { opacity: 1, y: 0 });
+  const pad = () => (narrow() ? 16 : Math.max(24, (stage.clientWidth - 1240) / 2));
+  const flat = { paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0, columnGap: 0, rowGap: 0 };
+
+  /* 1 · the classroom parts: the hero copy lifts away, the photo becomes three slices that pull apart
+     onto a white page and turn into the programme cards */
+  const T0 = 0.5;
+  tl.call(syncSlices, null, T0 - 0.01)
+    .set(deck, { visibility: "visible" }, T0)
+    .set(scene, { autoAlpha: 0 }, T0 + 0.01)
+    .to(hq(".h-head"), { opacity: 0, y: -100, duration: 0.35, ease: "power2.in" }, T0 - 0.1)
+    .to(hq(".h-stats"), { opacity: 0, y: -64, duration: 0.35, ease: "power2.in" }, T0 - 0.07)
+    .to(hq(".h-ctas"), { opacity: 0, y: -40, duration: 0.3, ease: "power2.in" }, T0 - 0.05)
+    .to("#nav", { autoAlpha: 0, duration: 0.25 }, T0)
+    .fromTo(drow, flat, { paddingTop: () => dhead.offsetHeight + (narrow() ? 20 : 36), paddingBottom: () => (narrow() ? 16 : 36),
+      paddingLeft: pad, paddingRight: pad, columnGap: 16, rowGap: 10, duration: 1.1, ease: "power3.inOut" }, T0 + 0.05)
+    .fromTo(bands, { borderRadius: 0 }, { borderRadius: 24, duration: 1.1, ease: "power3.inOut" }, T0 + 0.05)
+    .fromTo(deck, { backgroundColor: "#f6fafe" }, { backgroundColor: "#ffffff", duration: 0.8, ease: "none" }, T0 + 0.1)
+    .fromTo(part, { k: 0 }, { k: 1, duration: 1.1, ease: "power3.inOut", onUpdate: paintSlices }, T0 + 0.05)
+    .fromTo(cards, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, stagger: 0.08, ease: "power1.inOut" }, T0 + 0.6)
+    .fromTo(cards.map((c) => q(c, ".logo")), { y: 14 }, { y: 0, duration: 0.6, stagger: 0.08, ease: "power3.out" }, T0 + 0.6)
+    .fromTo(dhead, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", immediateRender: false }, T0 + 0.6)
+    .addLabel("cards", T0 + 1.4);
+
+  /* 2 · Academy takes the screen; Intensive and NIAT fold into rails on the right */
+  const T1 = tl.labels.cards + 0.25;
+  tl.to(dhead, { autoAlpha: 0, y: -24, duration: 0.4, ease: "power2.in" }, T1)
+    .to(drow, { ...flat, duration: 1, ease: "power3.inOut" }, T1)
+    .to(bands, { borderRadius: 0, duration: 1, ease: "power3.inOut" }, T1)
+    .fromTo([bands[1], bands[2]], { flexGrow: 1, flexBasis: "0px" }, { flexGrow: 0, flexBasis: () => RAIL() + "px", duration: 1, ease: "power3.inOut" }, T1)
+    .to([cards[1], cards[2]], { autoAlpha: 0, duration: 0.3 }, T1 + 0.1)
+    .fromTo(sceneLayers, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.4, ease: "power1.inOut", immediateRender: false }, T1 + 0.1)
+    .fromTo([rails[1], rails[2]], { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, T1 + 0.7)
+    .to(cards[0], { autoAlpha: 0, duration: 0.35 }, T1 + 0.35)
+    .add(reveal(0), T1 + 0.45)
+    .addLabel("p0", T1 + 1.75);
+
+  /* 3 · along the row: the open programme folds into a rail on the left, the next one opens from its rail */
+  const step = (a, b, at) => {
+    tl.add(conceal(a), at)
+      .fromTo(bands[a], { flexGrow: 1, flexBasis: "0px" }, { flexGrow: 0, flexBasis: () => RAIL() + "px", duration: 1, ease: "power3.inOut" }, at)
+      .fromTo(bands[b], { flexGrow: 0, flexBasis: () => RAIL() + "px" }, { flexGrow: 1, flexBasis: "0px", duration: 1, ease: "power3.inOut", immediateRender: false }, at)
+      .to(rails[b], { autoAlpha: 0, duration: 0.25 }, at)
+      .fromTo(rails[a], { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, immediateRender: false }, at + 0.7)
+      .add(reveal(b), at + 0.45)
+      .addLabel("p" + b, at + 1.75);
+  };
+  step(0, 1, tl.labels.p0 + 0.2);
+  step(1, 2, tl.labels.p1 + 0.2);
+  tl.to({}, { duration: 0.5 });
+
+  /* ---- pin + settle. scrub 0.8: the timeline trails the scroll by 0.8s, subtly smooth ---- */
+  const st = ScrollTrigger.create({
+    trigger: stage, start: "top top", end: () => "+=" + innerHeight * 0.8 * tl.duration(),
+    pin: true, scrub: RM ? true : 0.8, animation: tl, invalidateOnRefresh: true, onRefresh: syncSlices,
+  });
+  const at = (t) => st.start + (st.end - st.start) * (t / tl.duration());
+  let going = false, idle = 0;
+  const go = (label) => {
+    going = true;
+    lenis.scrollTo(at(tl.labels[label]), { duration: 1.1, onComplete: () => setTimeout(() => (going = false), 50) });
+  };
+  const settle = () => {
+    const y = lenis.scroll;
+    if (going || y <= st.start + 2 || y >= st.end - 2) return;
+    const t = ((y - st.start) / (st.end - st.start)) * tl.duration();
+    const stops = Object.entries(tl.labels).sort((a, b) => a[1] - b[1]);
+    if (stops.some(([, v]) => Math.abs(v - t) < 0.03)) return;
+    const next = stops.find(([, v]) => v > t + 0.02), prev = [...stops].reverse().find(([, v]) => v < t - 0.02);
+    if (!next && lenis.direction > 0) return;
+    if (!prev || !next) return go((next || prev)[0]);
+    const f = (t - prev[1]) / (next[1] - prev[1]);
+    /* leaving the hero takes only a nudge; between the other stops, 20% of the way decides it */
+    const fwd = prev[0] === "start" ? 0.06 : 0.2;
+    go((lenis.direction > 0 ? f > fwd : f > 0.8) ? next[0] : prev[0]);
+  };
+  lenis.on("scroll", () => { clearTimeout(idle); if (!going) idle = setTimeout(settle, 140); });
+  stage.addEventListener("click", (e) => {
+    const t = e.target.closest("[data-go]");
+    if (!t) return;
+    e.preventDefault(); go(t.dataset.go);
+  });
+
+  /* ---- loading: count the images in, then lift the curtain onto the hero ---- */
+  const imgs = [...document.images];
+  let done = 0;
+  const fill = $("loadFill"), pct = $("loadPct"), shown = { v: 0 };
+  const mark = document.querySelectorAll(".loader__mark span");
+  gsap.to(mark, { y: 0, duration: 0.8, stagger: 0.08, ease: "power4.out" });
+  const progress = gsap.quickTo(shown, "v", { duration: 0.5, ease: "power2.out",
+    onUpdate: () => { fill.style.transform = `scaleX(${shown.v})`; pct.textContent = Math.round(shown.v * 100) + "%"; } });
+  const tick = () => progress(++done / imgs.length);
+  imgs.forEach((im) => (im.complete ? tick() : (im.addEventListener("load", tick, { once: true }), im.addEventListener("error", tick, { once: true }))));
+  const heroReady = sceneImg.complete ? Promise.resolve() : new Promise((r) => { sceneImg.addEventListener("load", r, { once: true }); sceneImg.addEventListener("error", r, { once: true }); });
+  const ready = Promise.all([
+    Promise.race([Promise.all([heroReady, document.fonts ? document.fonts.ready : 0]), new Promise((r) => setTimeout(r, 2500))]),
+    new Promise((r) => setTimeout(r, 450)),
+  ]);
+  /* pointer parallax on the hero: the classroom leans away from the cursor, the copy a touch toward it */
+  if (!RM && matchMedia("(hover: hover)").matches) {
+    const qs = [gsap.quickTo(sceneImg, "x", { duration: 1.2, ease: "power3.out" }), gsap.quickTo(sceneImg, "y", { duration: 1.2, ease: "power3.out" }),
+      gsap.quickTo(hcopy, "x", { duration: 1.2, ease: "power3.out" }), gsap.quickTo(hcopy, "y", { duration: 1.2, ease: "power3.out" })];
+    gsap.set(sceneImg, { scale: 1.04 });
+    stage.addEventListener("pointermove", (e) => {
+      if (tl.time() > T0) return;
+      const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+      qs[0](-x * 22); qs[1](-y * 12); qs[2](x * 8); qs[3](y * 5);
+    });
+    stage.addEventListener("pointerleave", () => qs.forEach((f) => f(0)));
+  }
+
+  ready.then(() => {
+    progress(1);
+    /* scrolling is live as soon as the curtain is up; the copy finishes arriving on its own */
+    const unlock = () => { $("loader")?.remove(); document.body.classList.remove("is-loading"); lenis.start(); ScrollTrigger.refresh(); };
+    gsap.timeline({ delay: 0.15 })
+      .to(mark, { y: "-105%", duration: 0.4, stagger: 0.04, ease: "power3.in" }, 0)
+      .to([".loader__track", "#loadPct"], { opacity: 0, duration: 0.25 }, 0)
+      .to("#loader", { yPercent: -100, duration: 0.7, ease: "power4.inOut", onComplete: unlock }, 0.2)
+      /* the classroom settles in from a soft zoom while the copy arrives top to bottom */
+      .from(scene, { opacity: 0, duration: 0.8, ease: "power2.out" }, 0.35)
+      .from(sceneImg, { scale: 1.12, yPercent: 3, duration: 1.4, ease: "power3.out" }, 0.3)
+      .from("#nav", { opacity: 0, y: -12, duration: 0.6, ease: "power3.out" }, 0.55)
+      .from(hq(".h-title").querySelectorAll(".w > span"), { yPercent: 110, duration: 0.7, stagger: 0.025, ease: "power4.out" }, 0.58)
+      .from(hq(".h-stats").children, { opacity: 0, y: 12, duration: 0.5, stagger: 0.08, ease: "power3.out" }, 0.9)
+      .from(hq(".h-ctas").children, { opacity: 0, duration: 0.6, stagger: 0.06, ease: "power2.out" }, 1.05);
+  });
+  window.__rl = { tl, st, lenis, go };
+})();
+</script>
+
+
+</body></html>
