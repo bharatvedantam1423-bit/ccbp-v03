@@ -9,7 +9,8 @@ const PG_IC = (k) => `assets/programmes/icons/${k}.svg`;
 const PG_FIG = (f) => `assets/programmes/fig/${f}`;
 
 /* Programme content, as in Figma 8070:10931. Colours are the Figma fills.
-   pos = horizontal focus of the landscape photo inside the portrait card, so the students stay in frame. */
+   pos = horizontal focus of the landscape photo inside the portrait card, so the students stay in frame.
+   back = the side the card flips to (Figma 1089:356): its own photo (fit = object-position) and stat card (at = its place on the card). */
 const PROGRAMMES = [
   { name: "NxtWave Academy", short: "Academy", caption: "Build software skills alongside your studies.",
     tint: "#edf2fb", accent: "#2563eb", btn: "#2563eb", btnHover: "#1d4ed8",
@@ -18,6 +19,8 @@ const PROGRAMMES = [
     headline: ["Become a Highly-paid", "Gen AI Engineer"],
     features: [["file", "50+ Real-world AI Projects"], ["users", "Learn from IITians &amp; MAANG Professionals"], ["briefcase", "End-to-End Placement Support"]],
     stat: { fig: "36000+", cap: "Students Preparing for AI Careers", side: "left", bg: "#dbeafe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" },
+    back: { photo: PG_FIG("academy-back.webp"), fit: "50% 0",
+      stat: { fig: "50+", cap: "Real-world AI Projects", at: "right:-90.5px;top:112px", w: 181, bg: "#dbeafe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" } },
     cta: "Explore Academy", href: "https://www.ccbp.in/academy" },
   { name: "NxtWave Intensive", short: "Intensive", caption: "Get software training with placement support.",
     tint: "#eeedff", accent: "#4f46e5", btn: "#4f46e5", btnHover: "#4338ca",
@@ -26,6 +29,8 @@ const PROGRAMMES = [
     headline: ["Get Software Training", "with Placement Support"],
     features: [["grad", "For 2025, 2026 &amp; 2027 Graduates"], ["building", "Learn Online or at Our Training Centers"], ["book-i", "Open to Any Branch, Any Degree"]],
     stat: { fig: "04", cap: "Cities with Training Centers", side: "right", bg: "#fff", border: "1px solid #e2e8f0", grad: "linear-gradient(115.02deg,#1b1851 10.83%,#2116db 104.11%)" },
+    back: { photo: PG_FIG("intensive-back.webp"), fit: "50% 50%",
+      stat: { fig: "Offline Training Centers", cap: "Madhapur , Kukatpally, more..", at: "left:-90.5px;top:395px", w: 193, bg: "#f1dbfe", grad: "linear-gradient(104.34deg,#0f182d 10.83%,#235be1 104.11%)" } },
     cta: "Explore Intensive", href: "https://www.ccbp.in/intensive" },
   { name: "NxtWave Institute of Advanced Technologies", short: "NIAT", caption: "Start your journey in AI/ML, Robotics, Data Science &amp; more.",
     tint: "#ffecec", accent: "#991b1b", btn: "#991b1b", btnHover: "#7f1d1d",
@@ -34,6 +39,8 @@ const PROGRAMMES = [
     headline: ["Build Your Degree and", "Tech Career Together"],
     features: [["cpu", "Learn AI/ML, Robotics, Data Science &amp; More"], ["rocket", "Industry-Ready Upskilling"], ["book-n", "Designed for Students After 12th"]],
     stat: { fig: "35+", cap: "UGC-approved institutions", side: "left", bg: "#fffefe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" },
+    back: { photo: PG_FIG("niat-back.webp"), fit: "50% 50%",
+      stat: { fig: "Offline Training Centers", cap: "Madhapur , Kukatpally, more..", at: "left:-90.5px;top:395px", w: 193, bg: "#fff", grad: "linear-gradient(104.34deg,#0f182d 10.83%,#235be1 104.11%)" } },
     cta: "Explore NIAT", href: "#" },
 ];
 
@@ -70,14 +77,20 @@ const PROGRAMMES = [
             </div>
           </div>
           <div class="f-media">
-            <div class="f-flip"><div class="f-card">${["front", "back"].map((side) => `
-              <div class="f-face is-${side}"${side === "back" ? ' aria-hidden="true"' : ""}>
-                <figure class="f-photo"><img src="${p.photo}" alt="${side === "front" ? p.photoAlt : ""}" loading="lazy"></figure>
+            <div class="f-flip"><div class="f-card">
+              <div class="f-face is-front">
+                <figure class="f-photo"><img src="${p.photo}" alt="${p.photoAlt}" loading="lazy"></figure>
                 <div class="f-pop is-${s.side}"><div class="f-stat">
                   <div class="faces" aria-hidden="true"><div class="faces__row">${pools[i].slice(0, VISIBLE + 1).map((f) => `<img src="${f}" alt="">`).join("")}</div></div>
                   <div><strong>${s.fig}</strong><span>${s.cap}</span></div>
                 </div></div>
-              </div>`).join("")}
+              </div>
+              <div class="f-face is-back" aria-hidden="true">
+                <figure class="f-photo"><img src="${p.back.photo}" alt="" loading="lazy" style="object-position:${p.back.fit}"></figure>
+                <div class="f-pop is-back" style="${p.back.stat.at}"><div class="f-stat" style="width:${p.back.stat.w}px;--stat-bg:${p.back.stat.bg};--stat-grad:${p.back.stat.grad}">
+                  <div><strong>${p.back.stat.fig}</strong><span>${p.back.stat.cap}</span></div>
+                </div></div>
+              </div>
             </div></div>
           </div>
         </div>
@@ -97,20 +110,21 @@ const PROGRAMMES = [
   };
   measure(); addEventListener("resize", measure);
 
-  /* photo card hover: the card tilts toward the pointer, the picture drifts the other way inside
-     its frame and the stat card floats a little further, so the three read as layers. Size never changes. */
-  if (!RM && matchMedia("(hover: hover)").matches) bands.forEach((b) => {
-    const media = q(b, ".f-media"), img = b.querySelectorAll(".f-photo img"), stat = b.querySelectorAll(".f-stat");
+  /* photo card follows the pointer anywhere over the open programme (text and CTA included): the card
+     tilts toward it, the picture drifts the other way inside its frame and the stat card floats a little
+     further, so the three read as layers. Size never changes. */
+  if (!RM && matchMedia("(hover: hover)").matches) bands.forEach((b, i) => {
+    const area = fulls[i], media = q(b, ".f-media"), img = b.querySelectorAll(".f-photo img"), stat = b.querySelectorAll(".f-stat");
     const ease = { duration: 0.8, ease: "power3.out", overwrite: "auto" };
     gsap.set(media, { transformPerspective: 1100 });
-    media.addEventListener("pointerenter", () => gsap.to(img, { scale: 1.07, ...ease }));
-    media.addEventListener("pointermove", (e) => {
-      const r = media.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    area.addEventListener("pointerenter", () => gsap.to(img, { scale: 1.07, ...ease }));
+    area.addEventListener("pointermove", (e) => {
+      const r = area.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
       gsap.to(media, { rotationY: x * 9, rotationX: -y * 7, ...ease });
       gsap.to(img, { x: -x * 18, y: -y * 18, ...ease });
       gsap.to(stat, { x: x * 14, y: y * 10, ...ease });
     });
-    media.addEventListener("pointerleave", () => {
+    area.addEventListener("pointerleave", () => {
       const back = { duration: 1, ease: "power3.out", overwrite: "auto" };
       gsap.to(media, { rotationY: 0, rotationX: 0, ...back });
       gsap.to(img, { x: 0, y: 0, scale: 1, ...back });
@@ -151,10 +165,10 @@ const PROGRAMMES = [
   if (!RM) gsap.delayedCall(2.4, tick);
 
   /* card flip, after Framer University's "3D Flipping Project Card": every 2s the open programme's card
-     turns top over bottom (rotateX 180, perspective 1200) in 1s on a sharp in-out curve. Each face carries
-     its own photo and stat card (the same ones for now); the stat card floats 70px off its face, so it
-     turns with the card as a layer in front of the photo. The leaving stat card shrinks to 0.6 and drifts
-     toward the card's centre; the arriving one grows back from there. */
+     turns left to right (rotateY 180, perspective 1200) in 1s on a sharp in-out curve, from the front
+     (photo + stat card) to the back from Figma 1089:356 and back again. Each stat card floats 70px off its
+     face, so it turns with the card as a layer in front of the photo; the leaving one shrinks to 0.6 and
+     drifts toward the card's centre, the arriving one grows back from there. */
   const bezier = (x1, y1, x2, y2) => (t) => {
     const f = (a, b, u) => ((1 - 3 * b + 3 * a) * u + (3 * b - 6 * a)) * u * u + 3 * a * u;
     let lo = 0, hi = 1, u = t;
@@ -164,19 +178,20 @@ const PROGRAMMES = [
   const FLIP = { duration: 1, ease: bezier(0.93, 0.03, 0.23, 0.99) };
   const flippers = bands.map((b, i) => {
     const pops = [...b.querySelectorAll(".f-pop")];
-    return { card: q(b, ".f-card"), stats: pops.map((p) => q(p, ".f-stat")), drift: pops[0].classList.contains("is-left") ? -24 : 24, full: fulls[i], side: 0, tl: null };
+    const inward = (p) => (p.classList.contains("is-left") || p.style.left ? 15 : -15);
+    return { card: q(b, ".f-card"), stats: pops.map((p) => q(p, ".f-stat")), drift: pops.map(inward), full: fulls[i], side: 0, tl: null };
   });
   const flip = () => {
     const r = stage.getBoundingClientRect();
     if (r.bottom > 0 && r.top < innerHeight)
       flippers.forEach((f) => {
         if (!isOpen(f.full) || (f.tl && f.tl.isActive())) return;
-        const leaving = f.stats[f.side], arriving = f.stats[1 - f.side];
-        f.side = 1 - f.side;
+        const out = f.side, inn = 1 - f.side;
+        f.side = inn;
         f.tl = gsap.timeline({ defaults: FLIP })
-          .to(f.card, { rotationX: "+=180" }, 0)
-          .fromTo(leaving, { scale: 1, yPercent: 0 }, { scale: 0.6, yPercent: f.drift }, 0)
-          .fromTo(arriving, { scale: 0.6, yPercent: f.drift }, { scale: 1, yPercent: 0 }, 0);
+          .to(f.card, { rotationY: "+=180" }, 0)
+          .fromTo(f.stats[out], { scale: 1, xPercent: 0 }, { scale: 0.6, xPercent: f.drift[out] }, 0)
+          .fromTo(f.stats[inn], { scale: 0.6, xPercent: f.drift[inn] }, { scale: 1, xPercent: 0 }, 0);
       });
     gsap.delayedCall(2, flip);
   };
