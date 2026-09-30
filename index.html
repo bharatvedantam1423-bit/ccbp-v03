@@ -12,9 +12,15 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="vendor/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/fonts.css">
+<!-- lower sections (from ccbp-finalv02): styles scoped to .cs / .mc / .nr / .ft -->
+<link rel="stylesheet" href="career/style.css">
+<link rel="stylesheet" href="career/media-footer.css">
+<link rel="stylesheet" href="career/masterclass.css">
+<link rel="stylesheet" href="career/transformations.css">
+<link rel="stylesheet" href="career/national-recognition.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Outfit:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Outfit:wght@400;500;600&family=Inter:ital,wght@0,400;0,500;0,600;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <!-- section 2: programmes (styles scoped to #programmes) -->
 <link rel="stylesheet" href="programmes.css">
 <!-- design notes: the annotation switch in the bottom-left corner -->
@@ -223,6 +229,278 @@ a{color:inherit;text-decoration:none}
 
 /* PAGE LAYOUT */
 .site-nav{--hx-pad:var(--page-edge)}
+
+/* =====================================================================
+   SECTIONS 3 ONWARD — Recognised By down to the footer, ported from ccbp-finalv02
+   ===================================================================== */
+/* =====================================================================
+   S3 — AWARDS & RECOGNITIONS (Figma CCBP-v02 802:5108)
+   A wall of awards on film that plays with the scroll, then three photo cards
+   with captions.
+   ===================================================================== */
+/* opaque and above Programmes, whose upward shadow otherwise spills ~24px onto this heading as a grey band */
+.record{position:relative;z-index:3;background:#fff;padding:clamp(16px,2vw,32px) clamp(12px,2.3vw,33px) 0}
+.aw-inner{max-width:1600px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px}
+.record-title{line-height:1.2}
+.aw-wall{position:relative;width:min(100%,1600px);aspect-ratio:16/7;border-radius:clamp(20px,2.65vw,38px);overflow:hidden;
+  background:linear-gradient(179.3deg,#000 7.1%,#0b1e40 71.2%,#2563eb 117.3%);isolation:isolate}
+.aw-wall > img:not(.aw-notch),.aw-wall video,.aw-wall canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* the film sits low in the panel so its headline clears the notch (the canvas uses the same anchor) */
+.aw-wall > img:not(.aw-notch),.aw-wall video{object-position:50% 15%}
+.aw-wall video{opacity:0;transition:opacity .3s}
+.aw-wall.has-video video{opacity:1}
+.aw-wall canvas{opacity:0;transition:opacity .3s}
+.aw-wall.frames canvas{opacity:1}
+.aw-wall.frames video{visibility:hidden}
+/* the white tab cut into the top edge (Figma 802:5325: the recognition notch, flipped) */
+.aw-notch{position:absolute;left:50%;top:-1px;z-index:2;width:62.9%;height:clamp(16px,2.5vw,36px);translate:-50% 0;transform:scaleY(-1);display:block}
+.aw-cards{list-style:none;margin:20px 0 0;padding:0;width:min(100%,1200px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.7vw,32px)}
+.aw-cards li{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.aw-cards img{width:100%;aspect-ratio:378/174.6;object-fit:cover;border-radius:16px;display:block;background:#eef2f9}
+.aw-cards p{margin:0;font:500 clamp(14px,1.11vw,16px)/1.5 "Inter Display","InterVariable","Inter",sans-serif;color:#818181;max-width:380px}
+.aw-cards b{font-weight:600;color:#0f0f0f}
+@media (max-width:760px){ .aw-cards{grid-template-columns:1fr;max-width:420px} }
+
+/* =====================================================================
+   S2b — RECOGNISED BY (from the supplied build): under the programme cards
+   ===================================================================== */
+/* extra top margin: a hovered card grows ~170px (description + batch row + 4% lift), so the row sits
+   clear of it rather than under it */
+.recog{position:relative;z-index:1;width:100%;max-width:1204px;display:flex;flex-direction:column;align-items:center;gap:28px;text-align:center;
+  margin-top:clamp(80px,9vw,140px)}
+@media (hover:none){ .recog{margin-top:0} }   /* touch: cards are already shown open, nothing expands */
+.recog-title{margin:0;font:600 clamp(13px,1.1vw,16px)/1.2 var(--font);letter-spacing:.06em;text-transform:uppercase;color:#173559}
+.recog picture,.recog img{display:block;width:min(100%,960px);height:auto}
+@media (max-width:640px){ .recog picture,.recog img{width:min(100%,360px)} }
+/* standalone band now (it sat inside the v02 programmes section) */
+.recog-band{position:relative;z-index:2;background:#fff;display:flex;justify-content:center;
+  padding:clamp(40px,5vw,72px) 24px clamp(40px,5vw,72px)}
+.recog-band .recog{margin-top:0}
+
+
+/* =====================================================================
+   S3b — 3,000+ COMPANIES (from the supplied build): five lines of logos
+   drifting in alternate directions, edges fading into the page
+   ===================================================================== */
+.companies{background:#fefffe;padding:var(--sec-y) clamp(16px,4vw,57px) clamp(24px,3vw,48px)}   /* mentors below brings its own top room */
+.companies-inner{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:clamp(36px,3.7vw,53px)}
+.companies-head{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.companies-sub{margin:0;color:#000101}
+.ticker{width:100vw;margin-inline:calc(50% - 50vw);display:flex;flex-direction:column;gap:clamp(28px,3vw,44px);overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
+.ticker-row{display:flex;width:max-content;animation:tickL var(--tick-dur,60s) linear infinite}
+.ticker-row.to-right{animation-name:tickR}
+.ticker-set{display:flex;align-items:center;gap:clamp(48px,6vw,96px);padding-right:clamp(48px,6vw,96px);list-style:none;margin:0}
+.ticker-set li{flex:none;display:flex;align-items:center;height:clamp(20px,2.1vw,29px)}
+.ticker-set img{height:100%;width:auto;max-width:clamp(63px,7.2vw,105px);object-fit:contain;display:block}
+@keyframes tickL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes tickR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@media (prefers-reduced-motion:reduce){ .ticker-row{animation:none} }
+
+/* =====================================================================
+   S7b — BACKED BY LEADING GLOBAL INVESTORS (from the supplied build)
+   ===================================================================== */
+.cs .inv{background:#fff;padding:var(--sec-y) 24px 0;display:flex;flex-direction:column;align-items:center;gap:clamp(40px,5vw,72px)}
+.inv-head{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;max-width:898px}
+.inv-sub{margin:0;color:#000101}
+.inv-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:40px 64px;list-style:none;margin:0;padding:0}
+.inv-row li{display:flex;align-items:center;gap:24px}
+.inv-row .lf{width:48.48px;height:149px;display:block}
+.inv-logo{display:flex;align-items:center;justify-content:center;transition:transform .45s var(--ease)}
+.inv-row li:hover .inv-logo{transform:scale(1.06)}
+.inv-logo img{display:block;height:auto}
+.inv-better{width:156px;height:64px;background:#000;border-radius:12.5px}
+.inv-better img{width:107px;border-radius:8.5px}
+.inv-gp img{width:259px;border-radius:12.5px}
+.inv-orios img{width:224px}
+@media (max-width:640px){ .inv-row{gap:24px} .inv-row li{zoom:.72} }
+
+/* Why Top Companies Prefer NxtWave Students: portrait cards sized ~5.4 across, capped at 280px wide
+   and kept inside the window height, so the section stays compact on big screens as well as small */
+.cs .ht{--cw:clamp(170px,min(calc((100vw - 2 * var(--m) - 4 * var(--gap)) / 5.4),calc((100svh - 380px) * .5625)),280px)}
+@media (max-width:640px){ .cs .ht{--cw:min(58vw,calc((100svh - 300px) * .5625))} }
+.cs .ht__head{margin-bottom:clamp(32px,4vw,56px)}
+.cs .ht__name{font-size:clamp(15px,1.15vw,18px)}
+.cs .ht__role{font-size:clamp(13px,.95vw,14px)}
+.inv-row li.reveal-up{transition-delay:calc(var(--i,0) * 90ms)}
+
+/* scroll reveal for both new sections */
+.reveal-up{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform 1s var(--ease)}
+.is-in .reveal-up,.reveal-up.is-in{opacity:1;transform:none}
+.aw-cards li.reveal-up{transition-delay:calc(var(--i,0) * 90ms)}
+@media (prefers-reduced-motion:reduce){ .reveal-up{opacity:1;transform:none;transition:none} }
+
+/* =====================================================================
+   S3 — MENTORS: scroll-scrubbed video ("Taught by people who have done the job")
+   ===================================================================== */
+.mentors{position:relative;background:#fff}
+.mw-track{position:relative;height:var(--mw-track,340vh)}
+/* heading + film pin together: the heading stays in view for the whole scrub, the film takes
+   the room left beneath it */
+.mw-stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;align-items:center;
+  padding-bottom:clamp(24px,6vh,64px)}   /* breathing room under the table */
+.mw-head{flex:none;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  padding:clamp(40px,8vh,96px) 16px clamp(12px,2.6vh,28px);max-width:1080px;margin:0 auto}
+.mw-title{max-width:820px}
+.mw-sub{color:#000101;max-width:640px}
+
+/* the alumni strip that sits under the mentors heading, in place of a subhead */
+.mw-alumni{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:10px;width:100%}
+.mw-alumni-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+  gap:clamp(14px,2.2vw,34px);list-style:none;margin:0;padding:0}
+.mw-alumni-row li{display:flex;align-items:center;gap:8px}
+.mw-alumni-row img{display:block;width:auto;height:clamp(32px,2.7vw,42px);object-fit:contain}
+.mw-alumni-row b{font-family:var(--font-head);font-size:clamp(14px,1.15vw,17px);
+  font-weight:600;color:#0f172a;letter-spacing:-.01em;white-space:nowrap}
+.mw-alumni-more{margin:0;font-family:var(--font-sub);font-size:13px;color:#64748b}
+@media (max-width:640px){ .mw-alumni-row{gap:14px 20px} }
+/* heading rises in as the section arrives */
+.mw-head > *{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .9s var(--ease)}
+.mw-head > * + *{transition-delay:.12s}
+.mentors.is-in .mw-head > *{opacity:1;transform:none}
+
+/* the film: whole frame, uncropped, sitting on the desk edge at the foot of the stage */
+.mw-screen{position:relative;flex:1 1 0;min-height:0;width:100%}
+.mw-screen video,.mw-screen canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
+  /* fallback video: same thin feather as the canvas draws (sides + top) */
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%),linear-gradient(180deg,transparent 0,#000 6%);
+  -webkit-mask-composite:source-in;
+          mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%),linear-gradient(180deg,transparent 0,#000 6%);
+          mask-composite:intersect}
+.mw-screen video{object-fit:contain;object-position:50% 100%}
+/* the film's backdrop is rgb(253,253,251); lift it to pure white so it melts into the white section */
+.mw-screen video,.mw-screen canvas{filter:brightness(1.016)}
+.mw-screen canvas{opacity:0;transition:opacity .2s;-webkit-mask-image:none;mask-image:none}
+.mw-screen.frames canvas{opacity:1}
+.mw-screen.frames video{visibility:hidden}
+
+@media (max-width:860px){
+  .mentors{--mw-track:240vh}
+  .mw-head{gap:12px}
+  /* on a phone the film is far wider than it is tall: heading + film sit together in the middle
+     of the screen rather than the film dropping to the bottom with a gap above it */
+  .mw-stage{justify-content:center}
+  .mw-screen{flex:none;height:calc(100vw * 728 / 1262)}
+}
+
+/* =====================================================================
+   S6 — CAREER TRANSFORMATIONS
+   Two tickers side by side, no pinning and no scroll-scrub: a column of
+   learner portraits drifting up on the left, a wall of short written
+   reviews drifting on the right. Both loop by duplicating their content
+   and translating a whole copy's height, so the seam never shows.
+   Content lives in PEOPLE and REVIEWS in the script — edit those.
+   ===================================================================== */
+.ctv{position:relative;z-index:2;background:#fff;padding:var(--sec-y) 0;overflow:hidden}
+.ctv-inner{max-width:1440px;margin:0 auto;padding:0 var(--pad,clamp(20px,5.56vw,80px));
+  display:grid;grid-template-columns:minmax(0,clamp(300px,30vw,420px)) minmax(0,1fr);
+  gap:clamp(24px,3.4vw,56px);align-items:start}
+
+/* ---- left: portrait ticker. the photo is the card; the caption sits on it ---- */
+.ctv-people{position:relative;height:clamp(520px,74vh,760px);overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 9%,#000 91%,transparent);
+          mask-image:linear-gradient(180deg,transparent,#000 9%,#000 91%,transparent)}
+.ctv-people-track{display:flex;flex-direction:column;gap:16px;will-change:transform;
+  animation:ctvUp var(--ctv-dur,60s) linear infinite}
+.ctv-people:hover .ctv-people-track,.ctv-wall:hover .ctv-col{animation-play-state:paused}
+
+.ctv-shot{position:relative;flex:none;margin:0;border-radius:14px;overflow:hidden;
+  aspect-ratio:16/10;background:#e2e8f0;box-shadow:0 12px 28px -18px rgba(2,6,23,.45)}
+.ctv-shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ctv-shot figcaption{position:absolute;left:0;right:0;bottom:0;z-index:1;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:14px;
+  color:#fff;font-family:var(--font-sub);
+  background:linear-gradient(180deg,transparent,rgba(2,6,23,.78))}
+.ctv-shot figcaption span{min-width:0;font-size:13px;line-height:1.35}
+.ctv-shot figcaption b{display:block;font-size:15px;font-weight:600}
+.ctv-pkg{flex:none;align-self:center;background:#188300;color:#fff;border-radius:999px;
+  padding:4px 10px;font-size:12px;font-weight:700;line-height:1}
+
+/* ---- right: heading, then the wall of written reviews ---- */
+.ctv-head{max-width:640px}
+.ctv-title{margin:0;font-size:var(--head-size);line-height:1.12}
+.ctv-btn{display:inline-block;margin-top:20px;padding:12px 26px;border-radius:10px;
+  background:var(--brand,#2563eb);color:#fff;text-decoration:none;
+  font-family:var(--font-sub);font-size:15px;font-weight:600;
+  transition:background .2s,transform .2s}
+.ctv-btn:hover{background:#1d4ed8;transform:translateY(-1px)}
+
+.ctv-wall{position:relative;margin-top:clamp(24px,3vw,40px);
+  height:clamp(460px,62vh,640px);overflow:hidden;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent);
+          mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent)}
+.ctv-col{display:flex;flex-direction:column;gap:16px;will-change:transform;
+  animation:ctvUp var(--ctv-dur,60s) linear infinite}
+.ctv-col--down{animation-name:ctvDown}
+
+.ctv-note{flex:none;background:#f8fafc;border:1px solid #eef2f7;border-radius:12px;padding:16px}
+.ctv-note-by{display:flex;align-items:center;gap:10px}
+.ctv-note-by > div{min-width:0;flex:1 1 auto}
+.ctv-ctc{flex:none;align-self:center;background:#e8f5e9;color:#166534;border-radius:999px;
+  padding:4px 9px;font-family:var(--font-sub);font-size:12px;font-weight:700;line-height:1}
+.ctv-note-by img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none;background:#e2e8f0}
+.ctv-note-by b{display:block;font-family:var(--font-sub);font-size:13px;font-weight:600;color:#0f172a;line-height:1.3}
+.ctv-note-by span{display:block;font-family:var(--font-sub);font-size:12px;color:#64748b;line-height:1.3}
+.ctv-note p{margin:10px 0 0;font-family:var(--font-sub);font-size:13px;line-height:1.55;color:#334155}
+
+@keyframes ctvUp  {from{transform:translate3d(0,0,0)}      to{transform:translate3d(0,calc(-50% - 8px),0)}}
+@keyframes ctvDown{from{transform:translate3d(0,calc(-50% - 8px),0)} to{transform:translate3d(0,0,0)}}
+
+@media (max-width:1024px){
+  .ctv-inner{grid-template-columns:minmax(0,1fr);gap:32px}
+  .ctv-people{height:auto}
+  .ctv-people-track{flex-direction:row;animation-name:ctvLeft}
+  .ctv-people{-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+              mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .ctv-shot{width:min(74vw,320px)}
+  @keyframes ctvLeft{from{transform:translate3d(0,0,0)} to{transform:translate3d(calc(-50% - 8px),0,0)}}
+  .ctv-wall{grid-template-columns:repeat(2,minmax(0,1fr));height:clamp(420px,56vh,560px)}
+}
+@media (max-width:640px){
+  .ctv-wall{grid-template-columns:minmax(0,1fr);height:440px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ctv-people-track,.ctv-col{animation:none}
+  .ctv-people,.ctv-wall{height:auto;overflow:visible;-webkit-mask-image:none;mask-image:none}
+  .ctv-wall{grid-auto-rows:min-content}
+}
+
+/* everything from Masterclasses down is opaque and layered above, so nothing
+   below can show through a short section */
+.mc{position:relative;z-index:2}
+.cs--after{position:relative;z-index:2;background:#fff}
+
+/* one vertical rhythm for every section from here down: room above each heading, none below,
+   so two sections never stack their padding into a double gap */
+.cs{--sec:var(--sec-y)}
+.mc{--sec:var(--sec-y);padding-bottom:0}
+
+@media (prefers-reduced-motion:reduce){
+  .mentors{--mw-track:auto}
+  .mw-stage{position:relative;height:auto;min-height:100svh}
+  .mw-screen{flex:none;height:min(80vh,calc(100vw * 728 / 1262))}
+  .mw-head > *{opacity:1;transform:none}
+}
+
+/* =====================================================================
+   WHATSAPP — sticky contact button, bottom-right (like the chatbot slot)
+   ===================================================================== */
+.wa{position:fixed;right:72px;bottom:calc(48px + env(safe-area-inset-bottom,0px));z-index:70;
+  display:grid;place-items:center;width:56px;height:56px;border-radius:50%;
+  background:#25D366;box-shadow:0 10px 24px -8px rgba(15,23,42,.45);
+  transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.wa:hover{transform:scale(1.06);box-shadow:0 14px 30px -8px rgba(15,23,42,.55)}
+.wa:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.wa svg{width:32px;height:32px;display:block;fill:#fff}
+/* tablets: the 72px gutter is desktop-only, pull it in to a normal float */
+@media (max-width:1024px){.wa{right:32px;bottom:calc(32px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:640px){.wa{right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));
+    width:52px;height:52px}
+  .wa svg{width:29px;height:29px}}
+@media (prefers-reduced-motion:reduce){.wa{transition:none}.wa:hover{transform:none}}
+
 </style>
 <style>
 /* =====================================================================
@@ -375,7 +653,453 @@ html.lenis,html.lenis body{height:auto}
   </div>
 </section>
 
+<!-- ===================================================================
+     RECOGNISED BY (v02 build)
+     =================================================================== -->
+<section class="recog-band" id="recognised-by" aria-labelledby="recog-title">
+  <div class="recog">
+    <h2 class="recog-title" id="recog-title">Recognised by</h2>
+    <picture>
+      <source media="(max-width:640px)" srcset="assets/recognised-by-mobile.png">
+      <img src="assets/recognised-by.png" width="3621" height="157" alt="Recognised by NASSCOM, Ministry of Commerce and Industry (Government of India), Startup India and NSDC" loading="lazy">
+    </picture>
+  </div>
+</section>
+
+<!-- ===================================================================
+     S3 — AWARDS & RECOGNITIONS
+     =================================================================== -->
+<section class="record" id="recognition" aria-labelledby="record-title">
+  <div class="aw-inner">
+    <h2 class="record-title reveal-up" id="record-title">Awards &amp; Recognitions</h2>
+    <!-- the film plays forward and back with the scroll -->
+    <div class="aw-wall reveal-up" role="img"
+      aria-label="NxtWave's award wall: World Economic Forum 2024 Technology Pioneer, Times Business Awards 2022, AsiaOne 2021–22, Prime Insights 2023 and Marksmen Daily 2021">
+      <img src="assets/awards-wall.jpg" alt="" loading="lazy">
+      <video data-src="assets/awards-wall.mp4" muted playsinline preload="none" aria-hidden="true"></video>
+      <canvas aria-hidden="true"></canvas>
+      <img class="aw-notch" src="assets/record-notch.svg" alt="" aria-hidden="true">
+    </div>
+    <ul class="aw-cards">
+      <li class="reveal-up" style="--i:0"><img src="assets/award-forbes30.jpg" alt="Anupam Pedarla and Sashank Gujjula on the Forbes India 30 Under 30 cover" loading="lazy" style="object-position:59% 54%">
+        <p>Founders <b>Mr. Anupam Pedarla</b> &amp; <b>Mr. Sashank Gujjula</b> made it to the prestigious 2024 Forbes India 30 Under 30 list!</p></li>
+      <li class="reveal-up" style="--i:1"><img src="assets/award-times-1.jpg" alt="Sashank Gujjula receiving the Times Business Award on stage" loading="lazy">
+        <p><b>Mr. Sashank Gujjula</b>, Co-founder, NxtWave, receiving the ‘Best Tech Skilling EdTech Company’ award by Times Business Awards</p></li>
+      <li class="reveal-up" style="--i:2"><img src="assets/award-times-2.jpg" alt="Sashank Gujjula receiving an award from the Times Business Awards jury" loading="lazy" style="object-position:50% 62%">
+        <p><b>Mr. Sashank Gujjula</b>, Co-founder, NxtWave, receiving the ‘Best Tech Skilling EdTech Company’ award by Times Business Awards</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================================================================
+     S3c — NATIONAL LEVEL RECOGNITION (supplied build): the awards above are the
+     company's; this is the learners'. Three.js light-ribbon backdrop behind a skewed
+     photo pair, with the honour named on a card that overlaps them.
+     =================================================================== -->
+<section class="nr" id="national-recognition" aria-labelledby="nr-title">
+  <canvas class="nr-bg" aria-hidden="true"></canvas>
+
+  <div class="nr-wrap">
+    <div class="nr-copy">
+      <h2 class="nr-title" id="nr-title">
+        <span class="ln"><span>National Level</span></span>
+        <span class="ln"><span>Recognition for</span></span>
+        <span class="ln"><span>NxtWave Students</span></span>
+      </h2>
+      <p class="nr-lede">Our learners continue to make us proud, receiving recognition at the national level for their talent and contribution.</p>
+      <a class="nr-btn" href="#programmes">
+        <svg class="nr-btn-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+        <span>Request a Callback</span>
+        <svg class="nr-btn-ar" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <figure class="nr-media">
+      <div class="nr-photos">
+        <div class="nr-ph" data-depth="1"><img src="assets/national-recognition/photo-1.jpg" width="446" height="426" alt="Shri Dharmendra Pradhan presenting a certificate to a NxtWave learner" loading="lazy"></div>
+        <div class="nr-ph" data-depth="2"><img src="assets/national-recognition/photo-2.jpg" width="446" height="392" alt="Shri Dharmendra Pradhan presenting a certificate to a NxtWave learner" loading="lazy"></div>
+      </div>
+
+      <figcaption class="nr-card">
+        <img class="nr-emblem" src="assets/national-recognition/emblem.png" width="104" height="166" alt="National Emblem of India" loading="lazy">
+        <i class="nr-div" aria-hidden="true"></i>
+        <div class="nr-card-t">
+          <span class="nr-k">Honored by</span>
+          <strong class="nr-name">Shri Dharmendra Pradhan ji</strong>
+          <span class="nr-role">Union Minister for Education | Skill Development | Entrepreneurship</span>
+          <span class="nr-role">Govt. of India - 2023</span>
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===================================================================
+     S3b — 3,000+ COMPANIES HIRE NXTWAVE LEARNERS (from the supplied build): five lines of logos
+     =================================================================== -->
+<section class="companies" id="hiring-network" aria-labelledby="companies-title">
+  <div class="companies-inner">
+    <header class="companies-head reveal-up">
+      <h2 class="companies-title" id="companies-title">3,000+ companies hire NxtWave learners</h2>
+      <p class="companies-sub">Across product companies, startups, and global services firms.</p>
+    </header>
+    <div class="ticker reveal-up" id="logo-ticker" role="region" aria-label="Companies that hire NxtWave learners"></div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     S5 — MENTORS (scroll-scrubbed video)
+     =================================================================== -->
+<section class="mentors" id="team" aria-labelledby="mw-title">
+  <div class="mw-track">
+    <div class="mw-stage">
+      <!-- the heading pins with the film, so it stays in view for the whole scrub -->
+      <header class="mw-head">
+        <h2 class="mw-title" id="mw-title">Taught by people<br>who have done the job.</h2>
+        <div class="mw-alumni">
+          <ul class="mw-alumni-row">
+            <li><img src="assets/masterclass/logos/stanford-color.png" alt="Stanford University" width="243" height="104" loading="lazy"></li>
+            <li><img src="assets/masterclass/logos/google-color.png" alt="Google" width="238" height="104" loading="lazy"></li>
+            <li><img src="assets/masterclass/logos/iit-bombay-color.png" alt="IIT Bombay" width="284" height="104" loading="lazy"></li>
+            <li><img src="assets/masterclass/logos/amazon-color.png" alt="Amazon" width="229" height="104" loading="lazy"></li>
+            <li><img src="assets/masterclass/logos/iit-delhi-color.png" alt="IIT Delhi" width="210" height="104" loading="lazy"></li>
+            <li><img src="assets/masterclass/logos/microsoft-color.png" alt="Microsoft" width="276" height="104" loading="lazy"></li>
+          </ul>
+          <p class="mw-alumni-more">and many more&hellip;</p>
+        </div>
+      </header>
+      <div class="mw-screen">
+        <video id="mw-vid" data-src="assets/mentors-v2.mp4" muted playsinline preload="auto"
+          aria-label="A learner at his laptop as his mentors gather round: trainers Rahul and Shashank, product developers Pavan and Revanth, career coaches Trivikram and Sriram Teja, and masterclass speakers Rakesh Misra and Pranavi"></video>
+        <canvas aria-hidden="true"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     S6–S9 — CAREER TRANSFORMATIONS · WHAT COMPANIES LOOK FOR · HIRING TEAMS · MEDIA
+     (merged from career-site; styles scoped to .cs)
+     =================================================================== -->
+<div class="cs">
+<!-- Career Transformations (Figma CCBP-v02 794:4806): one pinned screen that turns from light to dark.
+     White: the heading with six learner portraits around it. Scrolling: the backdrop darkens, the
+     portraits drift off, the heading rises and turns light, and columns of testimonials rise in.
+     The next section then slides up over the finished dark screen. -->
+<section class="ctv" id="career-transformations" aria-labelledby="ct-title">
+  <div class="ctv-inner">
+    <div class="ctv-people"><div class="ctv-people-track"><!-- learner portraits, rendered from PEOPLE --></div></div>
+    <div class="ctv-main">
+      <header class="ctv-head">
+        <h2 class="ctv-title" id="ct-title">Career Transformations</h2>
+        <p class="ctv-sub">Real people. Named companies. Their own words.</p>
+        <a class="ctv-btn" href="#" data-blank>View All</a>
+      </header>
+      <div class="ctv-wall"><!-- written reviews, rendered from REVIEWS --></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ===================================================================
+     S6b — MASTERCLASSES FROM MENTORS IN THE COMMUNITY (from the supplied build;
+     styles career/masterclass.css, script career/masterclass.js). Sits right after
+     Career Transformations, so it is the section that slides up over its pinned dark screen.
+     =================================================================== -->
+<section class="mc" id="masterclasses" aria-labelledby="mc-title">
+  <header class="mc__head">
+    <h2 class="mc__title" id="mc-title">Masterclasses from<br>Mentors in the Community</h2>
+    <ul class="mc__aff" aria-label="Mentors from">
+      <li><img src="assets/masterclass/logos/stanford-color.png" alt="Stanford University" width="243" height="104"></li>
+      <li><img src="assets/masterclass/logos/google-color.png" alt="Google" width="238" height="104"></li>
+      <li><img src="assets/masterclass/logos/amazon-color.png" alt="Amazon" width="229" height="104"></li>
+      <li><img src="assets/masterclass/logos/microsoft-color.png" alt="Microsoft" width="276" height="104"></li>
+    </ul>
+  </header>
+  <div class="mc__body">
+    <div class="mc__grid">
+      <button class="mc__video" type="button" data-yt="wLOkQDXN8RQ" aria-label="Play: Sneak Peek Of Masterclass by Rakesh Misra">
+        <img src="assets/masterclass/rakesh.jpg" alt="" width="1184" height="800" loading="lazy">
+      </button>
+      <!-- mentor cards injected by career/masterclass.js -->
+    </div>
+  </div>
+  <div class="mc-ticker" data-ticker="companies" role="region" aria-label="Companies in our mentor community"></div>
+</section>
+
+<div class="cs cs--after">
+<!-- NxtWave Learner's Experiences (Figma CCBP-v02 828:149): one large player, five-up
+     thumbnail strip. Sits first in .cs--after, so it follows the masterclasses section. -->
+<section class="ctf" id="learner-experiences" aria-labelledby="ctf-title">
+  <h2 class="fm__title ctf__title" id="ctf-title">NxtWave Learner's Experiences</h2>
+  <div class="ctf__stage">
+    <div class="ctf__player" id="ctf-player"></div>
+    <div class="ctf__carousel">
+      <ul class="ctf__rail" id="ctf-rail" aria-label="Learner stories"></ul>
+    </div>
+    <a class="ctf__more" href="https://www.youtube.com/@NxtWaveTech/videos" target="_blank" rel="noopener">
+      View More<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a>
+  </div>
+</section>
+
+<section class="wl" id="what-companies-look-for" aria-labelledby="wl-title">
+  <header class="wl__head">
+    <h2 class="wl__title" id="wl-title">We train you for what<br>companies hire for</h2>
+    <p class="wl__sub"><b>3,000+ companies</b> have hired from our programmes. This is what we teach that gets people through.</p>
+  </header>
+  <!-- Figma 839:377. Two reveal units: the hero card, and the three cards on the
+       right as one block. Their parts settle in after, like the reference. -->
+  <div class="wl__grid">
+    <article class="wl__card wl__card--hero" data-reveal>
+      <div class="wl__copy wl-a" style="--d:.16s">
+        <h3 class="wl__h">AI is built into how<br class="wl__br"> you solve problems</h3>
+        <p class="wl__p">You use the tools working engineers use, on everything you build here.</p>
+      </div>
+      <div class="wl__art">
+        <svg viewBox="0 0 510 416" role="img" aria-label="An AI core wired to the four things you do with it: build, plan, debug and improve">
+          <defs>
+            <linearGradient id="wlPlate" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f2f7ff"/><stop offset="1" stop-color="#cfe0fa"/>
+            </linearGradient>
+            <linearGradient id="wlCore" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#eaf2ff"/><stop offset=".55" stop-color="#d2e3ff"/><stop offset="1" stop-color="#bcd4fb"/>
+            </linearGradient>
+            <radialGradient id="wlGlow" cx=".5" cy=".5" r=".5">
+              <stop offset="0" stop-color="#6ea8ff" stop-opacity=".55"/><stop offset="1" stop-color="#6ea8ff" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <g class="wl-wires">
+            <path class="wl-wire" style="--d:.45s" d="M255 218C205 205 165 185 92 160"/>
+            <path class="wl-wire" style="--d:.5s"  d="M255 218C320 205 360 160 418 128"/>
+            <path class="wl-wire" style="--d:.55s" d="M255 218C200 240 140 270 86 300"/>
+            <path class="wl-wire" style="--d:.6s"  d="M255 218C330 235 370 260 424 282"/>
+          </g>
+          <!-- core -->
+          <g class="wl-node wl-a" style="--d:.12s">
+            <ellipse cx="255" cy="252" rx="104" ry="30" fill="url(#wlGlow)"/>
+            <g transform="translate(255,262) scale(1,.58) rotate(45)"><rect x="-62" y="-62" width="124" height="124" rx="24" fill="#b9d2fa" opacity=".45"/></g>
+            <g transform="translate(255,242) scale(1,.58) rotate(45)"><rect x="-70" y="-70" width="140" height="140" rx="26" fill="#c9dcfb" opacity=".75"/></g>
+            <g transform="translate(255,227) scale(1,.58) rotate(45)"><rect x="-75" y="-75" width="150" height="150" rx="26" class="wl-plate-side"/></g>
+            <g transform="translate(255,218) scale(1,.58) rotate(45)"><rect x="-75" y="-75" width="150" height="150" rx="26" class="wl-core-top" stroke="#fff" stroke-width="2"/></g>
+            <text class="wl-ai" x="255" y="230">AI</text>
+          </g>
+          <!-- build -->
+          <g class="wl-node wl-a" style="--d:.26s">
+            <g transform="translate(92,169) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-side"/></g>
+            <g transform="translate(92,160) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-top" stroke="#fff" stroke-width="1.6"/></g>
+            <path d="M85 153l-7 7 7 7M99 153l7 7-7 7" fill="none" stroke="#2f6bff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <text class="wl-label" x="92" y="212">Build</text>
+          </g>
+          <!-- plan -->
+          <g class="wl-node wl-a" style="--d:.32s">
+            <g transform="translate(418,137) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-side"/></g>
+            <g transform="translate(418,128) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-top" stroke="#fff" stroke-width="1.6"/></g>
+            <g fill="none" stroke="#2f6bff" stroke-width="2.2" stroke-linecap="round">
+              <rect x="407" y="114" width="22" height="28" rx="4" fill="#fff"/>
+              <path d="M412 122h12M412 128h12M412 134h7"/>
+            </g>
+            <text class="wl-label" x="418" y="180">Plan</text>
+          </g>
+          <!-- debug -->
+          <g class="wl-node wl-a" style="--d:.38s">
+            <g transform="translate(86,309) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-side"/></g>
+            <g transform="translate(86,300) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-top" stroke="#fff" stroke-width="1.6"/></g>
+            <g fill="none" stroke="#7b3fe4" stroke-width="2.6" stroke-linecap="round">
+              <circle cx="83" cy="294" r="9"/><path d="M90 301l7 7"/>
+            </g>
+            <text class="wl-label" x="86" y="352">Debug</text>
+          </g>
+          <!-- improve -->
+          <g class="wl-node wl-a" style="--d:.44s">
+            <g transform="translate(424,291) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-side"/></g>
+            <g transform="translate(424,282) scale(1,.58) rotate(45)"><rect x="-42" y="-42" width="84" height="84" rx="18" class="wl-plate-top" stroke="#fff" stroke-width="1.6"/></g>
+            <g>
+              <rect x="414" y="282" width="5.5" height="11" rx="2.5" fill="#22c55e"/>
+              <rect x="422" y="275" width="5.5" height="18" rx="2.5" fill="#2f6bff"/>
+              <rect x="430" y="268" width="5.5" height="25" rx="2.5" fill="#22c55e"/>
+            </g>
+            <text class="wl-label" x="424" y="334">Improve</text>
+          </g>
+        </svg>
+      </div>
+      <p class="wl__note wl-a" style="--d:.5s">
+        <svg width="26" height="24" viewBox="0 0 26 24" aria-hidden="true"><path d="M13 2l2.4 6.1L21.5 10l-6.1 2.4L13 18l-2.4-5.6L4.5 10l6.1-1.9z" fill="#4f46e5"/><path d="M21 15l.9 2.2 2.1.8-2.1.8L21 21l-.9-2.2-2.1-.8 2.1-.8z" fill="#7c93ff"/></svg>
+        The same AI tools used by modern engineering teams.
+      </p>
+    </article>
+
+    <div class="wl__col" data-reveal>
+      <article class="wl__card wl__card--fund">
+        <div class="wl__copy wl-a" style="--d:.1s">
+          <h3 class="wl__h">The fundamentals still decide interviews.</h3>
+          <p class="wl__p">DSA, systems, problem solving. AI raised the bar on these. It did not remove them.</p>
+        </div>
+        <div class="wl__viz wl__viz--stack" aria-hidden="true">
+          <span class="wl__slab wl-a" style="--w:92px;--d:.42s">DSA</span>
+          <span class="wl__slab wl-a" style="--w:126px;--d:.34s">Systems</span>
+          <span class="wl__slab wl-a" style="--w:166px;--d:.26s">Problem Solving</span>
+        </div>
+      </article>
+      <article class="wl__card wl__card--curr">
+        <div class="wl__copy wl-a" style="--d:.18s">
+          <h3 class="wl__h">We update the curriculum when hiring changes.</h3>
+          <p class="wl__p">What companies screen for keeps moving. So does what you learn.</p>
+        </div>
+        <div class="wl__viz wl__viz--flow" aria-hidden="true">
+          <span class="wl__chip wl-a" style="--d:.3s">Hiring trends</span>
+          <svg class="wl__arrow wl-a" style="--d:.38s" viewBox="0 0 14 26"><path d="M7 1v20M1.5 16.5L7 22l5.5-5.5"/></svg>
+          <span class="wl__chip wl__chip--solid wl-a" style="--d:.46s">Updated<br>curriculum</span>
+        </div>
+      </article>
+      <article class="wl__card wl__card--prep">
+        <div class="wl__copy wl-a" style="--d:.26s">
+          <h3 class="wl__h">Interview prep for the rounds companies actually run.</h3>
+          <p class="wl__p">Not generic soft skills training.</p>
+        </div>
+        <ul class="wl__viz wl__viz--rounds" aria-hidden="true">
+          <li class="wl-a" style="--d:.34s"><i></i>Technical Round</li>
+          <li class="wl-a" style="--d:.42s"><i></i>System Design</li>
+          <li class="wl-a" style="--d:.5s"><i></i>Product / Applied</li>
+          <li class="wl-a" style="--d:.58s"><i></i>Live Coding</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="ht" id="hiring-teams" aria-labelledby="ht-title">
+  <header class="ht__head">
+    <div>
+      <h2 class="ht__title" id="ht-title">Why Top Companies Prefer NxtWave Students</h2>
+      <p class="ht__sub">The people who actually make the hiring decision, on why they keep coming back.</p>
+    </div>
+  </header>
+  <div class="ht__rail">
+    <ul class="ht__track" id="ht-track"></ul>
+    <div class="ht__nav">
+      <button class="ht__arrow" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="ht__arrow" data-dir="1" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- Backed by Leading Global Investors (from the supplied build) -->
+<section class="inv" id="investors" aria-labelledby="inv-title">
+  <header class="inv-head reveal-up">
+    <h2 class="inv-title" id="inv-title">Backed by Leading Global Investors</h2>
+    <p class="inv-sub">Supported by investors who share our vision for the future of tech education.</p>
+  </header>
+  <ul class="inv-row" aria-label="Investors">
+    <li class="reveal-up" style="--i:0"><img class="lf" src="assets/inv/laurel-l.png" alt="" aria-hidden="true"><div class="inv-logo inv-better"><img src="assets/inv/better.png" alt="Better Capital" loading="lazy"></div><img class="lf" src="assets/inv/laurel-r.png" alt="" aria-hidden="true"></li>
+    <li class="reveal-up" style="--i:1"><img class="lf" src="assets/inv/laurel-l.png" alt="" aria-hidden="true"><div class="inv-logo inv-gp"><img src="assets/inv/greater-pacific.png" alt="Greater Pacific Capital" loading="lazy"></div><img class="lf" src="assets/inv/laurel-r.png" alt="" aria-hidden="true"></li>
+    <li class="reveal-up" style="--i:2"><img class="lf" src="assets/inv/laurel-l.png" alt="" aria-hidden="true"><div class="inv-logo inv-orios"><img src="assets/inv/orios.png" alt="Orios Venture Partners" loading="lazy"></div><img class="lf" src="assets/inv/laurel-r.png" alt="" aria-hidden="true"></li>
+  </ul>
+</section>
+
+<section class="fm" id="featured-in-media" aria-labelledby="fm-title">
+  <h2 class="fm__title" id="fm-title">Recognized by Leading Media</h2>
+  <div class="fm__press">
+    <ul class="fm__press-row" id="fm-press" aria-label="Publications that have featured NxtWave"></ul>
+  </div>
+  <ul class="fm__grid" id="fm-grid"></ul>
+  <button class="fm__more" type="button" id="fm-more">View More</button>
+</section>
+</div>
+
 </main>
+
+
+<div class="cs">
+<footer class="ft" id="footer">
+  <div class="ft__inner">
+    <nav class="ft__crumb" aria-label="Breadcrumb"><ul><li><a href="https://www.ccbp.in/">Home</a></li><li><a href="https://www.ccbp.in/hire">Hire with us</a></li></ul></nav>
+
+    <!-- Arranged as ccbp.in has it: brand and Reach Us on the left, Quick Links in the
+         middle over two columns, Payment Methods and the address on the right. -->
+    <div class="ft__top">
+      <div class="ft__brand">
+        <img class="ft__logo" src="assets/footer/Nxtwave_White_logo.svg" width="112" height="34" alt="NxtWave">
+        <p class="ft__h2">Reach Us</p>
+        <ul class="ft__reach">
+          <li><svg class="ft__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.1.82.83-3.02-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm4.66 10.2c-.25-.13-1.47-.72-1.7-.8-.22-.09-.39-.13-.55.12s-.63.8-.77.96c-.14.17-.28.19-.53.06a6.6 6.6 0 0 1-1.95-1.2 7.3 7.3 0 0 1-1.35-1.68c-.14-.25-.02-.38.11-.5l.37-.44c.12-.14.16-.24.25-.4s.04-.32-.02-.45-.55-1.33-.76-1.82c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.75 2.75 0 0 0-.86 2.05 4.77 4.77 0 0 0 1 2.53 10.9 10.9 0 0 0 4.18 3.7c.58.25 1.04.4 1.4.51.59.19 1.12.16 1.54.1.47-.07 1.47-.6 1.68-1.18.2-.58.2-1.08.15-1.18-.06-.1-.23-.17-.48-.29Z"/></svg><a href="https://forms.ccbp.in/public/form/whatsapp-us-have-a-query" target="_blank" rel="noopener">+919390111761 <sup>WhatsApp only</sup></a></li>
+          <li><svg class="ft__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5h18a1 1 0 0 1 1 1V18a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18V6.5a1 1 0 0 1 1-1Zm1.1 1.8 7.9 5.3 7.9-5.3H4.1ZM20 9.2l-7.44 5a1 1 0 0 1-1.12 0L4 9.2v8.5h16V9.2Z"/></svg><a href="mailto:support@nxtwave.tech">support@nxtwave.tech</a></li>
+        </ul>
+        <p class="ft__ai"><a href="https://www.ccbp.in/llm-info">Hey AI, learn about us <span>New</span></a></p>
+      </div>
+
+      <div class="ft__links">
+        <p class="ft__h2">Quick Links</p>
+        <div class="ft__links-cols">
+          <ul>
+            <li><a href="https://www.ccbp.in/">Home</a></li>
+            <li><a href="https://www.ccbp.in/academy">Academy</a></li>
+            <li><a href="https://www.ccbp.in/intensive">Intensive</a></li>
+            <li><a href="https://www.ccbp.in/hire">Hire with us</a></li>
+            <li><a href="https://www.ccbp.in/contact-us">Contact Us</a></li>
+            <li><a href="https://www.ccbp.in/blog">Blog</a></li>
+            <li><a href="https://www.ccbp.in/our-tech">Our Tech</a></li>
+            <li><a href="https://www.ccbp.in/careers">NxtWave Careers</a></li>
+          </ul>
+          <ul>
+            <li><a href="https://www.ccbp.in/about-us">About Us</a></li>
+            <li><a href="https://www.ccbp.in/reviews">Reviews</a></li>
+            <li><a href="https://www.ccbp.in/tech-community">Community</a></li>
+            <li><a href="https://www.ccbp.in/4-0-champions">4.0 Champions</a></li>
+            <li><a href="https://www.youtube.com/watch?v=fpPwEFB86d4" target="_blank" rel="noopener">NxtWave'23 Review</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ft__paycol">
+        <p class="ft__h2">Payment Methods</p>
+        <ul class="ft__pay">
+          <li><img src="assets/footer/visa-icon.svg" alt="Visa"></li>
+          <li><img src="assets/footer/master-card-icon.svg" alt="Mastercard"></li>
+          <li><img src="assets/footer/payment-method-icon.svg" alt="Maestro"></li>
+          <li><img src="assets/footer/Razor-pay-icon.svg" alt="Razorpay"></li>
+          <li><img src="assets/footer/upi-icon.svg" alt="UPI"></li>
+          <li><img src="assets/footer/rupay-icon.svg" alt="RuPay"></li>
+        </ul>
+        <p class="ft__addr"><svg class="ft__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7Zm0 4.6A2.4 2.4 0 1 0 12 11.4 2.4 2.4 0 0 0 12 6.6Z"/></svg><span>8th Floor, Sohini Tech Park, Nanakramguda Rd, Financial District, Gachibowli, Nanakramguda, Telangana 500032</span></p>
+      </div>
+    </div>
+
+    <div class="ft__mid">
+      <div class="ft__icons">
+        <a href="https://www.facebook.com/NxtWave-106729994530632/" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/footer/facebook-icon.svg" alt=""></a>
+          <a href="https://www.instagram.com/ccbp_nxtwave/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/footer/instgram-icon.svg" alt=""></a>
+          <a href="https://twitter.com/nxtwave_tech" target="_blank" rel="noopener" aria-label="X (Twitter)"><img src="assets/footer/twitterimage.svg" alt=""></a>
+          <a href="https://www.linkedin.com/company/nxtwavetech" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/footer/linkedin-icon.svg" alt=""></a>
+          <a href="https://www.youtube.com/c/NxtWaveTech" target="_blank" rel="noopener" aria-label="YouTube"><img src="assets/footer/youtube-icon.svg" alt=""></a>
+      </div>
+      <div class="ft__legal">
+        <a href="https://www.ccbp.in/privacy-policy">Privacy Policy</a>
+        <a href="https://www.ccbp.in/cookie-policy">Cookie Policy</a>
+        <a href="https://www.ccbp.in/terms-and-conditions">Terms and Conditions</a>
+        <a href="https://www.ccbp.in/grievance-redressal">Grievance Redressal</a>
+        <a href="https://www.ccbp.in/corporate-information">Corporate Information</a>
+        <a href="https://www.ccbp.in/vision-and-values">Vision and Values</a>
+        <a href="https://www.ccbp.in/csr-policy">Corporate Social Responsibility Policy</a>
+      </div>
+    </div>
+
+    <div class="ft__tracks" id="ft-tracks"><p class="ft__tracks-h">Course Tracks</p></div>
+
+    <p class="ft__rights">&copy; <span id="ft-year">2026</span> NxtWave Disruptive Technologies Pvt. Ltd. All rights reserved.</p>
+  </div>
+</footer>
+
+<dialog class="ht__modal" id="ht-modal">
+  <button class="ht__close" aria-label="Close">×</button>
+  <div class="ht__frame"></div>
+</dialog>
+</div>
+
+<!-- sticky WhatsApp contact button -->
+<a class="wa" href="https://forms.ccbp.in/public/form/whatsapp-us-have-a-query" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.36c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.25 8.24Zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.47-.01-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.29Z"/></svg>
+</a>
 
 <script src="vendor/lenis.min.js"></script>
 <script>
@@ -390,6 +1114,461 @@ html.lenis,html.lenis body{height:auto}
     window.NW = Object.assign(window.NW || {}, { lenis });
   }
 
+
+
+  /* =================================================================
+     S3 — MENTORS: the video scrubs with scroll.
+     The source file has sparse keyframes (random seeks ≈ 20–180 ms), so once it
+     is near, every frame is captured into memory (small webp blobs) and the
+     scrub draws the exact frame to a canvas. Until then it seeks the video directly.
+     ================================================================= */
+  (() => {
+    const sec = document.getElementById('team');
+    const vid = document.getElementById('mw-vid');
+    if (!sec || !vid) return;
+    const screen = sec.querySelector('.mw-screen');
+    const cv = screen.querySelector('canvas');
+    const ctx = cv.getContext('2d');
+    const track = sec.querySelector('.mw-track');
+    const PLAY_END = 0.86;          /* last 14% of the pin holds the final frame */
+    const FPS = 30;
+    const LAST_FRAME = 140;         /* scene ends here (≈4.67s): all four mentor groups in, glow full, learner settled at the laptop.
+                                       the clip runs to 149, but the glow drops away and the scene reads as 'finished' — so we stop short */
+
+    /* heading reveal */
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) sec.classList.add('is-in'); }, { threshold: .15 })
+      .observe(sec.querySelector('.mw-head'));   /* the head is its own block above the track now */
+
+    const load = fetch(vid.dataset.src).then(r => { if (!r.ok) throw 0; return r.blob(); })
+      .then(b => URL.createObjectURL(b))
+      .catch(() => vid.dataset.src);
+    load.then(u => { vid.src = u; });
+    addEventListener('touchstart', () => { vid.play().then(() => vid.pause()).catch(() => {}); }, { once: true, passive: true });
+
+    if (RM) {                                   /* reduced motion: just show the finished scene */
+      vid.addEventListener('loadedmetadata', () => { vid.currentTime = (LAST_FRAME + .5) / FPS; }, { once: true });
+      return;
+    }
+
+    /* ---- canvas: contain-fit, anchored to the bottom (desk sits on the fold) ---- */
+    let cvW = 1262, cvH = 728, box = { x: 0, y: 0, w: 0, h: 0 }, lastDrawn = -1;
+    const sizeCanvas = () => {
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      const w = cv.clientWidth, h = cv.clientHeight;
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      /* the whole frame, uncropped, in the room under the sticky heading: the mentor cards run
+         right up to the frame's top and sides, so nothing may be cut off */
+      const s = Math.min(w / cvW, h / cvH);
+      box = { w: cvW * s * dpr, h: cvH * s * dpr };
+      box.x = (cv.width - box.w) / 2; box.y = cv.height - box.h;
+      lastDrawn = -1;
+    };
+
+    /* ---- frame capture (runs once, off-screen, when the section is near) ---- */
+    let frames = null;                          /* Blob[] */
+    let started = false;
+    const capture = async () => {
+      if (started || location.protocol === 'file:') return; started = true;
+      const url = await load;
+      const cap = document.createElement('video');
+      cap.muted = true; cap.playsInline = true; cap.src = url;
+      Object.assign(cap.style, { position: 'fixed', left: 0, top: 0, width: '2px', height: '2px', opacity: .01, pointerEvents: 'none' });
+      document.body.appendChild(cap);
+      await new Promise(r => cap.addEventListener('loadeddata', r, { once: true }));
+      const n = Math.min(LAST_FRAME + 1, Math.round(cap.duration * FPS)), got = new Array(n);
+      const W = cap.videoWidth, H = cap.videoHeight;
+      const grab = t => {
+        const i = Math.min(n - 1, Math.round(t * FPS));
+        if (got[i]) return Promise.resolve();
+        const c = document.createElement('canvas'); c.width = W; c.height = H;
+        c.getContext('2d').drawImage(cap, 0, 0, W, H);
+        return new Promise(r => c.toBlob(b => { got[i] = b; r(); }, 'image/webp', .9));
+      };
+      const jobs = [];
+      if ('requestVideoFrameCallback' in cap) {
+        await new Promise(done => {
+          const cb = (_, m) => {
+            if (m.mediaTime * FPS > n - .5) { cap.pause(); done(); return; }   /* past the last frame we keep */
+            jobs.push(grab(m.mediaTime)); if (!cap.ended) cap.requestVideoFrameCallback(cb);
+          };
+          cap.requestVideoFrameCallback(cb);
+          cap.addEventListener('ended', done, { once: true });
+          cap.play().catch(done);
+        });
+      }
+      await Promise.all(jobs);
+      /* anything the playback pass missed (or no rVFC): step-seek for it */
+      for (let i = 0; i < n; i++) if (!got[i]) {
+        await new Promise(r => { cap.addEventListener('seeked', r, { once: true }); cap.currentTime = (i + .5) / FPS; });
+        await grab((i + .5) / FPS);
+      }
+      frames = got; cap.remove();
+      cvW = W; cvH = H; sizeCanvas();
+      screen.classList.add('frames');
+    };
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) capture(); }, { rootMargin: '150% 0px' }).observe(sec);
+
+    /* decode-on-demand with a tiny cache; only the newest request wins */
+    const cache = new Map(); let want = -1, decoding = false;
+    const draw = bmp => {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.drawImage(bmp, box.x, box.y, box.w, box.h);
+      /* the film is narrower than the page now: feather its edges into the white so the desk and
+         arcs don't end in a hard box. Kept thin (the cards sit ~3.5% from the sides, ~10% from the top). */
+      ctx.globalCompositeOperation = 'destination-out';
+      const fs = box.w * .025;
+      for (const [x0, x1] of [[box.x, box.x + fs], [box.x + box.w, box.x + box.w - fs]]) {
+        const g = ctx.createLinearGradient(x0, 0, x1, 0);
+        g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g; ctx.fillRect(Math.min(x0, x1), box.y, fs, box.h);
+      }
+      const ft = box.h * .06, gt = ctx.createLinearGradient(0, box.y, 0, box.y + ft);
+      gt.addColorStop(0, 'rgba(0,0,0,1)'); gt.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gt; ctx.fillRect(box.x, box.y, box.w, ft);
+      ctx.globalCompositeOperation = 'source-over';
+    };
+    const show = i => {
+      want = i;
+      if (i === lastDrawn) return;
+      if (cache.has(i)) { draw(cache.get(i)); lastDrawn = i; return; }
+      if (decoding) return;
+      decoding = true;
+      createImageBitmap(frames[i]).then(bmp => {
+        cache.set(i, bmp);
+        if (cache.size > 24) { const k = cache.keys().next().value; cache.get(k).close(); cache.delete(k); }
+        decoding = false;
+        if (want === i) { draw(bmp); lastDrawn = i; } else show(want);
+      }).catch(() => { decoding = false; });
+    };
+
+    /* ---- fallback before frames exist: coalesced seeks on the video itself ---- */
+    let seeking = false, pending = -1;
+    vid.addEventListener('seeked', () => { seeking = false; if (pending >= 0) { const t = pending; pending = -1; seek(t); } });
+    const seek = t => {
+      if (seeking) { pending = t; return; }
+      if (Math.abs(vid.currentTime - t) < .5 / FPS) return;
+      seeking = true; vid.currentTime = t;
+    };
+
+    /* ---- scroll → progress ---- */
+    let top = 0, span = 1, vh = innerHeight, lastW = innerWidth;
+    const measure = () => {
+      vh = innerHeight;
+      top = track.getBoundingClientRect().top + scrollY;
+      span = Math.max(1, track.offsetHeight - vh);
+      sizeCanvas();
+    };
+    measure();
+    addEventListener('load', measure);
+    /* content above (fonts, card images) can settle after load and shift this section: re-measure */
+    new ResizeObserver(() => measure()).observe(document.body);
+    addEventListener('resize', () => {
+      if (matchMedia('(pointer: coarse)').matches && innerWidth === lastW) return;   /* URL-bar resize: ignore */
+      lastW = innerWidth; measure();
+    });
+
+    const tick = () => {
+      requestAnimationFrame(tick);
+      const y = scrollY;
+      if (y + vh < top - vh || y > top + span + vh) return;           /* off-screen */
+      const p = Math.min(1, Math.max(0, (y - top) / span));
+      const k = Math.min(1, p / PLAY_END);
+      if (frames) show(Math.round(k * (frames.length - 1)));
+      else if (vid.duration) seek((Math.round(k * LAST_FRAME) + .5) / FPS);
+      sec.dataset.frame = frames ? want : -1;     /* handy for QA */
+    };
+    requestAnimationFrame(tick);
+  })();
+
+  /* =================================================================
+     S6 — CAREER TRANSFORMATIONS
+     Two looping tickers. Each track holds its content twice and the CSS
+     animation translates exactly one copy, so it repeats seamlessly.
+
+     ---- EDIT THE CONTENT HERE ----
+     PEOPLE  : the portrait cards on the left.
+     REVIEWS : the short written reviews on the right.
+     Both are plain arrays; add or remove entries and the section adapts.
+     The portraits are PLACEHOLDER learners -- swap in real names, roles
+     and packages before this goes live.
+     ================================================================= */
+  (() => {
+    const sec = document.getElementById('career-transformations');
+    if (!sec) return;
+
+    const PEOPLE = [
+      { img: 'assets/people/ct-p1.jpg', name: 'Rohan Das',    role: 'SDE II, Razorpay',           pkg: '16LPA' },
+      { img: 'assets/people/ct-p2.jpg', name: 'Aditya Rao',   role: 'SDE I, Amazon',              pkg: '24LPA' },
+      { img: 'assets/people/ct-p3.jpg', name: 'Nikhil Rao',   role: 'Cloud Engineer, Accenture',  pkg: '12LPA' },
+      { img: 'assets/people/ct-p4.jpg', name: 'Meera Pillai', role: 'ML Engineer, Fractal',       pkg: '14LPA' },
+      { img: 'assets/people/ct-p5.jpg', name: 'Karthik S',    role: 'ML Scientist, GoKwik',       pkg: '22LPA' },
+      { img: 'assets/people/ct-p6.jpg', name: 'Vivek Menon',  role: 'Data Engineer, PhonePe',     pkg: '18LPA' },
+    ];
+
+    const REVIEWS = [
+      { av: 'assets/people/p01.jpg', name: 'Sebastian Speier', at: 'Shop',        ctc: '19LPA',
+        text: 'The projects are the part that stuck. I walked into interviews with something I had actually built and could talk about line by line.' },
+      { av: 'assets/people/p02.jpg', name: 'Meng To',          at: 'DesignCode',  ctc: '15LPA',
+        text: 'Coming from a non-tech degree I expected to be lost. The fundamentals track meant I never had to fake understanding something.' },
+      { av: 'assets/people/p03.jpg', name: 'Marco Cornacchia', at: 'Figma',       ctc: '26LPA',
+        text: 'My mentor reviewed every submission properly. Not a rubber stamp -- actual comments on why a decision was wrong.' },
+      { av: 'assets/people/p04.jpg', name: 'Taha Hossain',     at: 'Daybreak',    ctc: '13LPA',
+        text: 'I was working full time. Sessions were recorded and the doubt support was quick enough that I never fell a week behind.' },
+      { av: 'assets/people/p05.jpg', name: 'Haerin Song',      at: 'Visa',        ctc: '21LPA',
+        text: 'The interview prep was the difference. Mock rounds with people who actually hire, and blunt feedback afterwards.' },
+      { av: 'assets/people/p06.jpg', name: 'John Bai',         at: 'Plaid',       ctc: '24LPA',
+        text: 'Six months in I had a portfolio that looked like a junior engineer’s, not a student’s. That is what got the first callback.' },
+      { av: 'assets/people/p07.jpg', name: 'Josiah Gulden',    at: 'Compound Labs', ctc: '17LPA',
+        text: 'What I did not expect was the peer group. Being around people grinding the same problems kept me honest on the slow weeks.' },
+      { av: 'assets/people/p08.jpg', name: 'Rachel How',       at: 'Stripe',      ctc: '28LPA',
+        text: 'The curriculum tracked what companies were actually asking. Nothing felt like filler by the time I reached the interviews.' },
+      { av: 'assets/people/p09.jpg', name: 'Oykun Yilmaz',     at: 'Jotform',     ctc: '14LPA',
+        text: 'I switched from support to engineering at 27. It took longer than the brochure says, but the path was never unclear.' },
+    ];
+
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    const shot = p =>
+      `<figure class="ctv-shot"><img src="${p.img}" alt="" loading="lazy">` +
+      `<figcaption><span><b>${esc(p.name)}</b>${esc(p.role)}</span>` +
+      `<b class="ctv-pkg">${esc(p.pkg)}</b></figcaption></figure>`;
+
+    const note = r =>
+      `<article class="ctv-note"><div class="ctv-note-by">` +
+      `<img src="${r.av}" alt="" loading="lazy">` +
+      `<div><b>${esc(r.name)}</b><span>${esc(r.at)}</span></div>` +
+      (r.ctc ? `<b class="ctv-ctc">${esc(r.ctc)}</b>` : '') + `</div>` +
+      `<p>${esc(r.text)}</p></article>`;
+
+    /* the portrait column: the list twice over, so translating one copy loops */
+    const track = sec.querySelector('.ctv-people-track');
+    track.innerHTML = PEOPLE.map(shot).join('') + PEOPLE.map(shot).join('');
+
+    /* the review wall: deal the reviews into columns, alternate direction and
+       vary the speed so the columns never line up into a visible block */
+    const wall = sec.querySelector('.ctv-wall');
+    const COLS = 3;
+    wall.innerHTML = Array.from({ length: COLS }, (_, c) => {
+      const mine = REVIEWS.filter((_, i) => i % COLS === c);
+      const html = mine.map(note).join('');
+      return `<div class="ctv-col${c % 2 ? ' ctv-col--down' : ''}">${html}${html}</div>`;
+    }).join('');
+
+    /* Speed is set here, not in the CSS, so it stays the same no matter how many
+       entries PEOPLE and REVIEWS hold: each track's duration is one copy's length
+       divided by a target px/second. (The CSS can't do this -- and note --dur is
+       already taken by the global transition token, hence --ctv-dur.) */
+    const PX_PER_S = { people: 22, wall: 9 };
+    const COL_RATE = [1, .78, 1.16];          /* columns drift at slightly different rates */
+    const cols = [...wall.children];
+
+    const tune = () => {
+      const sideways = matchMedia('(max-width:1024px)').matches;
+      const span = sideways ? track.scrollWidth : track.scrollHeight;
+      track.style.setProperty('--ctv-dur', (span / 2 / PX_PER_S.people).toFixed(1) + 's');
+      cols.forEach((c, i) => {
+        c.style.setProperty('--ctv-dur',
+          (c.scrollHeight / 2 / (PX_PER_S.wall * COL_RATE[i % COL_RATE.length])).toFixed(1) + 's');
+      });
+    };
+    requestAnimationFrame(tune);
+    addEventListener('resize', () => { clearTimeout(tune.t); tune.t = setTimeout(tune, 200); });
+  })();
+
+  /* =================================================================
+     S3 — AWARDS: the wall film plays with the scroll, forward as the panel rises up the
+     screen and back as it goes down. Like the other scrubbed films, every frame is captured once so any frame can be
+     drawn instantly; until then the video element is seeked directly.
+     ================================================================= */
+  (() => {
+    const wall = document.querySelector('.aw-wall');
+    if (!wall || RM) return;                          /* reduced motion: the still stays */
+    const vid = wall.querySelector('video'), cv = wall.querySelector('canvas'), ctx = cv.getContext('2d');
+    const FPS = 30;
+    let n = 150, frames = null, cur = n - 1, target = n - 1, drawn = -1, box = null, near = false, loaded = null;
+    const AW_Y = .15;          /* vertical crop anchor: 0 = top of the film, .5 = centred (matches CSS object-position 50% 15%) */
+    let fW = 1280, fH = 720;
+    let redraw = () => {};                  /* set once the drawing code below exists */
+
+    const sizeCanvas = () => {
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      cv.width = Math.round(cv.clientWidth * dpr); cv.height = Math.round(cv.clientHeight * dpr);
+      const k = Math.max(cv.width / fW, cv.height / fH);                        /* cover */
+      /* crop mostly from the bottom (floor), keeping the wall's headline clear of the notch */
+      box = { w: fW * k, h: fH * k }; box.x = (cv.width - box.w) / 2; box.y = (cv.height - box.h) * AW_Y;
+      drawn = -1; redraw();                 /* resizing clears the canvas */
+    };
+    new ResizeObserver(sizeCanvas).observe(wall);
+
+    /* load + capture only once the section is near */
+    const start = () => {
+      if (loaded) return loaded;
+      loaded = fetch(vid.dataset.src).then(r => { if (!r.ok) throw 0; return r.blob(); })
+        .then(b => URL.createObjectURL(b)).catch(() => vid.dataset.src);
+      loaded.then(u => {
+        vid.src = u;
+        vid.addEventListener('loadeddata', () => {
+          n = Math.max(1, Math.round(vid.duration * FPS)); cur = target = Math.min(cur, n - 1);
+          wall.classList.add('has-video');
+        }, { once: true });
+        capture(u);
+      });
+      return loaded;
+    };
+    /* capture needs the page painting: a hidden tab never delivers the frames, so wait until it's
+       visible, abandon the pass if it's hidden midway, and try again once it's back */
+    let capturing = false;
+    const whenVisible = () => document.visibilityState === 'visible' ? Promise.resolve()
+      : new Promise(r => document.addEventListener('visibilitychange', function v(){ if (document.visibilityState === 'visible') { document.removeEventListener('visibilitychange', v); r(); } }));
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && !frames && loaded) loaded.then(u => capture(u));
+    });
+    const capture = async url => {
+      if (frames || capturing || location.protocol === 'file:' || !('requestVideoFrameCallback' in HTMLVideoElement.prototype)) return;
+      capturing = true;
+      try { await capturePass(url); } finally { capturing = false; }
+    };
+    const capturePass = async url => {
+      await whenVisible();
+      const cap = document.createElement('video');
+      cap.muted = true; cap.playsInline = true; cap.src = url;
+      Object.assign(cap.style, { position: 'fixed', left: 0, top: 0, width: '2px', height: '2px', opacity: .01, pointerEvents: 'none' });
+      document.body.appendChild(cap);
+      await new Promise(r => cap.addEventListener('loadeddata', r, { once: true }));
+      const count = Math.round(cap.duration * FPS), got = new Array(count), jobs = [];
+      fW = Math.min(1280, cap.videoWidth); fH = Math.round(fW * cap.videoHeight / cap.videoWidth);
+      let hidden = false;
+      const onHide = () => { if (document.visibilityState !== 'visible') { hidden = true; cap.pause(); cap.dispatchEvent(new Event('ended')); } };
+      document.addEventListener('visibilitychange', onHide);
+      await new Promise(done => {
+        const cb = (_, m) => {
+          if (hidden) return;
+          const i = Math.min(count - 1, Math.round(m.mediaTime * FPS));
+          if (!got[i]) {
+            const c = document.createElement('canvas'); c.width = fW; c.height = fH;
+            c.getContext('2d').drawImage(cap, 0, 0, fW, fH); got[i] = true;
+            jobs.push(new Promise(r => c.toBlob(b => { got[i] = b; r(); }, 'image/webp', .85)));
+          }
+          if (!cap.ended) cap.requestVideoFrameCallback(cb);
+        };
+        cap.requestVideoFrameCallback(cb);
+        cap.addEventListener('ended', done, { once: true });
+        cap.play().catch(done);
+      });
+      document.removeEventListener('visibilitychange', onHide);
+      await Promise.all(jobs);
+      cap.remove();
+      if (hidden || got.filter(x => x instanceof Blob).length / count < .9) return;   /* interrupted or patchy: keep seeking, retry when visible */
+      let last = null;
+      for (let i = 0; i < count; i++) { if (got[i] instanceof Blob) last = got[i]; else got[i] = last; }
+      for (let i = count - 1; i >= 0; i--) { if (got[i] instanceof Blob) last = got[i]; else got[i] = last; }
+      frames = got; n = count; sizeCanvas();
+      wall.classList.add('frames');
+    };
+    /* start well before the panel arrives: the frame capture plays the 5s film once, and until it
+       finishes the film can only seek the video, which is the jerky path */
+    new IntersectionObserver(([e]) => { near = e.isIntersecting; if (near) start(); }, { rootMargin: '250% 0px' }).observe(wall);
+
+    /* draw: frames are decoded a few at a time and ahead of the scroll direction, kept in a cache of
+       ~60 around the current position, and the two nearest are blended so motion is continuous
+       rather than stepping frame to frame */
+    const CACHE = 60, IN_FLIGHT = 3;
+    const cache = new Map(), inFlight = new Set();
+    let dirty = true, lastPos = -1, dir = 1;
+    redraw = () => { dirty = true; lastPos = -1; };
+    const decode = i => {
+      if (!frames || i < 0 || i >= n || cache.has(i) || inFlight.has(i) || inFlight.size >= IN_FLIGHT) return;
+      inFlight.add(i);
+      createImageBitmap(frames[i]).then(bmp => {
+        inFlight.delete(i);
+        cache.set(i, bmp); dirty = true;
+        if (cache.size > CACHE) {                     /* drop the frame furthest from where we are */
+          let far = -1, fd = -1;
+          for (const k of cache.keys()) { const d = Math.abs(k - cur); if (d > fd) { fd = d; far = k; } }
+          cache.get(far).close(); cache.delete(far);
+        }
+      }).catch(() => inFlight.delete(i));
+    };
+    const nearestCached = i => { for (let d = 0; d < n; d++) { if (cache.has(i - d)) return i - d; if (cache.has(i + d)) return i + d; } return -1; };
+    const show = pos => {
+      if (!box) return;
+      const i0 = Math.floor(pos), f = pos - i0;
+      /* what we need now, then what we'll need next in the direction of travel */
+      decode(i0); decode(i0 + 1);
+      for (let s = 2; s <= 8; s++) decode(i0 + dir * s);
+      decode(i0 - dir);
+      if (!dirty && Math.abs(pos - lastPos) < .01) return;
+      /* if the exact frame isn't decoded yet, only stand in a neighbour a few frames away; a far one
+         would flash the wrong part of the camera move, so hold the current picture a moment instead */
+      const a = cache.has(i0) ? i0 : nearestCached(i0);
+      if (a < 0 || (Math.abs(a - i0) > 3 && drawn >= 0)) return;
+      ctx.globalAlpha = 1;
+      ctx.drawImage(cache.get(a), box.x, box.y, box.w, box.h);
+      if (a === i0 && f > .02 && cache.has(i0 + 1)) {          /* blend in the next frame by the fraction */
+        ctx.globalAlpha = f;
+        ctx.drawImage(cache.get(i0 + 1), box.x, box.y, box.w, box.h);
+        ctx.globalAlpha = 1;
+      }
+      lastPos = pos; dirty = false; drawn = a; wall.dataset.frame = a;   /* data-frame: handy for QA */
+    };
+    let seeking = false, pending = -1;
+    vid.addEventListener('seeked', () => { seeking = false; if (pending >= 0) { const t = pending; pending = -1; seek(t); } });
+    const seek = t => {
+      if (seeking) { pending = t; return; }
+      if (Math.abs(vid.currentTime - t) < .5 / FPS) return;
+      seeking = true; vid.currentTime = t;
+    };
+
+    /* input: the panel's journey through the viewport — the film plays forward as it scrolls up
+       the screen and back as it scrolls down (every device) */
+    let lastT = 0;
+    const tick = now => {
+      requestAnimationFrame(tick);
+      if (!near) { lastT = 0; return; }
+      const r = wall.getBoundingClientRect();
+      target = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height))) * (n - 1);
+      /* eased toward the scroll position at the same rate whatever the display's refresh rate */
+      if (!lastT) cur = target;             /* arriving at the panel: start where the scroll is, don't rewind into it */
+      const dt = lastT ? Math.min(.1, (now - lastT) / 1000) : 1 / 60; lastT = now;
+      const prev = cur;
+      cur += (target - cur) * (1 - Math.pow(1 - .12, dt * 60));
+      if (Math.abs(target - cur) < .002) cur = target;
+      if (cur !== prev) dir = cur > prev ? 1 : -1;
+      const pos = Math.max(0, Math.min(n - 1, cur));
+      if (frames) show(pos);
+      else if (vid.readyState >= 2) seek((Math.round(pos) + .5) / FPS);
+    };
+    requestAnimationFrame(tick);
+  })();
+
+  /* S3b: 3,000+ companies logo ticker (from the supplied build) — five lines drifting in
+     alternate directions; each set is doubled so translate −50% loops seamlessly */
+  (() => {
+    const box = document.getElementById('logo-ticker');
+    if (!box) return;
+    const NAMES = ['Google','Amazon','NVIDIA','Accenture','Deloitte','Bank of America','Bosch',
+      'Jio','TCS','Tech Mahindra','Goldman Sachs','Oracle','Samsung','Infosys',
+      'Wipro','Apollo Hospitals','SAP','Capgemini','Cyient','HCL','Tata Elxsi',
+      'Cognizant','CGI','Merkle Sokrati','Mindtree','Delhivery','needl.ai','Fareportal',
+      'Prodapt','Tanla','GlobalLogic','NTT Data','Fractal','Napier Healthcare','GEP'];
+    const logos = NAMES.map((name, i) => ({ name, src: `assets/logos/logo-${String(i).padStart(2, '0')}.png` }));
+    const ROWS = 5, per = Math.ceil(logos.length / ROWS);
+    const set = (list, hidden) => `<ul class="ticker-set"${hidden ? ' aria-hidden="true"' : ''}>` +
+      list.map(l => `<li><img src="${l.src}" alt="${hidden ? '' : l.name}" decoding="async" loading="lazy"></li>`).join('') + '</ul>';
+    const row = (list, dir, dur) => `<div class="ticker-row ${dir}" style="--tick-dur:${dur}s">${set(list)}${set(list, true)}</div>`;
+    const DUR = [70, 64, 76, 60, 68];
+    box.innerHTML = DUR.map((d, r) => { const l = logos.slice(r * per, r * per + per); return row(l.concat(l), r % 2 ? 'to-left' : 'to-right', d); }).join('');
+  })();
+
+  /* S3: elements rise in as they enter the viewport */
+  (() => {
+    const els = document.querySelectorAll('.reveal-up');
+    if (!('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('is-in')); return; }
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    }), { threshold: .2, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(el => io.observe(el));
+  })();
 
   /* links with no destination yet */
   /* NAV LABEL ROLL — give each button two copies of its label, split per character, without
@@ -522,6 +1701,22 @@ html.lenis,html.lenis body{height:auto}
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
 <script src="programmes.js"></script>
+<script src="career/script.js"></script>
+<script src="career/media-footer.js"></script>
+<script src="career/masterclass.js"></script>
+<script src="career/transformations.js"></script>
+<script type="module" src="career/national-recognition.js"></script>
+<script>
+  /* keep ScrollTrigger in step with the page: re-measure once the tall pinned sections (hero and
+     programmes, mentors) have settled, and whenever the page height really changes */
+  (() => {
+    if (!window.ScrollTrigger) return;
+    let t = 0, lastH = 0;
+    const refresh = () => { clearTimeout(t); t = setTimeout(() => { lastH = document.body.scrollHeight; ScrollTrigger.refresh(); }, 150); };
+    addEventListener('load', refresh);
+    new ResizeObserver(() => { if (Math.abs(document.body.scrollHeight - lastH) > 4) refresh(); }).observe(document.body);
+  })();
+</script>
 <script src="notes.js"></script>
 </body>
 </html>
