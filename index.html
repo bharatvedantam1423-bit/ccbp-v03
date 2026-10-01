@@ -137,11 +137,9 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
    arrow. At rest the arrow nudges right every few seconds; on hover it slips out to the right and
    comes back in from the left. */
 .hx-login{display:flex;align-items:center;gap:8px}
-.hx-login-arw{display:block;width:12px;height:12px;flex:none;
-  animation:hx-nudge 2.6s cubic-bezier(.45,0,.25,1) infinite}
+.hx-login-arw{display:block;width:12px;height:12px;flex:none}   /* still at rest; it only moves on hover */
 .hx-login:hover .hx-login-arw,.hx-login:focus-visible .hx-login-arw{
   animation:hx-arw-loop .5s cubic-bezier(.55,0,.25,1) both}
-@keyframes hx-nudge{0%,58%,100%{transform:translateX(0)} 72%{transform:translateX(3px)} 86%{transform:translateX(0)}}
 @keyframes hx-arw-loop{
   0%{transform:translateX(0);opacity:1}
   45%{transform:translateX(12px);opacity:0}
