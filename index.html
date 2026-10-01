@@ -205,20 +205,19 @@ a{color:inherit;text-decoration:none}
 .hx-nl:hover .hx-nl-top .hx-ch,.hx-nl:focus-visible .hx-nl-top .hx-ch{transform:translateY(-105%)}
 .hx-nl:hover .hx-nl-dup .hx-ch,.hx-nl:focus-visible .hx-nl-dup .hx-ch{transform:translateY(0)}
 
-/* Login: the same pill as the others, plus a trailing arrow. At rest the arrow gives a small
-   nudge every few seconds; on hover it slides out to the right and back in from the left,
+/* Login: the same pill as the others, plus a trailing arrow. At rest the arrow stays still;
+   on hover it slides out to the right and back in from the left,
    clipped by its own little window so it never leaves the pill. */
 .hx-login{display:flex;align-items:center;gap:6px}
 .hx-arr{display:block;width:12px;height:12px;overflow:hidden;flex:none}
-.hx-arr svg{display:block;width:12px;height:12px;animation:hx-nudge 2.8s cubic-bezier(.45,0,.25,1) infinite}
-@keyframes hx-nudge{0%,62%,100%{transform:translateX(0)}74%{transform:translateX(3px)}86%{transform:translateX(0)}}
+.hx-arr svg{display:block;width:12px;height:12px}
 .hx-login:hover .hx-arr svg,.hx-login:focus-visible .hx-arr svg{animation:hx-arrow-go .9s cubic-bezier(.6,0,.2,1) infinite}
 @keyframes hx-arrow-go{0%{transform:translateX(0)}45%{transform:translateX(130%)}45.01%{transform:translateX(-130%)}90%,100%{transform:translateX(0)}}
 
 @media (max-width:1180px){ .hx-nav ul{gap:12px} .hx-nl{padding:9px 12px;font-size:12px;letter-spacing:-.01em} }
 @media (prefers-reduced-motion:reduce){
   .hx-nl,.hx-nl::after,.hx-nl-ring,.hx-ch{transition-duration:.01s;transition-delay:0s}
-  .hx-nl:hover::after,.hx-nl:hover .hx-nl-ring::before,.hx-arr svg,.hx-login:hover .hx-arr svg{animation:none}
+  .hx-nl:hover::after,.hx-nl:hover .hx-nl-ring::before,.hx-login:hover .hx-arr svg{animation:none}
 }
 @media (max-width:860px){
   .hx-nav-row{height:52px}
