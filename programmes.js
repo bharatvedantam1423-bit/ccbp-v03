@@ -75,6 +75,7 @@ const PROGRAMMES = [
               </div>
               <a class="f-cta" href="${p.href}">${p.cta}${ARROW}</a>
             </div>
+            <p class="f-note"><b>Disclaimer:</b> Outcomes are from multiple NxtWave programs (including online upskilling cohorts and placement support programs).</p>
           </div>
           <div class="f-media">
             <div class="f-flip"><div class="f-card">
@@ -234,6 +235,7 @@ const PROGRAMMES = [
       .fromTo(f.querySelectorAll(".f-list li"), { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power3.out" }, 0.34)
       .fromTo(f.querySelectorAll(".f-list .ic"), { scale: 0.7 }, { scale: 1, duration: 0.5, stagger: 0.07, ease: "back.out(2)", clearProps: "transform" }, 0.34)
       .fromTo(q(f, ".f-cta"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", clearProps: "transform" }, 0.55)
+      .fromTo(q(f, ".f-note"), { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.7)
       .fromTo(f.querySelectorAll(".f-photo"), { clipPath: "inset(6% 5% 6% 5% round 24px)", y: 30, opacity: 0.4 }, { clipPath: "inset(0% 0% 0% 0% round 24px)", y: 0, opacity: 1, duration: 1, ease: "power3.out", clearProps: "clipPath" }, 0.05)
       .fromTo(f.querySelectorAll(".f-photo img"), { scale: 1.12 }, { scale: 1, duration: 1.2, ease: "power2.out", clearProps: "transform" }, 0.05)
       .fromTo(f.querySelectorAll(".f-stat"), { opacity: 0, y: 26, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)", clearProps: "transform" }, 0.6);
