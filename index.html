@@ -351,7 +351,7 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
   --head-grad:linear-gradient(94.96deg,#000 17.7%,#0b1e40 31.6%,#2563eb 67.1%);
   --head-grad-dark:linear-gradient(193deg,#b9c3d6 12%,#ffffff 52%,#aeb9cd 115%);
   --title-grad:var(--head-grad);                   /* the supplied build's name for the same fill */
-  --sec-y:clamp(56px,6.5vw,96px);                  /* vertical breathing room above/below a section */
+  --sec-y:clamp(44px,4.6vw,72px);                  /* vertical breathing room above/below a section */
   --head-size:clamp(32px,3.9vw,56px);              /* section headings below the fold */
   --sub-size:clamp(15px,1.2vw,18px);               /* the subhead under a section heading */
   --page-bg:#ffffff;
@@ -445,7 +445,7 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 @media (max-width:640px){ .recog picture,.recog img{width:min(100%,360px)} }
 /* standalone band now (it sat inside the v02 programmes section) */
 .recog-band{position:relative;z-index:2;background:#fff;display:flex;justify-content:center;
-  padding:clamp(40px,5vw,72px) 24px clamp(40px,5vw,72px)}
+  padding:clamp(28px,3.4vw,48px) 24px}
 .recog-band .recog{margin-top:0}
 
 
@@ -506,7 +506,7 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
    S3 — MENTORS: scroll-scrubbed video ("Taught by people who have done the job")
    ===================================================================== */
 .mentors{position:relative;background:#fff}
-.mw-track{position:relative;height:var(--mw-track,340vh)}
+.mw-track{position:relative;height:var(--mw-track,220vh)}
 /* heading + film pin together: the heading stays in view for the whole scrub, the film takes
    the room left beneath it */
 .mw-stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;align-items:center;
@@ -547,7 +547,7 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 .mw-screen.frames video{visibility:hidden}
 
 @media (max-width:860px){
-  .mentors{--mw-track:240vh}
+  .mentors{--mw-track:170vh}
   .mw-head{gap:12px}
   /* on a phone the film is far wider than it is tall: heading + film sit together in the middle
      of the screen rather than the film dropping to the bottom with a gap above it */
@@ -723,7 +723,7 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 </header>
 <script>
 /* nav (from v3.2): the label roll on the buttons, and where each link goes. "Programmes" travels the
-   hero timeline to the first programme, like "Explore Programs"; the logo and Success Stories scroll
+   hero timeline to the first programme, like "Explore Programmes"; the logo and Success Stories scroll
    through the page's Lenis; Hire With Us, About Us and Login have no destination yet. The bar fades
    with the hero timeline (#nav in the script below). */
 (() => {
@@ -779,7 +779,7 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
       </dl>
     </div>
     <div class="h-ctas">
-      <a class="h-btn h-btn--pri" href="#programmes" data-go="cards">Explore Programs</a>
+      <a class="h-btn h-btn--pri" href="#programmes" data-go="cards">Explore Programmes</a>
       <a class="h-btn h-btn--sec" href="#">Talk to a Counsellor</a>
     </div>
   </div>
@@ -807,7 +807,7 @@ const PROGRAMMES = [
     logo: "assets/fig/academy-logo.png", rail: "#e9f0ff", photo: "assets/fig/academy-home.webp", wall: "#ece3d3", pos: "34%", photoAlt: "A student learning on his laptop at home",
     headline: ["Become a Highly-paid", "Gen AI Engineer"],
     features: [["file", "50+ Real-world AI Projects"], ["users", "Learn from IITians &amp; MAANG Professionals"], ["briefcase", "End-to-End Placement Support"]],
-    stat: { fig: "36000+", cap: "Students Preparing for AI Careers", side: "left", bg: "#dbeafe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" },
+    stat: { fig: "36,000+", cap: "Students Preparing for AI Careers", side: "left", bg: "#dbeafe", grad: "linear-gradient(115.32deg,#0f182d 10.83%,#235be1 104.11%)" },
     cta: "Explore Academy", href: "https://www.ccbp.in/academy" },
   { name: "NxtWave Intensive", short: "Intensive", caption: "Get software training with placement support.",
     tint: "#eeedff", accent: "#4f46e5", btn: "#4f46e5", btnHover: "#4338ca",
@@ -1024,11 +1024,11 @@ const PROGRAMMES = [
   };
   step(0, 1, tl.labels.p0 + 0.2);
   step(1, 2, tl.labels.p1 + 0.2);
-  tl.to({}, { duration: 0.5 });
+  tl.to({}, { duration: 0.25 });
 
   /* ---- pin + settle. scrub 0.8: the timeline trails the scroll by 0.8s, subtly smooth ---- */
   const st = ScrollTrigger.create({
-    trigger: stage, start: "top top", end: () => "+=" + innerHeight * 0.8 * tl.duration(),
+    trigger: stage, start: "top top", end: () => "+=" + innerHeight * 0.5 * tl.duration(),
     pin: true, scrub: RM ? true : 0.8, animation: tl, invalidateOnRefresh: true, onRefresh: syncSlices,
   });
   const at = (t) => st.start + (st.end - st.start) * (t / tl.duration());
@@ -1179,10 +1179,10 @@ const PROGRAMMES = [
         <img class="nr-emblem" src="assets/national-recognition/emblem.png" width="104" height="166" alt="National Emblem of India" loading="lazy">
         <i class="nr-div" aria-hidden="true"></i>
         <div class="nr-card-t">
-          <span class="nr-k">Honored by</span>
+          <span class="nr-k">Honoured by</span>
           <strong class="nr-name">Shri Dharmendra Pradhan ji</strong>
           <span class="nr-role">Union Minister for Education | Skill Development | Entrepreneurship</span>
-          <span class="nr-role">Govt. of India - 2023</span>
+          <span class="nr-role">Govt. of India, 2023</span>
         </div>
       </figcaption>
     </figure>
@@ -1453,7 +1453,7 @@ const PROGRAMMES = [
 </section>
 
 <section class="fm" id="featured-in-media" aria-labelledby="fm-title">
-  <h2 class="fm__title" id="fm-title">Recognized by Leading Media</h2>
+  <h2 class="fm__title" id="fm-title">Recognised by Leading Media</h2>
   <div class="fm__press">
     <ul class="fm__press-row" id="fm-press" aria-label="Publications that have featured NxtWave"></ul>
   </div>

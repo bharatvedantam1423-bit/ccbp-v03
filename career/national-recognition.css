@@ -13,7 +13,7 @@
   --rg:clamp(16px,4vw,40px);        /* page gutter, same as .record */
   --skew:-7deg;
 
-  position:relative;isolation:isolate;overflow:hidden;min-height:100vh;display:flex;align-items:center;padding:120px 0;
+  position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;padding:clamp(72px,7vw,104px) 0;
   background:linear-gradient(160deg,#fbfcff 0%,#f3f7fe 55%,#eef4fd 100%)}   /* fallback if WebGL is off */
 .nr figure,.nr figcaption{margin:0}
 .nr-bg{position:absolute;inset:0;width:100%;height:100%;z-index:-1;display:block}
@@ -64,15 +64,15 @@
 
 /* ---------- responsive ---------- */
 @media (max-width:1024px){
-  .nr{padding:96px 0;min-height:0}
-  .nr-wrap{grid-template-columns:1fr;gap:56px}
+  .nr{padding:72px 0}
+  .nr-wrap{grid-template-columns:1fr;gap:44px}
   .nr-copy{max-width:600px}
 }
 @media (max-width:600px){
-  .nr{padding:80px 0;--skew:0deg}
+  .nr{padding:56px 0;--skew:0deg}
   .nr-lede{margin-top:20px;font-size:16px}
-  .nr-btn{margin-top:32px;width:100%;justify-content:center;height:56px;font-size:16px}
-  .nr-photos{grid-template-columns:1fr;padding:0 4%;gap:16px}
+  .nr-btn{margin-top:28px;width:100%;justify-content:center;height:56px;font-size:16px}
+  .nr-photos{grid-template-columns:1fr 1fr;padding:0;gap:12px}   /* side by side: two stacked squares cost a full screen */
   /* mobile: plain 1:1 cards; photo scaled so the slanted-crop edges fall outside */
   .nr-ph{aspect-ratio:1/1;border-radius:16px;transform:none}
   .nr-ph img{width:130%;height:auto;transform:translateX(-50%)}

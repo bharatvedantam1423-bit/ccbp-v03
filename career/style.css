@@ -17,7 +17,7 @@
 .cs{font-family:"Inter Display","Inter",system-ui,sans-serif;font-optical-sizing:auto;letter-spacing:-.02em;-webkit-font-smoothing:antialiased}
 
 .ht{display:flex;flex-direction:column;padding:var(--sec) 0 0;overflow:hidden}
-.ht__head{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;margin:0 var(--m) 56px}
+.ht__head{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;margin:0 var(--m) 40px}
 .ht__head>div:first-child{display:flex;flex-direction:column;align-items:center}
 .ht__title{font-size:48px;line-height:1.1;font-weight:600;letter-spacing:-.02em;font-variation-settings:"opsz" 32}
 .ht__sub{font-family:"InterVariable","Inter",system-ui,sans-serif;font-size:16px;font-weight:500;line-height:1.5;color:var(--mute);margin-top:12px;max-width:520px;letter-spacing:-.02em}
@@ -66,7 +66,7 @@
    the hero enters as one unit and the right column as a second unit; the
    pieces inside each card then settle in with a short stagger (script.js). */
 .wl{padding:var(--sec) var(--m) 0}
-.wl__head{margin-bottom:56px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.wl__head{margin-bottom:40px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .wl__title{font-size:48px;line-height:1.15;font-weight:600;letter-spacing:-.02em}
 /* Section headings on light backgrounds — Figma gradient (token in index.html :root) */
 .wl__title,.ht__title,.fm__title{width:fit-content;max-width:100%;padding-bottom:.08em;
@@ -75,7 +75,7 @@
 .wl__sub{font-family:"InterVariable","Inter",system-ui,sans-serif;font-size:16px;font-weight:500;line-height:1.5;color:#757373;margin-top:12px}
 
 /* layout — 578 : 606 of the 1200 content box, same 16px gutter as Figma */
-.wl__grid{display:flex;align-items:stretch;gap:16px;min-height:721px}
+.wl__grid{display:flex;align-items:stretch;gap:16px;min-height:640px}
 .wl__col{flex:606 1 0;min-width:0;display:flex;flex-direction:column;gap:16px}
 .wl__col>.wl__card{flex:1 1 0;min-height:0}
 .wl__card{position:relative;overflow:hidden;border-radius:16px;margin:0}

@@ -2,7 +2,7 @@
 .fm{padding:var(--sec) 0;overflow:hidden;--fm-accent:#042ac0}
 .fm__title{font-size:48px;line-height:1.1;font-weight:600;letter-spacing:-.02em;font-variation-settings:"opsz" 32;margin:0 auto 36px;text-align:center}
 /* "Featured in" — publication marks between the title and the grid (ccbp.in press strip) */
-.fm__press{max-width:1180px;margin:8px auto 64px;padding:0 var(--m);box-sizing:content-box}
+.fm__press{max-width:1180px;margin:8px auto 48px;padding:0 var(--m);box-sizing:content-box}
 .fm__press-row{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:32px 48px;margin:0;padding:0}
 .fm__press-item{display:flex;align-items:center;justify-content:center;min-height:40px}
 .fm__press-item img{display:block;height:28px;width:auto;max-width:168px;opacity:.92}
@@ -41,7 +41,7 @@
 .fm__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;transition:transform .9s cubic-bezier(.2,.7,.1,1)}
 .fm__link:hover .fm__img img{transform:scale(1.08)}
 
-.fm__more{display:block;margin:48px auto 0;padding:12px 32px;min-width:160px;background:#1d4ed8;color:#fff;border:0;border-radius:12px;font-family:"Inter",system-ui,sans-serif;font-size:16px;line-height:20px;font-weight:600;letter-spacing:0;cursor:pointer;transition:transform .3s cubic-bezier(.2,.7,.1,1),box-shadow .3s}
+.fm__more{display:block;margin:40px auto 0;padding:12px 32px;min-width:160px;background:#1d4ed8;color:#fff;border:0;border-radius:12px;font-family:"Inter",system-ui,sans-serif;font-size:16px;line-height:20px;font-weight:600;letter-spacing:0;cursor:pointer;transition:transform .3s cubic-bezier(.2,.7,.1,1),box-shadow .3s}
 .fm__more:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(29,78,216,.55)}
 .fm__more:focus-visible{outline:2px solid #1d4ed8;outline-offset:3px}
 .fm__more[hidden]{display:none}
@@ -67,7 +67,15 @@
   .fm__link{grid-template-columns:1fr;min-height:0}
   .fm__img{order:-1;aspect-ratio:16/9}
   .fm__h{margin-top:4px}
-  .fm__more{margin-top:32px}
+  .fm__more{margin-top:28px}
+  /* phones: after the featured story, the rest read as a compact list (thumbnail beside headline)
+     instead of a full-width 16:9 cover each, which made this the longest section on the page */
+  .fm__card:not(.fm__card--feat) .fm__link{display:grid;grid-template-columns:112px minmax(0,1fr)}
+  .fm__card:not(.fm__card--feat) .fm__img{order:-1;aspect-ratio:auto;min-height:112px}
+  .fm__card:not(.fm__card--feat) .fm__body{padding:14px 16px}
+  .fm__card:not(.fm__card--feat) .fm__h{margin-top:10px;font-size:14px;-webkit-line-clamp:3}
+  .fm__card:not(.fm__card--feat) .fm__cta{margin-top:auto;padding-top:8px;font-size:13px}
+  .fm__grid{gap:12px}
 }
 
 /* ── Footer (Ather gen4 footer layout, NxtWave content) ───────── */

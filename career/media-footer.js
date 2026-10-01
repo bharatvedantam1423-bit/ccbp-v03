@@ -75,7 +75,7 @@
     grid.querySelectorAll('.fm__logo:not([style])').forEach(im => im.complete ? fit(im) : im.addEventListener('load', () => fit(im), { once: true }));
     more.hidden = shown >= A.length;
   };
-  add(11);                                  // featured + 2 stacked + two rows of four
+  add(matchMedia('(max-width:640px)').matches ? 6 : 7);    // featured + 2 stacked + a row of four; phones start shorter
   more.addEventListener('click', () => add(4));
 
   /* "Featured in" — publication marks under the section title (ccbp.in press strip) */
