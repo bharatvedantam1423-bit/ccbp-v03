@@ -306,9 +306,11 @@ const PROGRAMMES = [
   step(1, 2, tl.labels.p1 + 0.2);
   tl.to({}, { duration: 0.5 });
 
-  /* ---- pin + settle. scrub 0.8: the timeline trails the scroll by 0.8s, subtly smooth ---- */
+  /* ---- pin + settle. PACE = screens of scroll per second of timeline: 0.5 puts the hero and all three
+     programmes in about 3.5 screens. scrub 0.8: the timeline trails the scroll by 0.8s, subtly smooth ---- */
+  const PACE = 0.5;
   const st = ScrollTrigger.create({
-    trigger: stage, start: "top top", end: () => "+=" + innerHeight * 0.8 * tl.duration(),
+    trigger: stage, start: "top top", end: () => "+=" + innerHeight * PACE * tl.duration(),
     pin: true, scrub: RM ? true : 0.8, animation: tl, invalidateOnRefresh: true,
     /* a refresh re-renders the timeline without firing tween callbacks, so redraw the window from its current progress */
     onRefresh: () => { from = null; drawWindow(); },
