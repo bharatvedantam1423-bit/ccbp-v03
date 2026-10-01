@@ -205,20 +205,20 @@ a{color:inherit;text-decoration:none}
 .hx-nl:hover .hx-nl-top .hx-ch,.hx-nl:focus-visible .hx-nl-top .hx-ch{transform:translateY(-105%)}
 .hx-nl:hover .hx-nl-dup .hx-ch,.hx-nl:focus-visible .hx-nl-dup .hx-ch{transform:translateY(0)}
 
-/* Login stays a plain link (Figma 869:158): Geist Medium 14 */
-.hx-login{position:relative;display:block;padding:0 8px 3px;font:500 14px/normal Geist,var(--font);
-  transition:color .25s ease,text-shadow .25s ease}
-/* a rule that draws in from the left on hover */
-.hx-login::after{content:"";position:absolute;left:8px;right:8px;bottom:0;height:1.5px;
-  background:currentColor;border-radius:2px;transform:scaleX(0);transform-origin:left center;
-  transition:transform .26s cubic-bezier(.22,.61,.36,1)}
-.hx-login:hover::after,.hx-login:focus-visible::after{transform:scaleX(1)}
-.hx-login:hover,.hx-login:focus-visible{color:#bcd4ff;text-shadow:0 0 14px rgba(64,107,219,.55)}
+/* Login: the same pill as the others, plus a trailing arrow. At rest the arrow gives a small
+   nudge every few seconds; on hover it slides out to the right and back in from the left,
+   clipped by its own little window so it never leaves the pill. */
+.hx-login{display:flex;align-items:center;gap:6px}
+.hx-arr{display:block;width:12px;height:12px;overflow:hidden;flex:none}
+.hx-arr svg{display:block;width:12px;height:12px;animation:hx-nudge 2.8s cubic-bezier(.45,0,.25,1) infinite}
+@keyframes hx-nudge{0%,62%,100%{transform:translateX(0)}74%{transform:translateX(3px)}86%{transform:translateX(0)}}
+.hx-login:hover .hx-arr svg,.hx-login:focus-visible .hx-arr svg{animation:hx-arrow-go .9s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes hx-arrow-go{0%{transform:translateX(0)}45%{transform:translateX(130%)}45.01%{transform:translateX(-130%)}90%,100%{transform:translateX(0)}}
 
 @media (max-width:1180px){ .hx-nav ul{gap:12px} .hx-nl{padding:9px 12px;font-size:12px;letter-spacing:-.01em} }
 @media (prefers-reduced-motion:reduce){
   .hx-nl,.hx-nl::after,.hx-nl-ring,.hx-ch{transition-duration:.01s;transition-delay:0s}
-  .hx-nl:hover::after,.hx-nl:hover .hx-nl-ring::before{animation:none}
+  .hx-nl:hover::after,.hx-nl:hover .hx-nl-ring::before,.hx-arr svg,.hx-login:hover .hx-arr svg{animation:none}
 }
 @media (max-width:860px){
   .hx-nav-row{height:52px}
@@ -532,14 +532,6 @@ html.lenis,html.lenis body{height:auto}
   display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center;will-change:transform,opacity}
 #hero .h-top{display:flex;flex-direction:column;align-items:center;gap:20px}
 #hero .h-head{display:flex;flex-direction:column;align-items:center;gap:16px}
-#hero .h-badge{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:100px;
-  background:rgba(219,234,254,.9);color:#2563eb;box-shadow:0 0 0 1px rgba(37,99,235,.12),0 8px 24px -12px rgba(37,99,235,.45);
-  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-  font-size:14px;line-height:28px;font-weight:600;letter-spacing:-.28px;white-space:nowrap}
-#hero .h-badge img{width:14px;height:14px}
-#hero .h-badge img:first-child{animation:hx-twinkle 3.2s ease-in-out infinite}
-#hero .h-badge img:last-child{animation:hx-twinkle 3.2s ease-in-out 1.6s infinite}
-@keyframes hx-twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(.72) rotate(45deg)}}
 #hero .h-title{margin:0;font-weight:600;font-size:52px;line-height:76px;letter-spacing:-.26px;font-variation-settings:"opsz" 32;color:#181818}
 #hero .h-title .row{display:block;white-space:nowrap}
 #hero .h-title .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:6px;margin-bottom:-6px}
@@ -563,7 +555,7 @@ html.lenis,html.lenis body{height:auto}
 #hero .h-btn:active{transform:translateY(0) scale(.98)}
 #hero .h-btn:focus-visible{outline:2px solid #2563eb;outline-offset:3px}
 
-/* intro: the film settles from a slight push-in; the badge, the words, the stats and the buttons rise in turn */
+/* intro: the film settles from a slight push-in; the words, the stats and the buttons rise in turn */
 #hero [data-in]{opacity:0;transform:translateY(18px);transition:opacity .9s var(--hx-ease),transform 1.1s var(--hx-ease);transition-delay:var(--d,0s)}
 #hero .h-title .w > span{transform:translateY(105%);transition:transform 1.1s var(--hx-ease);transition-delay:var(--d,0s)}
 #hero.is-in [data-in]{opacity:1;transform:none}
@@ -580,7 +572,7 @@ html.lenis,html.lenis body{height:auto}
 }
 @media (prefers-reduced-motion:reduce){
   #hero .hb,#hero [data-in],#hero .h-title .w > span{transition:none}
-  #hero .h-badge img,#hero .h-title .ai > span{animation:none}
+  #hero .h-title .ai > span{animation:none}
 }
 
 /* the nav rides over a light film now: dark ink, pale strokes, a white frost on hover */
@@ -591,8 +583,6 @@ html.lenis,html.lenis body{height:auto}
 .site-nav .hx-nl::after{background:linear-gradient(115deg,transparent 32%,rgba(37,99,235,.10) 47%,rgba(96,165,250,.18) 52%,transparent 68%);
   background-size:260% 100%;background-repeat:no-repeat}
 .site-nav .hx-nav-tint{background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.25) 45%,rgba(255,255,255,0) 100%)}
-.site-nav .hx-nav a.hx-login{color:#2563eb}
-.site-nav .hx-login:hover,.site-nav .hx-login:focus-visible{color:#1d4ed8;text-shadow:none}
 </style>
 </head>
 <body>
@@ -608,7 +598,7 @@ html.lenis,html.lenis body{height:auto}
           <li><a class="hx-nl" href="#career-transformations">Success Stories<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
           <li><a class="hx-nl" href="#" data-blank>Hire With Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
           <li><a class="hx-nl" href="#" data-blank>About Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
-          <li><a class="hx-login" href="#" data-blank>Login</a></li>
+          <li><a class="hx-nl hx-login" href="#" data-blank>Login<span class="hx-arr" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6h9M6.75 2.25 10.5 6l-3.75 3.75"/></svg></span><span class="hx-nl-ring" aria-hidden="true"></span></a></li>
         </ul>
       </div>
     </nav>
@@ -629,7 +619,6 @@ html.lenis,html.lenis body{height:auto}
   <div class="h-copy">
     <div class="h-top">
       <div class="h-head">
-        <p class="h-badge" data-in style="--d:.15s"><img src="assets/hero/star.svg" alt="">Helping ambition grow into ability.<img src="assets/hero/star.svg" alt=""></p>
         <h1 class="h-title"><span class="row">Preparing tomorrow's tech talent</span><span class="row">for an <span class="ai">AI-shaped world</span>.</span></h1>
       </div>
       <div class="h-sw"><dl class="h-stats" data-in style="--d:.85s">
