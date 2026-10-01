@@ -133,33 +133,27 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 .hx-nl:hover .hx-nl-top .hx-ch,.hx-nl:focus-visible .hx-nl-top .hx-ch{transform:translateY(-105%)}
 .hx-nl:hover .hx-nl-dup .hx-ch,.hx-nl:focus-visible .hx-nl-dup .hx-ch{transform:translateY(0)}
 
-/* Login: no pill, but the same type as the buttons (Geist SemiBold 12 caps) plus a trailing arrow.
-   At rest the arrow nudges right with a soft glow every few seconds; on hover the label turns blue,
-   a rule draws in under it and the arrow steps out. */
-.hx-login{position:relative;display:flex;align-items:center;gap:8px;padding:10px 8px;
-  font:600 12px/normal Geist,var(--font);text-transform:uppercase;white-space:nowrap;
-  transition:color .25s ease,text-shadow .25s ease}
-.hx-login-txt{position:relative}
-.hx-login-txt::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1.5px;
-  background:currentColor;border-radius:2px;transform:scaleX(0);transform-origin:left center;
-  transition:transform .26s cubic-bezier(.22,.61,.36,1)}
-.hx-login:hover .hx-login-txt::after,.hx-login:focus-visible .hx-login-txt::after{transform:scaleX(1)}
-.hx-login:hover,.hx-login:focus-visible{color:#bcd4ff;text-shadow:0 0 14px rgba(64,107,219,.55)}
-.hx-login:focus-visible{outline:none}
+/* Login: the same pill as the buttons above (stroke, glow, moving ring, label roll) plus a trailing
+   arrow. At rest the arrow nudges right every few seconds; on hover it slips out to the right and
+   comes back in from the left. */
+.hx-login{display:flex;align-items:center;gap:8px}
 .hx-login-arw{display:block;width:12px;height:12px;flex:none;
   animation:hx-nudge 2.6s cubic-bezier(.45,0,.25,1) infinite}
-.hx-login:hover .hx-login-arw,.hx-login:focus-visible .hx-login-arw{animation:none;transform:translateX(4px);
-  transition:transform .26s cubic-bezier(.22,.61,.36,1)}
-@keyframes hx-nudge{
-  0%,58%,100%{transform:translateX(0);filter:none}
-  72%{transform:translateX(4px);filter:drop-shadow(0 0 4px currentColor)}
-  86%{transform:translateX(0);filter:none}
+.hx-login:hover .hx-login-arw,.hx-login:focus-visible .hx-login-arw{
+  animation:hx-arw-loop .5s cubic-bezier(.55,0,.25,1) both}
+@keyframes hx-nudge{0%,58%,100%{transform:translateX(0)} 72%{transform:translateX(3px)} 86%{transform:translateX(0)}}
+@keyframes hx-arw-loop{
+  0%{transform:translateX(0);opacity:1}
+  45%{transform:translateX(12px);opacity:0}
+  46%{transform:translateX(-12px);opacity:0}
+  100%{transform:translateX(0);opacity:1}
 }
 
 @media (max-width:1180px){ .hx-nav ul{gap:12px} .hx-nl{padding:9px 12px;font-size:12px;letter-spacing:-.01em} }
 @media (prefers-reduced-motion:reduce){
   .hx-nl,.hx-nl::after,.hx-nl-ring,.hx-ch{transition-duration:.01s;transition-delay:0s}
   .hx-nl:hover::after,.hx-nl:hover .hx-nl-ring::before,.hx-login-arw{animation:none}
+  .hx-login:hover .hx-login-arw,.hx-login:focus-visible .hx-login-arw{animation:none}
 }
 @media (max-width:860px){
   .hx-nav-row{height:52px}
@@ -175,7 +169,6 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 .site-nav .hx-nl::after{background:linear-gradient(115deg,transparent 32%,rgba(37,99,235,.10) 47%,rgba(96,165,250,.18) 52%,transparent 68%);
   background-size:260% 100%;background-repeat:no-repeat}
 .site-nav .hx-nav-tint{background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.25) 45%,rgba(255,255,255,0) 100%)}
-.site-nav .hx-login:hover,.site-nav .hx-login:focus-visible{color:#2563eb;text-shadow:none}
 
 /* ---------- hero: Figma 8077:11126, 1440 x 900 ---------- */
 .stage{position:relative;height:100vh;height:100svh;overflow:hidden;background:#f6fafe}
@@ -723,7 +716,7 @@ svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
           <li><a class="hx-nl" href="#career-transformations">Success Stories<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
           <li><a class="hx-nl" href="#" data-blank>Hire With Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
           <li><a class="hx-nl" href="#" data-blank>About Us<span class="hx-nl-ring" aria-hidden="true"></span></a></li>
-          <li><a class="hx-login" href="#" data-blank><span class="hx-login-txt">Login</span><svg class="hx-login-arw" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 6h8.5M6.5 2.25 10.25 6 6.5 9.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+          <li><a class="hx-nl hx-login" href="#" data-blank>Login<svg class="hx-login-arw" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 6h8.5M6.5 2.25 10.25 6 6.5 9.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="hx-nl-ring" aria-hidden="true"></span></a></li>
         </ul>
       </div>
     </nav>
